@@ -275,74 +275,15 @@ export const authMixin = {
         if (!(body && body.email && body.password)) {
           reject("Request body not provided during login");
         }
-
-        window.firebase
-          .auth()
-          .signInWithEmailAndPassword(body.email, body.password)
-          .then(response => {
-            this.$store.commit("isAuthenticated", true);
-            this.$store.commit("token", response.user.refreshToken || null);
-            this.$store.commit("user", {
-              username: response.displayName,
-              email: response.email
-            });
-            resolve();
-          })
-          .catch(err => {
-            reject(err.message);
-          });
       });
-
-      /*axios
-          .post("/api/login", body) // Todo: Change this line to match your authentication API
-          .then(response => {
-            // Todo: Parse the response and set 'isAuthenticated' to true on successful login
-            // this.$store.commit("isAuthenticated", true);
-            resolve(this.isAuthenticated);
-          })
-          .catch(err => {
-            // this.$store.commit("isAuthenticated", false);
-            reject(`Error logging in: ${err}`);
-          });
-      });*/
     },
     logout() {
-      window.firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.$store.commit("isAuthenticated", false);
-          this.$store.commit("user", null);
-          this.$store.commit("alert", true);
-          this.$store.commit("alertMessage", "Logout Successful");
-          this.$store.commit("alertColor", "#288964");
-        })
-        .catch(err => {
-          this.$store.commit("alert", true);
-          this.$store.commit("alertMessage", err);
-        });
     },
     register(body) {
       return new Promise((resolve, reject) => {
         if (!(body && body.email && body.password)) {
           reject("Request body not provided during login");
         }
-
-        window.firebase
-          .auth()
-          .createUserWithEmailAndPassword(body.email, body.password)
-          .then(response => {
-            this.$store.commit("isAuthenticated", true);
-            this.$store.commit("token", response.user.refreshToken || null);
-            this.$store.commit("user", {
-              username: response.displayName,
-              email: response.email
-            });
-            resolve();
-          })
-          .catch(err => {
-            reject(err.message);
-          });
       });
     },
     setColor(minutes) {
