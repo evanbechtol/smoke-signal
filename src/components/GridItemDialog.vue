@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" persistent :fullscreen="$vuetify.breakpoint.name === 'xs'" >
     <v-card v-if="item" :dark="isDark" :color="`accent ${darken}`">
-      <v-card-title primary-title class="hildaLight space-small dark-l0 ma-0">
+      <v-card-title primary-title class="bg hildaLight space-small dark-l0 ma-0">
         {{ item.title }}
         <v-spacer></v-spacer>
         <v-btn color="primary"

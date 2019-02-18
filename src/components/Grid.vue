@@ -1,11 +1,10 @@
 <template>
   <div>
-    <v-card :color="`accent ${darken}`" elevation="0" :dark="isDark">
+    <v-card :color="`accent ${darken}`" elevation="0" :dark="isDark" class="bg">
       <v-toolbar card
                  height="40px"
-                 :color="`accent ${darken}`"
-                 :dark="isDark"
-                 class="my-4 pt-2"
+                 dark
+                 class="my-4 pt-2 bg"
                  flat>
         <v-card-title primary-title class="hildaLight space-small pl-0 ml-0">
           <slot name="title"></slot>

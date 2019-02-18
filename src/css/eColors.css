@@ -211,3 +211,44 @@ h1.e, h2.e, h3.e, h4.e, h5.e {
 .dark-text {
   color: #f2f2f2;
 }
+
+.bg {
+  background: linear-gradient(270deg, #159957, #155799);
+  background-size: 400% 400%;
+  -webkit-animation: shiftBg 20s ease infinite;
+  -moz-animation: shiftBg 20s ease infinite;
+  animation: shiftBg 20s ease infinite;
+}
+@-webkit-keyframes shiftBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes shiftBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes shiftBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
