@@ -8,6 +8,17 @@
                  flat>
         <v-card-title primary-title class="hildaLight space-small pl-0 ml-0">
           <slot name="title"></slot>
+          <v-tooltip right class="ml-3">
+            <template #activator="data">
+              <v-btn icon
+                     :color="pullingCord === true ? 'success' : 'error'"
+                     v-on="data.on"
+                     @click="pullingCord = !pullingCord">
+                <v-icon>{{ pullingCord === true ? "clear" : "flag" }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ "Pull My Cord" }}</span>
+          </v-tooltip>
         </v-card-title>
       
         <v-spacer></v-spacer>
@@ -65,6 +76,7 @@ export default {
   components: { GridItemDialog },
   computed: {},
   data: () => ({
+    pullingCord: false,
     editDialog: false,
     selectedItem: null,
     search: ""
