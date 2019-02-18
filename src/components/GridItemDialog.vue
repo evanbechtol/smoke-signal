@@ -97,9 +97,14 @@
               <div class="hildaLight space-small">Discussion
                 <v-tooltip right>
                   <template #activator="data">
-                    <v-btn icon :color="addingToDiscussion === true ? 'error' : 'success'" v-on="data.on" @click="addingToDiscussion = !addingToDiscussion"><v-icon>{{ addingToDiscussion === true ? "clear" : "create" }}</v-icon></v-btn>
+                    <v-btn icon
+                           :color="addingToDiscussion === true ? 'error' : 'success'"
+                           v-on="data.on"
+                           @click="addingToDiscussion = !addingToDiscussion">
+                      <v-icon>{{ addingToDiscussion === true ? "clear" : "create" }}</v-icon>
+                    </v-btn>
                   </template>
-                  <span>{{ addingToDiscussion === true ? "Cancel adding to discussion" : "Add to discussion"}}</span>
+                  <span>{{ addingToDiscussion === true ? "Cancel adding to discussion" : "Add to discussion" }}</span>
                 </v-tooltip>
               </div>
               
