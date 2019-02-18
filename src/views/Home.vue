@@ -12,7 +12,6 @@
       </v-layout>
     </v-container>
   </div>
-
 </template>
 
 <script>
@@ -126,51 +125,15 @@ export default {
       }
     ]
   }),
-  beforeDestroy() {
-    this.stop();
-  },
+  beforeDestroy() {},
   created() {},
   mounted() {},
   methods: {
-    addEvent() {
-      let { color, icon } = this.genAlert();
-
-      const previousColor = this.logItems[0].color;
-
-      while (previousColor === color) {
-        color = this.genColor();
-      }
-
-      this.logItems.unshift({
-        id: this.nonce++,
-        color,
-        icon
-      });
-
-      if (this.nonce > 6) {
-        this.logItems.pop();
-      }
-    },
-    genAlert() {
-      const color = this.genColor();
-
-      return {
-        color,
-        icon: this.genIcon(color)
-      };
-    },
     genColor() {
       return COLORS[Math.floor(Math.random() * 3)];
     },
     genIcon(color) {
       return ICONS[color];
-    },
-    start() {
-      this.interval = setInterval(this.addEvent, 3000);
-    },
-    stop() {
-      clearInterval(this.interval);
-      this.interval = null;
     }
   }
 };
