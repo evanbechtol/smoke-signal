@@ -58,71 +58,71 @@ export default {
         name: "VDC 01",
         app: 72,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: null
+        duration: "1 hour",
+        hero: null
       },
       {
         name: "VDC 02",
         app: 56,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: "eevabec"
+        duration: "1 hour",
+        hero: "eevabec"
       },
       {
         name: "VDC 03",
         app: 98,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: null
+        duration: "1 hour",
+        hero: null
       },
       {
         name: "VDC 04",
         app: 45,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: "eevabec"
+        duration: "1 hour",
+        hero: "eevabec"
       },
       {
         name: "VDC 05",
         app: 32,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: null
+        duration: "1 hour",
+        hero: null
       },
       {
         name: "VDC 06",
         app: 55,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: "eevabec"
+        duration: "1 hour",
+        hero: "eevabec"
       },
       {
         name: "VDC 07",
         app: 81,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: null
+        duration: "1 hour",
+        hero: null
       },
       {
         name: "VDC 08",
         app: 34,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: "eevabec"
+        duration: "1 hour",
+        hero: "eevabec"
       },
       {
         name: "VDC 09",
         app: 25,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: null
+        duration: "1 hour",
+        hero: null
       },
       {
         name: "VDC 10",
         app: 26,
         category: "Troubleshooting",
-        Duration: "1 hour",
-        Hero: "eevabec"
+        duration: "1 hour",
+        hero: "eevabec"
       }
     ]
   }),

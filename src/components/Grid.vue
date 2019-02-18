@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="`accent ${darken}`">
+  <v-card :color="`accent ${darken}`" elevation="0">
     <v-toolbar card
                height="40px"
                :color="`accent ${darken}`"
@@ -36,7 +36,20 @@
             :items="items"
             :search="search">
       <template slot="items" slot-scope="props">
-        <td v-for="(col) in Object.keys(props.item)" :key="col">{{ props.item[col] }}</td>
+        <!--<td v-for="(col) in Object.keys(props.item)" :key="col">{{ props.item[col] }}</td>-->
+        <td>{{ props.item.name }}</td>
+        <td>{{ props.item.app }}</td>
+        <td>{{ props.item.category }}</td>
+        <td>{{ props.item.duration }}</td>
+        <td>
+          <div v-if="props.item.hero && props.item.hero.length > 0">{{ props.item.hero }}</div>
+          <div v-else>
+            <v-btn @click="toggleRegistration()" :color="`info darken-1`" name="register" class="ma-0">
+              <v-icon dark class="pr-2">work_outline</v-icon>
+              Rescue
+            </v-btn>
+          </div>
+        </td>
       </template>
       <v-alert slot="no-results" :value="true" color="error" icon="warning">
         Your search for "{{ search }}" found no results.

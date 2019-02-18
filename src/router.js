@@ -32,17 +32,6 @@ let router = new Router({
         import(/* webpackChunkName: "login" */ "./views/Login.vue")
     },
     {
-      path: "/kc",
-      name: "catalog",
-      meta: {
-        guest: false,
-        requiresAuth: true,
-        isAdmin: false
-      },
-      component: () =>
-        import(/* webpackChunkName: "catalog" */ "./views/KC.vue")
-    },
-    {
       path: "/profile",
       name: "profile",
       meta: {
