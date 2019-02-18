@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card :color="`accent ${darken}`" elevation="0">
+    <v-card :color="`accent ${darken}`" elevation="0" :dark="isDark">
       <v-toolbar card
                  height="40px"
                  :color="`accent ${darken}`"
