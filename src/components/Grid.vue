@@ -12,6 +12,7 @@
             <template #activator="data">
               <v-btn icon
                      :color="pullingCord === true ? 'success' : 'error'"
+                     class="animated slow pulse infinite"
                      v-on="data.on"
                      @click="pullingCord = !pullingCord">
                 <v-icon>{{ pullingCord === true ? "clear" : "flag" }}</v-icon>
