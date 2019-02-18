@@ -37,21 +37,13 @@
               :items="items"
               :search="search">
         <template slot="items" slot-scope="props">
-          <!--<td v-for="(col) in Object.keys(props.item)" :key="col">{{ props.item[col] }}</td>-->
           <tr @click="openEditDialog(props.item)">
+            <td>{{ props.item.title }}</td>
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.app }}</td>
             <td>{{ props.item.category }}</td>
             <td>{{ props.item.duration }}</td>
-            <td>
-              <div v-if="props.item.hero && props.item.hero.length > 0">{{ props.item.hero }}</div>
-              <div v-else>
-                <v-btn :color="`info darken-1`" name="editItem" class="ma-0">
-                  <v-icon dark class="pr-2">work_outline</v-icon>
-                  Rescue
-                </v-btn>
-              </div>
-            </td>
+            <td>{{ props.item.hero || "" }}</td>
           </tr>
         </template>
         <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -60,7 +52,7 @@
       </v-data-table>
     </v-card>
   
-    <grid-item-dialog :initial-dialog="editDialog" v-on:cancelItemEdit="closeEditDialog"></grid-item-dialog>
+    <grid-item-dialog :initial-dialog="editDialog" v-on:cancelItemEdit="closeEditDialog" :item="selectedItem"></grid-item-dialog>
   </div>
 </template>
 
@@ -75,7 +67,7 @@ export default {
   computed: {},
   data: () => ({
     editDialog: false,
-    editedItem: {},
+    selectedItem: null,
     search: ""
   }),
   props: {
@@ -94,10 +86,11 @@ export default {
   },
   methods: {
     openEditDialog(item) {
-      this.editedItem = Object.assign({}, item);
+      this.selectedItem = Object.assign({}, item);
       this.editDialog = true;
     },
     closeEditDialog() {
+      this.selectedItem = null;
       this.editDialog = false;
     }
   }

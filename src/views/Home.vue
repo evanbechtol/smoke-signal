@@ -46,6 +46,7 @@ export default {
       { title: "Some Action 4" }
     ],
     headers: [
+      { text: "Title", align: "left", value: "title" },
       { text: "Name", align: "left", value: "name" },
       { text: "App", align: "left", value: "app" },
       { text: "Category", align: "left", value: "category" },
@@ -54,71 +55,81 @@ export default {
     ],
     items: [
       {
-        name: "VDC 01",
-        app: 72,
-        category: "Troubleshooting",
-        duration: "1 hour",
+        title: "500 Status code on login",
+        name: "Evan Bechtol",
+        app: "Knowledge Catalog",
+        category: "Authentication",
+        duration: "1 Day 5 hours",
         hero: null
       },
       {
-        name: "VDC 02",
-        app: 56,
+        title: "Button mis-alignment",
+        name: "Paul Lamb",
+        app: "Ericsson Virtual Assistant",
         category: "Troubleshooting",
+        duration: "10 minutes",
+        hero: "eevabec"
+      },
+      {
+        title: "Unable to register app",
+        name: "Evan Bechtol",
+        app: "E-Auth",
+        category: "Bug Fix",
+        duration: "3 hours",
+        hero: null
+      },
+      {
+        title: "Module Not Found",
+        name: "Paul Lamb",
+        app: "E-Auth",
+        category: "Deployment",
         duration: "1 hour",
         hero: "eevabec"
       },
       {
-        name: "VDC 03",
-        app: 98,
-        category: "Troubleshooting",
-        duration: "1 hour",
+        title: "MySQL has gone away",
+        name: "Ravish NV.",
+        app: "EAMS",
+        category: "Database Error",
+        duration: "30 minutes",
         hero: null
       },
       {
-        name: "VDC 04",
-        app: 45,
-        category: "Troubleshooting",
-        duration: "1 hour",
+        title: "Test 1234 failed",
+        name: "Maya K.",
+        app: "EAMS",
+        category: "Testing and Validation",
+        duration: "6 hours",
         hero: "eevabec"
       },
       {
-        name: "VDC 05",
-        app: 32,
+        title: "Unable to reach COP",
+        name: "Ravish NV.",
+        app: "EAMS",
         category: "Troubleshooting",
-        duration: "1 hour",
+        duration: "5 minutes",
         hero: null
       },
       {
-        name: "VDC 06",
-        app: 55,
-        category: "Troubleshooting",
-        duration: "1 hour",
+        title: "T-Mobile portal build failed",
+        name: "Raghavendra",
+        app: "Customer Portal",
+        category: "Deployment",
+        duration: "4 hours",
         hero: "eevabec"
       },
       {
-        name: "VDC 07",
-        app: 81,
-        category: "Troubleshooting",
-        duration: "1 hour",
+        title: "Undefined variable error",
+        name: "Raghavendra",
+        app: "Customer Portal",
+        category: "Debugging",
+        duration: "1 hour 10 minutes",
         hero: null
       },
       {
-        name: "VDC 08",
-        app: 34,
-        category: "Troubleshooting",
-        duration: "1 hour",
-        hero: "eevabec"
-      },
-      {
-        name: "VDC 09",
-        app: 25,
-        category: "Troubleshooting",
-        duration: "1 hour",
-        hero: null
-      },
-      {
-        name: "VDC 10",
-        app: 26,
+        title: "Function not being called",
+        name: "Raghavendra",
+        app: "Customer Portal",
         category: "Troubleshooting",
         duration: "1 hour",
         hero: "eevabec"
