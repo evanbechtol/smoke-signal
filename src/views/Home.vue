@@ -59,7 +59,7 @@ export default {
         name: "Evan Bechtol",
         app: "Knowledge Catalog",
         category: "Authentication",
-        duration: "1 Day 5 hours",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: null
       },
       {
@@ -67,7 +67,7 @@ export default {
         name: "Paul Lamb",
         app: "Ericsson Virtual Assistant",
         category: "Troubleshooting",
-        duration: "10 minutes",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: "eevabec"
       },
       {
@@ -75,7 +75,7 @@ export default {
         name: "Evan Bechtol",
         app: "E-Auth",
         category: "Bug Fix",
-        duration: "3 hours",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: null
       },
       {
@@ -83,7 +83,7 @@ export default {
         name: "Paul Lamb",
         app: "E-Auth",
         category: "Deployment",
-        duration: "1 hour",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: "eevabec"
       },
       {
@@ -91,7 +91,7 @@ export default {
         name: "Ravish NV.",
         app: "EAMS",
         category: "Database Error",
-        duration: "30 minutes",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: null
       },
       {
@@ -99,7 +99,7 @@ export default {
         name: "Maya K.",
         app: "EAMS",
         category: "Testing and Validation",
-        duration: "6 hours",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: "eevabec"
       },
       {
@@ -107,7 +107,7 @@ export default {
         name: "Ravish NV.",
         app: "EAMS",
         category: "Troubleshooting",
-        duration: "5 minutes",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: null
       },
       {
@@ -115,7 +115,7 @@ export default {
         name: "Raghavendra",
         app: "Customer Portal",
         category: "Deployment",
-        duration: "4 hours",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: "eevabec"
       },
       {
@@ -123,7 +123,7 @@ export default {
         name: "Raghavendra",
         app: "Customer Portal",
         category: "Debugging",
-        duration: "1 hour 10 minutes",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: null
       },
       {
@@ -131,7 +131,7 @@ export default {
         name: "Raghavendra",
         app: "Customer Portal",
         category: "Troubleshooting",
-        duration: "1 hour",
+        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
         hero: "eevabec"
       }
     ]
@@ -148,6 +148,12 @@ export default {
     }
   }
 };
+
+function generateRandomDate(start, end) {
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
 </script>
 
 <style scoped>

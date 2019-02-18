@@ -42,7 +42,7 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.app }}</td>
             <td>{{ props.item.category }}</td>
-            <td>{{ props.item.duration }}</td>
+            <td>{{ computeDuration(props.item.openedOn) }}</td>
             <td>{{ props.item.hero || "" }}</td>
           </tr>
         </template>
@@ -92,9 +92,27 @@ export default {
     closeEditDialog() {
       this.selectedItem = null;
       this.editDialog = false;
+    },
+    computeDuration(date) {
+      const now = new Date();
+      const openedOn = new Date(date);
+      return msToTime(parseInt((now - openedOn) / 24));
     }
   }
 };
+
+function msToTime(duration) {
+  let milliseconds = parseInt((duration % 1000) / 100),
+    seconds = parseInt((duration / 1000) % 60),
+    minutes = parseInt((duration / (1000 * 60)) % 60),
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+  hours = hours < 10 ? "0" + hours : hours;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+}
 </script>
 
 <style scoped>

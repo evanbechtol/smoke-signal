@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialog" persistent :fullscreen="$vuetify.breakpoint.name === 'xs'" >
-    <v-card v-if="item">
+    <v-card v-if="item" :dark="isDark" :color="`accent ${darken}`">
       <v-card-title primary-title class="hildaLight space-small dark-l0 ma-0">
         {{ item.title }}
         <v-spacer></v-spacer>
@@ -59,7 +59,7 @@
                   <v-text-field box label="Application" type="text" v-model="item.app" readonly color="info"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm4>
-                  <v-text-field box label="Duration" type="text" v-model="item.duration" readonly color="info"></v-text-field>
+                  <v-text-field box label="Duration" type="text" :value="computeDuration(item.openedOn)" readonly color="info"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm4>
                   <v-text-field box label="Category" type="text" v-model="item.category" readonly color="info"></v-text-field>
@@ -199,6 +199,11 @@ export default {
     cancel() {
       this.$emit("cancelItemEdit");
     },
+    computeDuration(date) {
+      const now = new Date();
+      const openedOn = new Date(date);
+      return msToTime(parseInt((now - openedOn) / 24));
+    },
     save() {
       //Todo: save the stuff
       Object.assign(this.desserts[this.editedIndex], this.editedItem);
@@ -211,6 +216,19 @@ export default {
     }
   }
 };
+
+function msToTime(duration) {
+  let milliseconds = parseInt((duration % 1000) / 100),
+    seconds = parseInt((duration / 1000) % 60),
+    minutes = parseInt((duration / (1000 * 60)) % 60),
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+  hours = hours < 10 ? "0" + hours : hours;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+}
 </script>
 
 <style scoped>
