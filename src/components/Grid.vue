@@ -3,25 +3,33 @@
     <v-toolbar card
                height="40px"
                :color="`accent ${darken}`"
-               dark
-               extended
+               :dark="isDark"
+               class="my-4 pt-2"
                flat>
+      <v-card-title primary-title class="hildaLight space-small pl-0 ml-0">
+        <slot name="title"></slot>
+      </v-card-title>
+      
       <v-spacer></v-spacer>
       
       <v-text-field v-model="search"
+                    style="max-width: 300px;"
+                    color="info"
                     append-icon="search"
                     label="Search"
                     single-line
                     hide-details>
       </v-text-field>
       
-      <v-btn icon>
-        <v-icon>apps</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="data">
+          <v-btn icon class="ml-4 mt-3" v-on="data.on">
+            <v-icon>more_vert</v-icon>
+          </v-btn>
+        </template>
+        <span>Options</span>
+      </v-tooltip>
       
-      <v-btn icon>
-        <v-icon>more_vert</v-icon>
-      </v-btn>
     </v-toolbar>
     <v-data-table
             :headers="headers"
@@ -61,17 +69,7 @@ export default {
         return [];
       }
     }
-  },
-  beforeCreate() {},
-  created() {},
-  beforeDestroy() {},
-  destroyed() {},
-  beforeMount() {},
-  mounted() {},
-  beforeUpdate() {},
-  updated() {},
-  methods: {},
-  watch: {}
+  }
 };
 </script>
 
