@@ -95,17 +95,47 @@
             
             <v-flex xs12>
               <div class="hildaLight space-small">Discussion
-                <v-tooltip right>
+                <v-tooltip right v-if="!addingToDiscussion">
                   <template #activator="data">
                     <v-btn icon
-                           :color="addingToDiscussion === true ? 'error' : 'success'"
+                           v-if="!addingToDiscussion"
+                           color="success"
                            v-on="data.on"
                            @click="addingToDiscussion = !addingToDiscussion">
-                      <v-icon>{{ addingToDiscussion === true ? "clear" : "create" }}</v-icon>
+                      <v-icon>create</v-icon>
                     </v-btn>
                   </template>
-                  <span>{{ addingToDiscussion === true ? "Cancel adding to discussion" : "Add to discussion" }}</span>
+                  <span>Add to discussion</span>
                 </v-tooltip>
+  
+                <transition name="auth-animation" mode="out-in" enter-active-class="animated faster fadeIn">
+                  <v-layout column fill-height v-if="addingToDiscussion">
+                    <v-flex xs12>
+                      <v-textarea v-model="discussion" box counter hint="Must be at least 10 characters"></v-textarea>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-layout row wrap fill-height>
+                        <v-flex xs12 sm1>
+                          <v-btn color="error"
+                                 class="mb-4"
+                                 @click="addingToDiscussion = false"
+                                 :block="$vuetify.breakpoint.name === 'xs'">
+                            <v-icon size="20" class="mr-2">close</v-icon>Cancel
+                          </v-btn>
+                        </v-flex>
+                        <v-flex xs12 sm1>
+                          <v-btn :disabled="!addingToDiscussion || discussion.length < 10"
+                                                :outline="!addingToDiscussion || discussion.length < 10"
+                                                color="info"
+                                                class="mb-4"
+                                                :block="$vuetify.breakpoint.name === 'xs'">
+                          <v-icon size="20" class="mr-2">create</v-icon>Submit Discussion
+                        </v-btn>
+                        </v-flex>
+                      </v-layout>
+                    </v-flex>
+                  </v-layout>
+                </transition>
               </div>
               
               <v-divider></v-divider>
@@ -213,6 +243,7 @@ export default {
   data: function() {
     return {
       addingToDiscussion: false,
+      discussion: "",
       dialog: this.initialDialog,
       localItem: this.item
     };
@@ -235,6 +266,11 @@ export default {
   watch: {
     initialDialog: function() {
       this.dialog = this.item;
+    },
+    addingToDiscussion: function() {
+      if (this.addingToDiscussion === false) {
+        this.discussion = "";
+      }
     }
   }
 };
