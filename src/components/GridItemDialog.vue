@@ -49,7 +49,7 @@
                       </v-item>
   
                       <v-item>
-                        <v-chip outline color="primary" dark slot-scope="{ active, toggle }" :selected="active">
+                        <v-chip outline :color="isDark ?  'accent' : 'primary'" :dark="isDark" slot-scope="{ active, toggle }" :selected="active">
                           <v-avatar>
                             <v-icon alt="add">add</v-icon>
                           </v-avatar>
