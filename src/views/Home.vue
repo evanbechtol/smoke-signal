@@ -60,7 +60,9 @@ export default {
         app: "Knowledge Catalog",
         category: "Authentication",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null
+        hero: null,
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "Button mis-alignment",
@@ -68,7 +70,9 @@ export default {
         app: "Ericsson Virtual Assistant",
         category: "Troubleshooting",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec"
+        hero: "eevabec",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "Unable to register app",
@@ -76,7 +80,9 @@ export default {
         app: "E-Auth",
         category: "Bug Fix",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null
+        hero: null,
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "Module Not Found",
@@ -84,7 +90,9 @@ export default {
         app: "E-Auth",
         category: "Deployment",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec"
+        hero: "eevabec",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "MySQL has gone away",
@@ -92,7 +100,9 @@ export default {
         app: "EAMS",
         category: "Database Error",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null
+        hero: null,
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "Test 1234 failed",
@@ -100,7 +110,9 @@ export default {
         app: "EAMS",
         category: "Testing and Validation",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec"
+        hero: "eevabec",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "Unable to reach COP",
@@ -108,7 +120,9 @@ export default {
         app: "EAMS",
         category: "Troubleshooting",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null
+        hero: null,
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "T-Mobile portal build failed",
@@ -116,7 +130,9 @@ export default {
         app: "Customer Portal",
         category: "Deployment",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec"
+        hero: "eevabec",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "Undefined variable error",
@@ -124,7 +140,9 @@ export default {
         app: "Customer Portal",
         category: "Debugging",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null
+        hero: null,
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
         title: "Function not being called",
@@ -132,7 +150,9 @@ export default {
         app: "Customer Portal",
         category: "Troubleshooting",
         openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec"
+        hero: "eevabec",
+        description:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       }
     ]
   }),
