@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100vh;" class="home page">
-    <v-container>
+    <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12>
           <grid :headers="headers" :items="items">
@@ -59,7 +59,7 @@ export default {
         app: 72,
         category: "Troubleshooting",
         Duration: "1 hour",
-        Hero: "eevabec"
+        Hero: null
       },
       {
         name: "VDC 02",
@@ -73,7 +73,7 @@ export default {
         app: 98,
         category: "Troubleshooting",
         Duration: "1 hour",
-        Hero: "eevabec"
+        Hero: null
       },
       {
         name: "VDC 04",
@@ -87,7 +87,7 @@ export default {
         app: 32,
         category: "Troubleshooting",
         Duration: "1 hour",
-        Hero: "eevabec"
+        Hero: null
       },
       {
         name: "VDC 06",
@@ -101,7 +101,7 @@ export default {
         app: 81,
         category: "Troubleshooting",
         Duration: "1 hour",
-        Hero: "eevabec"
+        Hero: null
       },
       {
         name: "VDC 08",
@@ -115,7 +115,7 @@ export default {
         app: 25,
         category: "Troubleshooting",
         Duration: "1 hour",
-        Hero: "eevabec"
+        Hero: null
       },
       {
         name: "VDC 10",
