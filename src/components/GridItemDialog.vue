@@ -47,6 +47,15 @@
                           Gertrude Von Winkle
                         </v-chip>
                       </v-item>
+  
+                      <v-item>
+                        <v-chip color="primary" dark slot-scope="{ active, toggle }" :selected="active">
+                          <v-avatar>
+                            <v-icon alt="add">add</v-icon>
+                          </v-avatar>
+                          I'll Rescue You!
+                        </v-chip>
+                      </v-item>
                     </v-item-group>
                   </div>
                   <v-divider></v-divider>
@@ -85,7 +94,14 @@
             </v-flex>
             
             <v-flex xs12>
-              <div class="hildaLight space-small">Discussion</div>
+              <div class="hildaLight space-small">Discussion
+                <v-tooltip right>
+                  <template #activator="data">
+                    <v-btn icon color="success" v-on="data.on"><v-icon>add</v-icon></v-btn>
+                  </template>
+                  <span>Add to discussion</span>
+                </v-tooltip>
+              </div>
               
               <v-divider></v-divider>
               
