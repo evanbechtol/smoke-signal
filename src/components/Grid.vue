@@ -11,11 +11,12 @@
           <v-tooltip right class="ml-3">
             <template #activator="data">
               <v-btn icon
-                     :color="pullingCord === true ? 'success' : 'error'"
+                     v-if="!pullingCord"
+                     color="error"
                      class="animated slow pulse infinite"
                      v-on="data.on"
                      @click="pullingCord = !pullingCord">
-                <v-icon>{{ pullingCord === true ? "clear" : "flag" }}</v-icon>
+                <v-icon>flag</v-icon>
               </v-btn>
             </template>
             <span>{{ "Pull My Cord" }}</span>
@@ -48,7 +49,7 @@
               :items="items"
               :search="search">
         <template slot="items" slot-scope="props">
-          <tr @click="openEditDialog(props.item)" class="row">
+          <tr @click="openItem(props.item)" class="row">
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.app }}</td>
@@ -62,20 +63,23 @@
         </v-alert>
       </v-data-table>
     </v-card>
+    
+    <pull-cord-dialog :initial-dialog="pullingCord" v-on:closeDialog="pullingCord = false"></pull-cord-dialog>
   </div>
 </template>
 
 <script>
 import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
+import PullCordDialog from "./PullCordDialog.vue";
 
 export default {
   name: "Grid",
   mixins: [themeMixin, cordMixin],
+  components: { PullCordDialog },
   computed: {},
   data: () => ({
     pullingCord: false,
-    editDialog: false,
     selectedItem: null,
     search: ""
   }),
@@ -94,15 +98,13 @@ export default {
     }
   },
   methods: {
-    openEditDialog(item) {
-      /*this.selectedItem = Object.assign({}, item);
-      this.editDialog = true;*/
+    openItem(item) {
       this.$store.commit("selectedCord", item);
       this.$router.push({ path: `/cord/${item.id}`, props: item });
     },
-    closeEditDialog() {
+    closeCordDialog() {
       this.selectedItem = null;
-      this.editDialog = false;
+      this.pullingCord = false;
     },
     computeDuration(date) {
       const now = new Date();
