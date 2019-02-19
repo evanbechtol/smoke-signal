@@ -218,9 +218,8 @@
         </v-card-text>
     
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="cancel">Cancel</v-btn>
-          <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+          <!--<v-btn color="blue darken-1" flat @click="cancel">Cancel</v-btn>-->
+          <v-btn :block="$vuetify.breakpoint.name === 'xs'" color="blue darken-1" depressed dark @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>

@@ -11,84 +11,107 @@
           <v-icon color="#f2f2f2">mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      
+  
       <v-card-text>
         <v-container grid-list-md fluid>
-          <v-layout wrap row>
-            <v-flex xs12 sm6 d-flex>
-              <v-layout column justify-center>
-                <v-flex xs12 sm4>
-                  <v-text-field box
-                                label="Title"
-                                type="text"
-                                v-model="cord.title"
-                                color="info"
-                                hint="What is the problem?"
-                                required></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm4>
-                  <v-text-field box
-                                label="Application"
-                                type="text"
-                                v-model="cord.app"
-                                color="info"
-                                hint="What application is this related to?"
-                                required></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm4>
-                  <v-text-field box
-                                label="Duration"
-                                type="text"
-                                readonly :value="cord.openedOn"
-                                color="info"
-                                hint="This is auto-populated"
-                                required></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm4>
-                  <v-text-field box
-                                label="Category"
-                                type="text"
-                                v-model="cord.category"
-                                color="info"
-                                hint="Ex) Bug Fix, Troubleshooting, Deployment, Admin, etc."
-                                required></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-            
-            <v-flex xs12 sm6 align-self-center grow>
-              <v-layout fill-height column align-center justify-center>
-                <v-flex grow>
-                  <div>
-                    <v-img height="240" v-if="cord.img"></v-img>
-                    <v-img v-else height="240">
-                      <v-icon size="240">image</v-icon>
-                    </v-img>
-                  </div>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-            
-            <v-flex xs12>
-              <v-textarea color="info"
-                          box
-                          label="Issue Description"
-                          v-model="cord.description"
-                          hint="Provide a brief description of the issue, use details!"
-                          counter
-                          required>
-              </v-textarea>
-            </v-flex>
-          </v-layout>
+          <v-form v-model="formValid" ref="form">
+            <v-layout wrap row>
+              <v-flex xs12 sm6 d-flex>
+                <v-layout column justify-center>
+                  <v-flex xs12 sm4>
+                    <v-text-field box
+                                  label="Title"
+                                  type="text"
+                                  v-model="cord.title"
+                                  color="info"
+                                  hint="What is the problem?"
+                                  required
+                                  counter
+                                  max="20"
+                                  :rules="[rules.required, rules.maximum]">
+                    </v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm4>
+                    <v-text-field box
+                                  label="Application"
+                                  type="text"
+                                  v-model="cord.app"
+                                  color="info"
+                                  hint="What application is this related to?"
+                                  required
+                                  counter
+                                  max="20"
+                                  :rules="[rules.required, rules.maximum]">
+                    </v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm4>
+                    <v-text-field box
+                                  label="Duration"
+                                  type="text"
+                                  readonly :value="cord.openedOn"
+                                  color="info"
+                                  hint="This is auto-populated"
+                                  required>
+                    </v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm4>
+                    <v-text-field box
+                                  label="Category"
+                                  type="text"
+                                  v-model="cord.category"
+                                  color="info"
+                                  hint="Ex) Bug Fix, Troubleshooting, Deployment, Admin, etc."
+                                  required
+                                  counter
+                                  max="20"
+                                  :rules="[rules.required, rules.maximum]">
+                    </v-text-field>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+          
+              <v-flex xs12 sm6 align-self-center grow>
+                <v-layout fill-height column align-center justify-center>
+                  <v-flex grow>
+                    <div>
+                      <v-img height="240" v-if="cord.img"></v-img>
+                      <v-img v-else height="240">
+                        <v-icon size="240">image</v-icon>
+                      </v-img>
+                    </div>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+          
+              <v-flex xs12>
+                <v-textarea color="info"
+                            box
+                            label="Issue Description"
+                            v-model="cord.description"
+                            hint="Provide a brief description of the issue, use details!"
+                            counter
+                            :rules="[rules.required, rules.minimum]"
+                            required>
+                </v-textarea>
+              </v-flex>
+            </v-layout>
+          </v-form>
         </v-container>
       </v-card-text>
       
       <v-card-actions>
         <v-spacer v-if="$vuetify.breakpoint.name !== 'xs'"></v-spacer>
-        <v-btn color="error darken-1" depressed @click="cancel" :block="$vuetify.breakpoint.name === 'xs'">
+        <v-btn color="error darken-1"
+               depressed
+               @click="cancel"
+               :block="$vuetify.breakpoint.name === 'xs'">
           <v-icon class="mr-2">close</v-icon>Cancel
         </v-btn>
-        <v-btn color="success darken-1" :disabled="!valid"  depressed @click="save" :block="$vuetify.breakpoint.name === 'xs'">
+        <v-btn color="success darken-1"
+               :disabled="!formValid"
+               depressed
+               @click="save"
+               :block="$vuetify.breakpoint.name === 'xs'">
           <v-icon class="mr-2">check</v-icon>Pull It!</v-btn>
       </v-card-actions>
     </v-card>
@@ -106,8 +129,16 @@ export default {
   computed: {},
   data: function() {
     return {
-      dialog: this.initialDialog,
       cord: {},
+      dialog: this.initialDialog,
+      formValid: false,
+      rules: {
+        required: value => !!value || "Required.",
+        minimum: value =>
+          (value && value.length >= 10) || "Must be at least 10 characters",
+        maximum: value =>
+          (value && value.length <= 20) || "Please limit to 20 characters"
+      },
       valid: false
     };
   },
