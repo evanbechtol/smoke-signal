@@ -1,5 +1,9 @@
 <template>
-  <v-layout row fill-height>
+  <v-layout row
+            fill-height
+            v-touch="{
+              right: () => goBack()
+            }">
     <v-flex xs12>
       <v-card :dark="isDark"
               :color="`accent ${darken}`"
