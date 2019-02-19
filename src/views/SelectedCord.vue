@@ -1,9 +1,26 @@
 <template>
   <v-layout row fill-height>
     <v-flex xs12>
-      <v-card :dark="isDark" :color="`accent ${darken}`" class="mt-5">
+      <v-card :dark="isDark"
+              :color="`accent ${darken}`"
+              :class="$vuetify.breakpoint.name === 'xs' ? 'mt-0' : 'mt-5'"
+              :style="$vuetify.breakpoint.name === 'xs' ? 'z-index: 99' : 'z-index: default'">
         <v-card-title primary-title class="bg hildaLight space-small dark-l0 ma-0">
-          {{ selectedCord.title }}
+          <v-tooltip bottom v-if="$vuetify.breakpoint.name === 'xs'">
+            <template #activator="data">
+              <v-btn fab
+                     outline
+                     color="accent"
+                     v-on="data.on"
+                     dark
+                     class="mb-2 mr-4"
+                     @click="goBack">
+                <v-icon size="30">arrow_back</v-icon>
+              </v-btn>
+            </template>
+            <span>Go back</span>
+          </v-tooltip>
+          <span class="ml-3">{{ selectedCord.title }}</span>
           <v-spacer></v-spacer>
         </v-card-title>
     
@@ -251,6 +268,9 @@ export default {
       const now = new Date();
       const openedOn = new Date(date);
       return msToTime(parseInt((now - openedOn) / 24));
+    },
+    goBack() {
+      window.history.back();
     },
     save() {
       //Todo: save the stuff
