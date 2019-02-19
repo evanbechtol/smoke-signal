@@ -127,7 +127,7 @@
                       </v-flex>
                       <v-flex xs12>
                         <v-layout row wrap fill-height>
-                          <v-flex xs12 sm1>
+                          <v-flex xs12 sm2>
                             <v-btn color="error"
                                    class="mb-4"
                                    @click="addingToDiscussion = false"
