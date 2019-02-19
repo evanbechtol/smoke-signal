@@ -221,34 +221,34 @@ h1.e, h2.e, h3.e, h4.e, h5.e {
 }
 @-webkit-keyframes shiftBg {
   0% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
   50% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 @-moz-keyframes shiftBg {
   0% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
   50% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 @keyframes shiftBg {
   0% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
   50% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }

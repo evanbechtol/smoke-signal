@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh;" class="home page">
+  <div style="height: 100vh;" class="home page mt-5">
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12>
@@ -55,6 +55,7 @@ export default {
     ],
     items: [
       {
+        id: 1,
         title: "500 Status code on login",
         name: "Evan Bechtol",
         app: "Knowledge Catalog",
@@ -65,6 +66,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 2,
         title: "Button mis-alignment",
         name: "Paul Lamb",
         app: "Ericsson Virtual Assistant",
@@ -75,6 +77,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 3,
         title: "Unable to register app",
         name: "Evan Bechtol",
         app: "E-Auth",
@@ -85,6 +88,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 4,
         title: "Module Not Found",
         name: "Paul Lamb",
         app: "E-Auth",
@@ -95,6 +99,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 5,
         title: "MySQL has gone away",
         name: "Ravish NV.",
         app: "EAMS",
@@ -105,6 +110,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 6,
         title: "Test 1234 failed",
         name: "Maya K.",
         app: "EAMS",
@@ -115,6 +121,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 7,
         title: "Unable to reach COP",
         name: "Ravish NV.",
         app: "EAMS",
@@ -125,6 +132,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 8,
         title: "T-Mobile portal build failed",
         name: "Raghavendra",
         app: "Customer Portal",
@@ -135,6 +143,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 9,
         title: "Undefined variable error",
         name: "Raghavendra",
         app: "Customer Portal",
@@ -145,6 +154,7 @@ export default {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       },
       {
+        id: 10,
         title: "Function not being called",
         name: "Raghavendra",
         app: "Customer Portal",

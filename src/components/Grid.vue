@@ -26,7 +26,7 @@
       
         <v-text-field v-model="search"
                       style="max-width: 300px;"
-                      color="info"
+                      color="primary"
                       append-icon="search"
                       label="Search"
                       single-line
@@ -48,7 +48,7 @@
               :items="items"
               :search="search">
         <template slot="items" slot-scope="props">
-          <tr @click="openEditDialog(props.item)">
+          <tr @click="openEditDialog(props.item)" class="row">
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.app }}</td>
@@ -62,19 +62,16 @@
         </v-alert>
       </v-data-table>
     </v-card>
-  
-    <grid-item-dialog :initial-dialog="editDialog" v-on:cancelItemEdit="closeEditDialog" :item="selectedItem"></grid-item-dialog>
   </div>
 </template>
 
 <script>
 import { themeMixin } from "../mixins/themeMixin.js";
-import GridItemDialog from "../components/GridItemDialog.vue";
+import { cordMixin } from "../mixins/cordMixin.js";
 
 export default {
   name: "Grid",
-  mixins: [themeMixin],
-  components: { GridItemDialog },
+  mixins: [themeMixin, cordMixin],
   computed: {},
   data: () => ({
     pullingCord: false,
@@ -98,8 +95,10 @@ export default {
   },
   methods: {
     openEditDialog(item) {
-      this.selectedItem = Object.assign({}, item);
-      this.editDialog = true;
+      /*this.selectedItem = Object.assign({}, item);
+      this.editDialog = true;*/
+      this.$store.commit("selectedCord", item);
+      this.$router.push({ path: `/cord/${item.id}`, props: item });
     },
     closeEditDialog() {
       this.selectedItem = null;
@@ -128,4 +127,9 @@ function msToTime(duration) {
 </script>
 
 <style scoped>
+.row:hover {
+  background: rgba(0, 132, 240, 0.8) !important;
+  color: #f2f2f2;
+  cursor: pointer;
+}
 </style>

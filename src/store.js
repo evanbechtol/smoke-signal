@@ -15,6 +15,7 @@ export default new Vuex.Store({
     isDark: false,
     isAuthenticated: false,
     isExpiryIntervalSet: false,
+    selectedCord: null,
     theme: "light",
     token: null,
     /*"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlciI6eyJuYW1lIjoiRXZhbiBCZWNodG9sIiwidXNlcm5hbWUiOiJlZXZhYmVjIiwic2lnbnVtIjoiZWV2YWJlYyIsImVtYWlsIjoiZXZhbi5iZWNodG9sQGVyaWNzc29uLmNvbSIsImlzQWRtaW4iOmZhbHNlfSwiZXhwIjoxNTQyMTE3MDExLCJpYXQiOjE1NDIxMTYwMTF9.DOPCqBNH2dflBuc8UP3uN57063il6138fTygZhQFcW8"*/
@@ -31,6 +32,7 @@ export default new Vuex.Store({
     isDark: state => state.isDark,
     isAuthenticated: state => state.isAuthenticated,
     isExpiryIntervalSet: state => state.isExpiryIntervalSet,
+    selectedCord: state => state.selectedCord,
     theme: state => state.theme,
     token: state => state.token,
     user: state => state.user
@@ -66,6 +68,9 @@ export default new Vuex.Store({
     },
     isExpiryIntervalSet: function(state, payload) {
       state.isExpiryIntervalSet = payload;
+    },
+    selectedCord: function(state, payload) {
+      state.selectedCord = payload;
     },
     theme: function(state, payload) {
       // This can be modified to retrieve from API instead of localstorage

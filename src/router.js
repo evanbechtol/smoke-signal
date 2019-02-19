@@ -21,6 +21,18 @@ let router = new Router({
       component: () => import(/* webpackChunkName: "home" */ "./views/Home.vue")
     },
     {
+      path: "/cord/:id",
+      name: "cordView",
+      props: true,
+      meta: {
+        guest: true,
+        requiresAuth: false,
+        isAdmin: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "selectedCord" */ "./views/SelectedCord.vue")
+    },
+    {
       path: "/login",
       name: "login",
       meta: {
@@ -73,7 +85,7 @@ let router = new Router({
         isAdmin: false
       },
       component: () =>
-        import(/* webpackChunkName: "metrics" */ "./views/ResetPassword.vue")
+        import(/* webpackChunkName: "resetPassword" */ "./views/ResetPassword.vue")
     },
     {
       path: "/404",
