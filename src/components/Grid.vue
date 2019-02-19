@@ -26,6 +26,7 @@
         <v-spacer></v-spacer>
       
         <v-text-field v-model="search"
+                      class="hidden-xs-only"
                       style="max-width: 300px;"
                       color="primary"
                       append-icon="search"
@@ -33,16 +34,6 @@
                       single-line
                       hide-details>
         </v-text-field>
-      
-        <v-tooltip bottom>
-          <template #activator="data">
-            <v-btn icon class="ml-4 mt-3" v-on="data.on">
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-          </template>
-          <span>Options</span>
-        </v-tooltip>
-    
       </v-toolbar>
       <v-data-table
               :headers="headers"
@@ -72,13 +63,24 @@
 import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import PullCordDialog from "./PullCordDialog.vue";
+import MenuBtn from "./MenuBtn";
 
 export default {
   name: "Grid",
   mixins: [themeMixin, cordMixin],
-  components: { PullCordDialog },
+  components: { MenuBtn, PullCordDialog },
   computed: {},
   data: () => ({
+    fav: true,
+    menu: false,
+    message: false,
+    hints: true,
+    menuItems: [
+      { title: 'Click Me' },
+      { title: 'Click Me' },
+      { title: 'Click Me' },
+      { title: 'Click Me 2' }
+    ],
     pullingCord: false,
     selectedItem: null,
     search: ""
