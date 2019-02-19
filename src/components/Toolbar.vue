@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar v-bind:color="color" dark scroll-off-screen fixed app>
+    <v-toolbar v-bind:color="color" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer" style="margin: 8px;"></v-toolbar-side-icon>
       <v-toolbar-title class="space-base" style="margin: 8px;">
         <router-link class="link white--text" to="/">AnA Smoke Signal</router-link>
