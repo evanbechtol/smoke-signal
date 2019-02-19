@@ -138,8 +138,7 @@ export default {
           (value && value.length >= 10) || "Must be at least 10 characters",
         maximum: value =>
           (value && value.length <= 20) || "Please limit to 20 characters"
-      },
-      valid: false
+      }
     };
   },
   created() {
@@ -147,6 +146,7 @@ export default {
   },
   methods: {
     cancel() {
+      this.$refs.form.reset();
       this.$emit("closeDialog");
     },
     save() {
