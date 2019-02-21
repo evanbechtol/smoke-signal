@@ -1,6 +1,6 @@
 {
-  "name": "app-template",
-  "short_name": "app-template",
+  "name": "smoke-signal",
+  "short_name": "smoke-signal",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",
