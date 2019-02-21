@@ -126,7 +126,6 @@ function makeRequest(options = null) {
             return resolve(response);
           })
           .catch(err => {
-            debugger;
             return reject(err);
           });
       }

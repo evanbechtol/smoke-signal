@@ -48,7 +48,10 @@
                     <p class="mb-0">Rescuers</p>
                     <div class="mb-3">
                       <v-item-group multiple>
-                        <v-item v-for="(rescuer, index) in selectedCord.rescuers" :key="`rescuer-${index}`">
+                        <v-item
+                          v-for="(rescuer, index) in selectedCord.rescuers"
+                          :key="`rescuer-${index}`"
+                        >
                           <v-chip
                             close
                             :color="genColor()"
@@ -65,7 +68,7 @@
                             {{ getInitials(rescuer) }}
                           </v-chip>
                         </v-item>
-<!--
+                        <!--
                         <v-item>
                           <v-chip
                             close
@@ -126,7 +129,7 @@
                       box
                       label="Cord Pulled By"
                       type="text"
-                      v-model="selectedCord.name"
+                      v-model="selectedCord.puller.username"
                       readonly
                       color="info"
                     ></v-text-field>
@@ -369,7 +372,7 @@ import { assetMixin } from "../mixins/assetMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 
 export default {
-  name: "GridItemDialog",
+  name: "SelectedCord",
   mixins: [themeMixin, assetMixin, cordMixin],
   components: {},
   computed: {},

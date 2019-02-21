@@ -70,6 +70,7 @@
     <pull-cord-dialog
       :initial-dialog="pullingCord"
       v-on:closeDialog="pullingCord = false"
+      v-on:refreshCordGrid="refreshCordGrid"
     ></pull-cord-dialog>
   </div>
 </template>
@@ -129,6 +130,9 @@ export default {
       const now = new Date();
       const openedOn = new Date(date);
       return msToTime(parseInt((now - openedOn) / 24));
+    },
+    refreshCordGrid() {
+      this.$emit("refreshCordGrid");
     }
   },
   watch: {

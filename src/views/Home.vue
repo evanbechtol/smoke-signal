@@ -3,7 +3,12 @@
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12>
-          <grid :headers="headers" :items="gridItems" :loading="loading">
+          <grid
+            :headers="headers"
+            :items="gridItems"
+            :loading="loading"
+            v-on:refreshCordGrid="getCordGridItems"
+          >
             <template v-slot:title>
               <h1>Active Cords</h1>
             </template>
@@ -55,140 +60,32 @@ export default {
       { text: "Duration", align: "left", value: "duration" },
       { text: "Hero", align: "left", value: "hero" }
     ],
-    gridItems: [] /*[
-      {
-        id: 1,
-        title: "500 Status code on login",
-        name: "Evan Bechtol",
-        app: "Knowledge Catalog",
-        category: "Authentication",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null,
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 2,
-        title: "Button mis-alignment",
-        name: "Paul Lamb",
-        app: "Ericsson Virtual Assistant",
-        category: "Troubleshooting",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 3,
-        title: "Unable to register app",
-        name: "Evan Bechtol",
-        app: "E-Auth",
-        category: "Bug Fix",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null,
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 4,
-        title: "Module Not Found",
-        name: "Paul Lamb",
-        app: "E-Auth",
-        category: "Deployment",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 5,
-        title: "MySQL has gone away",
-        name: "Ravish NV.",
-        app: "EAMS",
-        category: "Database Error",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null,
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 6,
-        title: "Test 1234 failed",
-        name: "Maya K.",
-        app: "EAMS",
-        category: "Testing and Validation",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 7,
-        title: "Unable to reach COP",
-        name: "Ravish NV.",
-        app: "EAMS",
-        category: "Troubleshooting",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null,
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 8,
-        title: "T-Mobile portal build failed",
-        name: "Raghavendra",
-        app: "Customer Portal",
-        category: "Deployment",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 9,
-        title: "Undefined variable error",
-        name: "Raghavendra",
-        app: "Customer Portal",
-        category: "Debugging",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: null,
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      },
-      {
-        id: 10,
-        title: "Function not being called",
-        name: "Raghavendra",
-        app: "Customer Portal",
-        category: "Troubleshooting",
-        openedOn: generateRandomDate(new Date(2019, 0, 1), new Date()),
-        hero: "eevabec",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
-      }
-    ]*/
+    gridItems: []
   }),
   beforeDestroy() {},
   created() {
-    this.loading = true;
-    this.getCords()
-      .then(response => {
-        this.gridItems = response.data.data;
-        this.loading = false;
-      })
-      .catch(err => {
-        alertMixin.setAlert(
-          err.error || err.message || "Unknown error occurred",
-          "#DC2D37",
-          0
-        );
-        this.loading = false;
-      });
+    this.getCordGridItems();
   },
   mounted() {},
   methods: {
     genIcon(color) {
       return ICONS[color];
+    },
+    getCordGridItems() {
+      this.loading = true;
+      this.getCords()
+        .then(response => {
+          this.gridItems = response.data.data;
+          this.loading = false;
+        })
+        .catch(err => {
+          alertMixin.setAlert(
+            err.error || err.message || "Unknown error occurred",
+            "#DC2D37",
+            0
+          );
+          this.loading = false;
+        });
     }
   }
 };
