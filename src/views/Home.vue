@@ -3,7 +3,7 @@
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12>
-          <grid :headers="headers" :items="items">
+          <grid :headers="headers" :items="gridItems">
             <template v-slot:title>
               <h1>Active Cords</h1>
             </template>
@@ -17,6 +17,8 @@
 <script>
 // @ is an alias to /src
 import { themeMixin } from "../mixins/themeMixin.js";
+import { cordMixin } from "../mixins/cordMixin.js";
+import { alertMixin } from "../mixins/alertMixin.js";
 import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
@@ -31,7 +33,7 @@ const ICONS = {
 
 export default {
   name: "home",
-  mixins: [themeMixin],
+  mixins: [themeMixin, cordMixin],
   components: {
     JwtExpiry,
     MenuBtn,
@@ -53,7 +55,7 @@ export default {
       { text: "Duration", align: "left", value: "duration" },
       { text: "Hero", align: "left", value: "hero" }
     ],
-    items: [
+    gridItems: [] /*[
       {
         id: 1,
         title: "500 Status code on login",
@@ -164,10 +166,22 @@ export default {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare suspendisse sed nisi lacus."
       }
-    ]
+    ]*/
   }),
   beforeDestroy() {},
-  created() {},
+  created() {
+    this.getCords()
+      .then(response => {
+        this.gridItems = response.data.data;
+      })
+      .catch(err => {
+        alertMixin.setAlert(
+          err.error || err.message || "Unknown error occurred",
+          "#DC2D37",
+          0
+        );
+      });
+  },
   mounted() {},
   methods: {
     genColor() {

@@ -1,44 +1,41 @@
 <template>
   <div>
     <v-card :color="`accent ${darken}`" elevation="0" :dark="isDark" class="bg">
-      <v-toolbar card
-                 height="40px"
-                 dark
-                 class="my-4 pt-2 bg"
-                 flat>
+      <v-toolbar card height="40px" dark class="my-4 pt-2 bg" flat>
         <v-card-title primary-title class="hildaLight space-small pl-0 ml-0">
           <slot name="title"></slot>
           <v-tooltip right class="ml-3">
             <template #activator="data">
-              <v-btn icon
-                     v-if="!pullingCord"
-                     color="error"
-                     class="animated slow pulse infinite"
-                     v-on="data.on"
-                     @click="pullingCord = !pullingCord">
+              <v-btn
+                icon
+                v-if="!pullingCord"
+                color="error"
+                class="animated slow pulse infinite"
+                v-on="data.on"
+                @click="pullingCord = !pullingCord"
+              >
                 <v-icon>flag</v-icon>
               </v-btn>
             </template>
             <span>{{ "Pull My Cord" }}</span>
           </v-tooltip>
         </v-card-title>
-      
+
         <v-spacer></v-spacer>
-      
-        <v-text-field v-model="search"
-                      class="hidden-xs-only"
-                      style="max-width: 300px;"
-                      color="primary"
-                      append-icon="search"
-                      label="Search"
-                      single-line
-                      hide-details>
+
+        <v-text-field
+          v-model="search"
+          class="hidden-xs-only"
+          style="max-width: 300px;"
+          color="primary"
+          append-icon="search"
+          label="Search"
+          single-line
+          hide-details
+        >
         </v-text-field>
       </v-toolbar>
-      <v-data-table
-              :headers="headers"
-              :items="items"
-              :search="search">
+      <v-data-table :headers="headers" :items="items" :search="search">
         <template slot="items" slot-scope="props">
           <tr @click="openItem(props.item)" class="row">
             <td>{{ props.item.title }}</td>
@@ -54,8 +51,11 @@
         </v-alert>
       </v-data-table>
     </v-card>
-    
-    <pull-cord-dialog :initial-dialog="pullingCord" v-on:closeDialog="pullingCord = false"></pull-cord-dialog>
+
+    <pull-cord-dialog
+      :initial-dialog="pullingCord"
+      v-on:closeDialog="pullingCord = false"
+    ></pull-cord-dialog>
   </div>
 </template>
 
@@ -76,10 +76,10 @@ export default {
     message: false,
     hints: true,
     menuItems: [
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me 2' }
+      { title: "Click Me" },
+      { title: "Click Me" },
+      { title: "Click Me" },
+      { title: "Click Me 2" }
     ],
     pullingCord: false,
     selectedItem: null,
