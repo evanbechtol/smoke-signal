@@ -18,7 +18,6 @@ export default new Vuex.Store({
     selectedCord: null,
     theme: "light",
     token: null,
-    /*"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlciI6eyJuYW1lIjoiRXZhbiBCZWNodG9sIiwidXNlcm5hbWUiOiJlZXZhYmVjIiwic2lnbnVtIjoiZWV2YWJlYyIsImVtYWlsIjoiZXZhbi5iZWNodG9sQGVyaWNzc29uLmNvbSIsImlzQWRtaW4iOmZhbHNlfSwiZXhwIjoxNTQyMTE3MDExLCJpYXQiOjE1NDIxMTYwMTF9.DOPCqBNH2dflBuc8UP3uN57063il6138fTygZhQFcW8"*/
     user: null
   },
   getters: {
@@ -27,7 +26,6 @@ export default new Vuex.Store({
     alertMessage: state => state.alertMessage,
     alertSeverity: state => state.alertSeverity,
     alertTimeout: state => state.alertTimeout,
-    app: state => state.app,
     appToken: state => state.appToken,
     isDark: state => state.isDark,
     isAuthenticated: state => state.isAuthenticated,
@@ -52,9 +50,6 @@ export default new Vuex.Store({
     },
     alertTimeout: function(state, payload) {
       state.alertTimeout = payload;
-    },
-    app: function(state, payload) {
-      state.app = payload;
     },
     appToken: function(state, payload) {
       state.appToken = payload;

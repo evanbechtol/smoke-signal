@@ -32,7 +32,7 @@
                       hint="What is the problem?"
                       required
                       counter
-                      max="20"
+                      max="30"
                       :rules="[rules.required, rules.maximum]"
                     >
                     </v-text-field>
@@ -53,7 +53,7 @@
                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field
+                    <!--<v-text-field
                       box
                       label="Duration"
                       type="text"
@@ -63,7 +63,7 @@
                       hint="This is auto-populated"
                       required
                     >
-                    </v-text-field>
+                    </v-text-field>-->
                   </v-flex>
                   <v-flex xs12 sm4>
                     <v-text-field
@@ -159,13 +159,11 @@ export default {
         minimum: value =>
           (value && value.length >= 10) || "Must be at least 10 characters",
         maximum: value =>
-          (value && value.length <= 20) || "Please limit to 20 characters"
+          (value && value.length <= 30) || "Please limit to 30 characters"
       }
     };
   },
-  created() {
-    this.getDateTime();
-  },
+  created() {},
   methods: {
     cancel() {
       this.$refs.form.reset();
@@ -174,18 +172,20 @@ export default {
     save() {
       //Todo: Send actual user once auth setup
       this.cord.puller = { id: 1, username: "eevabec" };
+      this.cord.openedOn = this.getDateTime();
       this.createCord(this.cord)
         .then(() => {
-          this.setAlert("Cord pulled successfully!", "#288964", 5);
+          this.$refs.form.reset();
+          this.$emit("closeDialog");
           this.$emit("refreshCordGrid");
+          this.setAlert("Cord pulled successfully!", "#288964", 10);
         })
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);
         });
     },
     getDateTime() {
-      const now = new Date();
-      this.cord.openedOn = now.toISOString();
+      return new Date().toISOString();
     }
   },
   props: ["initialDialog"],

@@ -398,8 +398,14 @@ export default {
       window.history.back();
     },
     save() {
-      //Todo: save the stuff
-      //Object.assign(this.desserts[this.editedIndex], this.editedItem);
+      this.updateCord(this.selectedCord._id, this.selectedCord)
+        .then(response => {
+          this.setAlert("Cord pulled successfully!", "#288964", 5);
+          this.selectedCord = response.data.data;
+        })
+        .catch(err => {
+          this.setAlert(err.message, "#DC2D37", 0);
+        });
     }
   },
   props: ["id"],

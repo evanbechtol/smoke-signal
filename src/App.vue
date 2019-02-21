@@ -43,10 +43,6 @@ export default {
   created() {
     const color = this.isDark ? "#181818" : "#e0e0e0";
 
-    if (this.app && this.app.length <= 0) {
-      this.$store.commit("app", this.$route.query.app || "");
-    }
-
     document.getElementById("html").style.height = "100vh";
     document.getElementById("body").style.height = "100vh";
     document.getElementById("html").style.backgroundColor = color;
