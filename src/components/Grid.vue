@@ -80,7 +80,6 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
 
-const COLORS = ["info", "purple", "success"];
 
 export default {
   name: "Grid",
@@ -112,9 +111,6 @@ export default {
     }
   },
   methods: {
-    genColor() {
-      return COLORS[Math.floor(Math.random() * 3)];
-    },
     getInitials(item) {
       return item ? item.slice(0, 2).toLocaleUpperCase() : "";
     },

@@ -23,7 +23,6 @@ import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
 
-const COLORS = ["info", "teal", "success"];
 const ICONS = {
   info: "mdi-information",
   warning: "mdi-alert",
@@ -188,20 +187,11 @@ export default {
   },
   mounted() {},
   methods: {
-    genColor() {
-      return COLORS[Math.floor(Math.random() * 3)];
-    },
     genIcon(color) {
       return ICONS[color];
     }
   }
 };
-
-function generateRandomDate(start, end) {
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
-}
 </script>
 
 <style scoped>

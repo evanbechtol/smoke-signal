@@ -21,6 +21,10 @@ computed: {
     }
   },
   methods: {
+    genColor() {
+      const COLORS = ["info", "purple", "success"];
+      return COLORS[Math.floor(Math.random() * 3)];
+    },
     toggleTheme(value) {
       const color = this.isDark ? "#181818" : "#e0e0e0";
       this.$store.commit("theme", value.toLowerCase());

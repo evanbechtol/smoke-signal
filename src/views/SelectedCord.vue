@@ -1,24 +1,35 @@
 <template>
-  <v-layout row
-            fill-height
-            v-touch="{
-              right: () => goBack()
-            }">
+  <v-layout
+    row
+    fill-height
+    v-touch="{
+      right: () => goBack()
+    }"
+  >
     <v-flex xs12>
-      <v-card :dark="isDark"
-              :color="`accent ${darken}`"
-              :class="$vuetify.breakpoint.name === 'xs' ? 'mt-0' : 'mt-5'"
-              :style="$vuetify.breakpoint.name === 'xs' ? 'z-index: 99' : 'z-index: default'">
-        <v-card-title primary-title class="bg hildaLight space-small dark-l0 ma-0">
+      <v-card
+        :dark="isDark"
+        :color="`accent ${darken}`"
+        :class="$vuetify.breakpoint.name === 'xs' ? 'mt-0' : 'mt-5'"
+        :style="
+          $vuetify.breakpoint.name === 'xs' ? 'z-index: 99' : 'z-index: default'
+        "
+      >
+        <v-card-title
+          primary-title
+          class="bg hildaLight space-small dark-l0 ma-0"
+        >
           <v-tooltip bottom v-if="$vuetify.breakpoint.name === 'xs'">
             <template #activator="data">
-              <v-btn fab
-                     outline
-                     color="accent"
-                     v-on="data.on"
-                     dark
-                     class="mb-2 mr-4"
-                     @click="goBack">
+              <v-btn
+                fab
+                outline
+                color="accent"
+                v-on="data.on"
+                dark
+                class="mb-2 mr-4"
+                @click="goBack"
+              >
                 <v-icon size="30">arrow_back</v-icon>
               </v-btn>
             </template>
@@ -27,7 +38,7 @@
           <span class="ml-3">{{ selectedCord.title }}</span>
           <v-spacer></v-spacer>
         </v-card-title>
-    
+
         <v-card-text>
           <v-container grid-list-md fluid>
             <v-layout wrap row>
@@ -37,35 +48,68 @@
                     <p class="mb-0">Rescuers</p>
                     <div class="mb-3">
                       <v-item-group multiple>
-                        <v-item>
-                          <v-chip close color="info" dark slot-scope="{ active, toggle }" :selected="active">
-                            <v-avatar>
-                              <img src="https://randomuser.me/api/portraits/men/35.jpg" alt="Claudius">
-                            </v-avatar>
-                            Claudius Mort
+                        <v-item v-for="(rescuer, index) in selectedCord.rescuers" :key="`rescuer-${index}`">
+                          <v-chip
+                            close
+                            :color="genColor()"
+                            dark
+                            slot-scope="{ active, toggle }"
+                            :selected="active"
+                          >
+                            <!--<v-avatar>
+                              <img
+                                src="https://randomuser.me/api/portraits/men/35.jpg"
+                                alt="Claudius"
+                              />
+                            </v-avatar>-->
+                            {{ getInitials(rescuer) }}
                           </v-chip>
                         </v-item>
-                    
+<!--
                         <v-item>
-                          <v-chip close color="success" dark slot-scope="{ active, toggle }" :selected="active">
+                          <v-chip
+                            close
+                            color="success"
+                            dark
+                            slot-scope="{ active, toggle }"
+                            :selected="active"
+                          >
                             <v-avatar>
-                              <img src="https://randomuser.me/api/portraits/women/31.jpg" alt="Fifi">
+                              <img
+                                src="https://randomuser.me/api/portraits/women/31.jpg"
+                                alt="Fifi"
+                              />
                             </v-avatar>
                             Fifi Trixiebell
                           </v-chip>
                         </v-item>
-                    
+
                         <v-item>
-                          <v-chip close color="purple" dark slot-scope="{ active, toggle }" :selected="active">
+                          <v-chip
+                            close
+                            color="purple"
+                            dark
+                            slot-scope="{ active, toggle }"
+                            :selected="active"
+                          >
                             <v-avatar>
-                              <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="Gertrude">
+                              <img
+                                src="https://randomuser.me/api/portraits/women/5.jpg"
+                                alt="Gertrude"
+                              />
                             </v-avatar>
                             Gertrude Von Winkle
                           </v-chip>
-                        </v-item>
-                    
+                        </v-item>-->
+
                         <v-item>
-                          <v-chip outline :color="isDark ?  'accent' : 'primary'" :dark="isDark" slot-scope="{ active, toggle }" :selected="active">
+                          <v-chip
+                            outline
+                            :color="isDark ? 'accent' : 'primary'"
+                            :dark="isDark"
+                            slot-scope="{ active, toggle }"
+                            :selected="active"
+                          >
                             <v-avatar>
                               <v-icon alt="add">add</v-icon>
                             </v-avatar>
@@ -76,22 +120,50 @@
                     </div>
                     <v-divider></v-divider>
                   </v-flex>
-              
+
                   <v-flex xs12 sm4>
-                    <v-text-field box label="Cord Pulled By" type="text" v-model="selectedCord.name" readonly color="info"></v-text-field>
+                    <v-text-field
+                      box
+                      label="Cord Pulled By"
+                      type="text"
+                      v-model="selectedCord.name"
+                      readonly
+                      color="info"
+                    ></v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field box label="Application" type="text" v-model="selectedCord.app" readonly color="info"></v-text-field>
+                    <v-text-field
+                      box
+                      label="Application"
+                      type="text"
+                      v-model="selectedCord.app"
+                      readonly
+                      color="info"
+                    ></v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field box label="Duration" type="text" :value="computeDuration(selectedCord.openedOn)" readonly color="info"></v-text-field>
+                    <v-text-field
+                      box
+                      label="Duration"
+                      type="text"
+                      :value="computeDuration(selectedCord.openedOn)"
+                      readonly
+                      color="info"
+                    ></v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field box label="Category" type="text" v-model="selectedCord.category" readonly color="info"></v-text-field>
+                    <v-text-field
+                      box
+                      label="Category"
+                      type="text"
+                      v-model="selectedCord.category"
+                      readonly
+                      color="info"
+                    ></v-text-field>
                   </v-flex>
                 </v-layout>
               </v-flex>
-          
+
               <v-flex xs12 sm6 align-self-center grow>
                 <v-layout fill-height column align-center justify-center>
                   <v-flex grow>
@@ -104,48 +176,75 @@
                   </v-flex>
                 </v-layout>
               </v-flex>
-          
+
               <v-flex xs12>
-                <v-textarea color="info" box label="Issue Description" v-model="selectedCord.description"></v-textarea>
+                <v-textarea
+                  color="info"
+                  box
+                  label="Issue Description"
+                  v-model="selectedCord.description"
+                ></v-textarea>
               </v-flex>
-          
+
               <v-flex xs12>
-                <div class="hildaLight space-small">Discussion
+                <div class="hildaLight space-small">
+                  Discussion
                   <v-tooltip right v-if="!addingToDiscussion">
                     <template #activator="data">
-                      <v-btn icon
-                             v-if="!addingToDiscussion"
-                             color="success"
-                             v-on="data.on"
-                             @click="addingToDiscussion = !addingToDiscussion">
+                      <v-btn
+                        icon
+                        v-if="!addingToDiscussion"
+                        color="success"
+                        v-on="data.on"
+                        @click="addingToDiscussion = !addingToDiscussion"
+                      >
                         <v-icon>create</v-icon>
                       </v-btn>
                     </template>
                     <span>Add to discussion</span>
                   </v-tooltip>
-              
-                  <transition name="auth-animation" mode="out-in" enter-active-class="animated faster fadeIn">
+
+                  <transition
+                    name="auth-animation"
+                    mode="out-in"
+                    enter-active-class="animated faster fadeIn"
+                  >
                     <v-layout column fill-height v-if="addingToDiscussion">
                       <v-flex xs12>
-                        <v-textarea v-model="discussion" box counter hint="Must be at least 10 characters"></v-textarea>
+                        <v-textarea
+                          v-model="discussion"
+                          box
+                          counter
+                          hint="Must be at least 10 characters"
+                        ></v-textarea>
                       </v-flex>
                       <v-flex xs12>
                         <v-layout row wrap fill-height>
                           <v-flex xs12 sm2>
-                            <v-btn color="error"
-                                   class="mb-4"
-                                   @click="addingToDiscussion = false"
-                                   :block="$vuetify.breakpoint.name === 'xs'">
-                              <v-icon size="20" class="mr-2">close</v-icon>Cancel
+                            <v-btn
+                              color="error"
+                              class="mb-4"
+                              @click="addingToDiscussion = false"
+                              :block="$vuetify.breakpoint.name === 'xs'"
+                            >
+                              <v-icon size="20" class="mr-2">close</v-icon
+                              >Cancel
                             </v-btn>
                           </v-flex>
                           <v-flex xs12 sm1>
-                            <v-btn :disabled="!addingToDiscussion || discussion.length < 10"
-                                   :outline="!addingToDiscussion || discussion.length < 10"
-                                   color="info"
-                                   class="mb-4"
-                                   :block="$vuetify.breakpoint.name === 'xs'">
-                              <v-icon size="20" class="mr-2">create</v-icon>Submit Discussion
+                            <v-btn
+                              :disabled="
+                                !addingToDiscussion || discussion.length < 10
+                              "
+                              :outline="
+                                !addingToDiscussion || discussion.length < 10
+                              "
+                              color="info"
+                              class="mb-4"
+                              :block="$vuetify.breakpoint.name === 'xs'"
+                            >
+                              <v-icon size="20" class="mr-2">create</v-icon
+                              >Submit Discussion
                             </v-btn>
                           </v-flex>
                         </v-layout>
@@ -153,14 +252,16 @@
                     </v-layout>
                   </transition>
                 </div>
-            
+
                 <v-divider></v-divider>
-            
+
                 <v-timeline align-top dense>
-                  <v-timeline-item color="pink"
-                                   small>
+                  <v-timeline-item color="pink" small>
                     <v-avatar slot="icon" size="40">
-                      <img src="https://randomuser.me/api/portraits/women/31.jpg" alt="Fifi">
+                      <img
+                        src="https://randomuser.me/api/portraits/women/31.jpg"
+                        alt="Fifi"
+                      />
                     </v-avatar>
                     <v-layout pt-3>
                       <v-flex xs3 sm1>
@@ -172,12 +273,13 @@
                       </v-flex>
                     </v-layout>
                   </v-timeline-item>
-              
-                  <v-timeline-item
-                          color="teal lighten-3"
-                          small>
+
+                  <v-timeline-item color="teal lighten-3" small>
                     <v-avatar slot="icon" size="40">
-                      <img src="https://randomuser.me/api/portraits/men/35.jpg" alt="Claudius">
+                      <img
+                        src="https://randomuser.me/api/portraits/men/35.jpg"
+                        alt="Claudius"
+                      />
                     </v-avatar>
                     <v-layout wrap pt-3>
                       <v-flex xs3 sm1>
@@ -187,24 +289,30 @@
                         <strong>Design Stand Up</strong>
                         <div class="caption mb-2">Hangouts</div>
                         <v-avatar>
-                          <v-img src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"></v-img>
+                          <v-img
+                            src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"
+                          ></v-img>
                         </v-avatar>
                         <v-avatar>
-                      
-                          <v-img src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned"></v-img>
+                          <v-img
+                            src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned"
+                          ></v-img>
                         </v-avatar>
                         <v-avatar>
-                          <v-img src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Sunglasses&hairColor=BlondeGolden&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Surprised&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Pale"></v-img>
+                          <v-img
+                            src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Sunglasses&hairColor=BlondeGolden&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Surprised&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Pale"
+                          ></v-img>
                         </v-avatar>
                       </v-flex>
                     </v-layout>
                   </v-timeline-item>
-              
-                  <v-timeline-item
-                          color="pink"
-                          small>
+
+                  <v-timeline-item color="pink" small>
                     <v-avatar slot="icon" size="40">
-                      <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="Gertrude">
+                      <img
+                        src="https://randomuser.me/api/portraits/women/5.jpg"
+                        alt="Gertrude"
+                      />
                     </v-avatar>
                     <v-layout pt-3>
                       <v-flex xs3 sm1>
@@ -215,12 +323,13 @@
                       </v-flex>
                     </v-layout>
                   </v-timeline-item>
-              
-                  <v-timeline-item
-                          color="teal lighten-3"
-                          small>
+
+                  <v-timeline-item color="teal lighten-3" small>
                     <v-avatar slot="icon" size="40">
-                      <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="Evan">
+                      <img
+                        src="https://randomuser.me/api/portraits/men/10.jpg"
+                        alt="Evan"
+                      />
                     </v-avatar>
                     <v-layout pt-3>
                       <v-flex xs3 sm1>
@@ -237,15 +346,21 @@
             </v-layout>
           </v-container>
         </v-card-text>
-    
+
         <v-card-actions>
           <!--<v-btn color="blue darken-1" flat @click="cancel">Cancel</v-btn>-->
-          <v-btn :block="$vuetify.breakpoint.name === 'xs'" color="blue darken-1" depressed dark @click="save">Save</v-btn>
+          <v-btn
+            :block="$vuetify.breakpoint.name === 'xs'"
+            color="blue darken-1"
+            depressed
+            dark
+            @click="save"
+            >Save</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-flex>
   </v-layout>
-  
 </template>
 
 <script>
@@ -272,6 +387,9 @@ export default {
       const now = new Date();
       const openedOn = new Date(date);
       return msToTime(parseInt((now - openedOn) / 24));
+    },
+    getInitials(item) {
+      return item ? item.slice(0, 2).toLocaleUpperCase() : "";
     },
     goBack() {
       window.history.back();
@@ -305,5 +423,4 @@ function msToTime(duration) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
