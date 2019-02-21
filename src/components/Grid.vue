@@ -101,8 +101,15 @@ export default {
   },
   methods: {
     openItem(item) {
-      this.$store.commit("selectedCord", item);
-      this.$router.push({ path: `/cord/${item._id}`, props: item });
+      this.getCordById(item._id)
+        .then(response => {
+          const cord = response.data.data;
+          this.$store.commit("selectedCord", cord);
+          this.$router.push({ path: `/cord/${cord._id}`, props: cord });
+        })
+        .catch(err => {
+          this.setAlert(err.message, "#DC2D37", 0);
+        });
     },
     computeDuration(date) {
       const now = new Date();
