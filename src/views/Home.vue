@@ -3,7 +3,7 @@
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12>
-          <grid :headers="headers" :items="gridItems">
+          <grid :headers="headers" :items="gridItems" :loading="loading">
             <template v-slot:title>
               <h1>Active Cords</h1>
             </template>
@@ -41,6 +41,7 @@ export default {
   },
   computed: {},
   data: () => ({
+    loading: false,
     menuItems: [
       { title: "Some Action 1" },
       { title: "Some Action 2" },
@@ -170,9 +171,11 @@ export default {
   }),
   beforeDestroy() {},
   created() {
+    this.loading = true;
     this.getCords()
       .then(response => {
         this.gridItems = response.data.data;
+        this.loading = false;
       })
       .catch(err => {
         alertMixin.setAlert(
@@ -180,6 +183,7 @@ export default {
           "#DC2D37",
           0
         );
+        this.loading = false;
       });
   },
   mounted() {},

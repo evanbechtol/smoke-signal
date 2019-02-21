@@ -35,7 +35,12 @@
         >
         </v-text-field>
       </v-toolbar>
-      <v-data-table :headers="headers" :items="items" :search="search">
+      <v-data-table
+        :headers="headers"
+        :items="items"
+        :search="search"
+        :loading="gridLoading"
+      >
         <template slot="items" slot-scope="props">
           <tr @click="openItem(props.item)" class="row">
             <td>{{ props.item.title }}</td>
@@ -71,16 +76,7 @@ export default {
   components: { MenuBtn, PullCordDialog },
   computed: {},
   data: () => ({
-    fav: true,
-    menu: false,
-    message: false,
-    hints: true,
-    menuItems: [
-      { title: "Click Me" },
-      { title: "Click Me" },
-      { title: "Click Me" },
-      { title: "Click Me 2" }
-    ],
+    gridLoading: false,
     pullingCord: false,
     selectedItem: null,
     search: ""
@@ -97,6 +93,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -115,6 +115,11 @@ export default {
       const now = new Date();
       const openedOn = new Date(date);
       return msToTime(parseInt((now - openedOn) / 24));
+    }
+  },
+  watch: {
+    loading: function() {
+      this.gridLoading = this.loading;
     }
   }
 };
