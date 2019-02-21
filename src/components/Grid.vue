@@ -48,7 +48,17 @@
             <td>{{ props.item.app }}</td>
             <td>{{ props.item.category }}</td>
             <td>{{ computeDuration(props.item.openedOn) }}</td>
-            <td>{{ props.item.hero || "" }}</td>
+            <td>
+              <v-avatar
+                v-for="(rescuer, index) in props.item.rescuers"
+                size="30"
+                :key="index"
+                :color="genColor()"
+                class="white--text mx-1"
+              >
+                {{ getInitials(rescuer) }}
+              </v-avatar>
+            </td>
           </tr>
         </template>
         <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -69,6 +79,8 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
+
+const COLORS = ["info", "purple", "success"];
 
 export default {
   name: "Grid",
@@ -100,6 +112,12 @@ export default {
     }
   },
   methods: {
+    genColor() {
+      return COLORS[Math.floor(Math.random() * 3)];
+    },
+    getInitials(item) {
+      return item ? item.slice(0, 2).toLocaleUpperCase() : "";
+    },
     openItem(item) {
       this.getCordById(item._id)
         .then(response => {

@@ -1,5 +1,5 @@
 export const themeMixin = {
-  computed: {
+computed: {
     isDark: {
       get: function() {
         return this.$store.getters.isDark;

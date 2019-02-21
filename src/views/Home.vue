@@ -23,7 +23,7 @@ import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
 
-const COLORS = ["info", "warning", "error", "success"];
+const COLORS = ["info", "teal", "success"];
 const ICONS = {
   info: "mdi-information",
   warning: "mdi-alert",
