@@ -102,7 +102,7 @@ export default {
   methods: {
     openItem(item) {
       this.$store.commit("selectedCord", item);
-      this.$router.push({ path: `/cord/${item.id}`, props: item });
+      this.$router.push({ path: `/cord/${item._id}`, props: item });
     },
     closeCordDialog() {
       this.selectedItem = null;
