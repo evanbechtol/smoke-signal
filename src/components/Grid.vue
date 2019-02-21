@@ -104,10 +104,6 @@ export default {
       this.$store.commit("selectedCord", item);
       this.$router.push({ path: `/cord/${item._id}`, props: item });
     },
-    closeCordDialog() {
-      this.selectedItem = null;
-      this.pullingCord = false;
-    },
     computeDuration(date) {
       const now = new Date();
       const openedOn = new Date(date);
