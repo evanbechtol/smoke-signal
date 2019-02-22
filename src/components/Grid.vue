@@ -56,7 +56,7 @@
                 :color="genColor()"
                 class="white--text mx-1"
               >
-                {{ getInitials(rescuer) }}
+                {{ getInitials(rescuer.username) }}
               </v-avatar>
             </td>
           </tr>

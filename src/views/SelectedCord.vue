@@ -65,7 +65,7 @@
                                 alt="Claudius"
                               />
                             </v-avatar>-->
-                            {{ getInitials(rescuer) }}
+                            {{ getInitials(rescuer.username) }}
                           </v-chip>
                         </v-item>
                         <!--

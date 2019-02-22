@@ -37,7 +37,7 @@ const ICONS = {
 
 export default {
   name: "home",
-  mixins: [themeMixin, cordMixin],
+  mixins: [themeMixin, cordMixin, alertMixin],
   components: {
     JwtExpiry,
     MenuBtn,
@@ -46,12 +46,6 @@ export default {
   computed: {},
   data: () => ({
     loading: false,
-    menuItems: [
-      { title: "Some Action 1" },
-      { title: "Some Action 2" },
-      { title: "Some Action 3" },
-      { title: "Some Action 4" }
-    ],
     headers: [
       { text: "Title", align: "left", value: "title" },
       { text: "Name", align: "left", value: "name" },
@@ -79,7 +73,7 @@ export default {
           this.loading = false;
         })
         .catch(err => {
-          alertMixin.setAlert(
+          this.setAlert(
             err.error || err.message || "Unknown error occurred",
             "#DC2D37",
             0
