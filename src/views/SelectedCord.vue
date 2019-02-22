@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0' : 'mt-5'">
     <v-layout
       row
       fill-height
@@ -310,8 +310,8 @@
                           <span>{{ content.user.username }}</span>
                         </v-tooltip>
                       </v-avatar>
-                      <v-layout pt-3>
-                        <v-flex xs3 sm1>
+                      <v-layout pt-3 wrap row fill-height>
+                        <v-flex xs12 sm2>
                           <strong>
                             <!--eslint-disable-next-line-->
                               {{ convertStringToDate(content.time).toLocaleDateString("en-us") }} -
@@ -319,96 +319,11 @@
                               {{ convertStringToDate(content.time).toLocaleTimeString("en-us") }}
                           </strong>
                         </v-flex>
-                        <v-flex>
+                        <v-flex grow>
                           <p>{{ content.data }}</p>
                         </v-flex>
                       </v-layout>
                     </v-timeline-item>
-                    <!--<v-timeline-item color="pink" small>
-                        <v-avatar slot="icon" size="40">
-                          <img
-                            src="https://randomuser.me/api/portraits/women/31.jpg"
-                            alt="Fifi"
-                          />
-                        </v-avatar>
-                        <v-layout pt-3>
-                          <v-flex xs3 sm1>
-                            <strong>5pm</strong>
-                          </v-flex>
-                          <v-flex>
-                            <strong>New Icon</strong>
-                            <div class="caption">Mobile App</div>
-                          </v-flex>
-                        </v-layout>
-                      </v-timeline-item>
-    
-                      <v-timeline-item color="teal lighten-3" small>
-                        <v-avatar slot="icon" size="40">
-                          <img
-                            src="https://randomuser.me/api/portraits/men/35.jpg"
-                            alt="Claudius"
-                          />
-                        </v-avatar>
-                        <v-layout wrap pt-3>
-                          <v-flex xs3 sm1>
-                            <strong>3-4pm</strong>
-                          </v-flex>
-                          <v-flex>
-                            <strong>Design Stand Up</strong>
-                            <div class="caption mb-2">Hangouts</div>
-                            <v-avatar>
-                              <v-img
-                                src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"
-                              ></v-img>
-                            </v-avatar>
-                            <v-avatar>
-                              <v-img
-                                src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned"
-                              ></v-img>
-                            </v-avatar>
-                            <v-avatar>
-                              <v-img
-                                src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Sunglasses&hairColor=BlondeGolden&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Surprised&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Pale"
-                              ></v-img>
-                            </v-avatar>
-                          </v-flex>
-                        </v-layout>
-                      </v-timeline-item>
-    
-                      <v-timeline-item color="pink" small>
-                        <v-avatar slot="icon" size="40">
-                          <img
-                            src="https://randomuser.me/api/portraits/women/5.jpg"
-                            alt="Gertrude"
-                          />
-                        </v-avatar>
-                        <v-layout pt-3>
-                          <v-flex xs3 sm1>
-                            <strong>12pm</strong>
-                          </v-flex>
-                          <v-flex>
-                            <strong>Lunch break</strong>
-                          </v-flex>
-                        </v-layout>
-                      </v-timeline-item>
-    
-                      <v-timeline-item color="teal lighten-3" small>
-                        <v-avatar slot="icon" size="40">
-                          <img
-                            src="https://randomuser.me/api/portraits/men/10.jpg"
-                            alt="Evan"
-                          />
-                        </v-avatar>
-                        <v-layout pt-3>
-                          <v-flex xs3 sm1>
-                            <strong>9-11am</strong>
-                          </v-flex>
-                          <v-flex>
-                            <strong>Finish Home Screen</strong>
-                            <div class="caption">Web App</div>
-                          </v-flex>
-                        </v-layout>
-                      </v-timeline-item>-->
                   </v-timeline>
                 </v-flex>
               </v-layout>
