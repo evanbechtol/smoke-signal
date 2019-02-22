@@ -147,6 +147,21 @@
                     <v-flex xs12 sm4>
                       <v-text-field
                         box
+                        label="Status"
+                        type="text"
+                        v-model="selectedCord.status"
+                        readonly
+                        dark
+                        :background-color="
+                          selectedCord.status === 'Open' ? 'success' : 'error'
+                        "
+                        color="info"
+                      ></v-text-field>
+                    </v-flex>
+
+                    <v-flex xs12 sm4>
+                      <v-text-field
+                        box
                         label="Cord Pulled By"
                         type="text"
                         v-model="selectedCord.puller.username"
@@ -221,7 +236,7 @@
                           v-on="data.on"
                           @click="addingToDiscussion = !addingToDiscussion"
                         >
-                          <v-icon>create</v-icon>
+                          <v-icon>note_add</v-icon>
                         </v-btn>
                       </template>
                       <span>Add to discussion</span>
