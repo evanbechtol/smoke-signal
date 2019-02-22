@@ -42,7 +42,11 @@
               <span class="ml-3">{{ selectedCord.title }}</span>
               <v-spacer></v-spacer>
             </div>
-            <div v-else style="z-index: 99; width: 100%;" class="text-xs-center">
+            <div
+              v-else
+              style="z-index: 99; width: 100%;"
+              class="text-xs-center"
+            >
               <p>Please wait! Loading Data</p>
               <v-progress-linear
                 :indeterminate="true"
@@ -424,6 +428,8 @@ export default {
     updateDiscussion() {
       this.selectedCord.discussion.push({
         time: new Date().toISOString(),
+
+        // Todo: This needs to be the authenticated user
         user: { id: 1, username: "eevabec" },
         data: this.discussion
       });
