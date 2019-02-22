@@ -98,6 +98,21 @@ export const cordMixin = {
         data
       };
       return makeRequest(options);
+    },
+    /**
+     * @description Attempts to update the cord rescuers for the cord matching the provided Object ID
+     * @param id {string} Object ID for the cord to update
+     * @param data {object} Body to use when updating the cord
+     * @returns {Promise} Returns promise for request being generated
+     */
+    updateRescuers(id, data) {
+      const route = `cords/rescuers/${id}`;
+      const options = {
+        method: "PUT",
+        url: `${baseUrl}/${route}`,
+        data
+      };
+      return makeRequest(options);
     }
   }
 };

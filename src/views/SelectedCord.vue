@@ -54,7 +54,11 @@
                         >
                           <v-tooltip bottom offset-x>
                             <template #activator="data">
-                              <v-chip v-on="data.on" :color="COLORS[index % 3]" dark>
+                              <v-chip
+                                v-on="data.on"
+                                :color="COLORS[index % 3]"
+                                dark
+                              >
                                 <!--<v-avatar>
                                   <img
                                     src="https://randomuser.me/api/portraits/men/35.jpg"
@@ -106,6 +110,7 @@
 
                         <v-item>
                           <v-chip
+                            @click="rescue"
                             outline
                             :color="isDark ? 'accent' : 'primary'"
                             :dark="isDark"
@@ -369,10 +374,11 @@
 import { themeMixin } from "../mixins/themeMixin.js";
 import { assetMixin } from "../mixins/assetMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
+import { alertMixin } from "../mixins/alertMixin";
 
 export default {
   name: "SelectedCord",
-  mixins: [themeMixin, assetMixin, cordMixin],
+  mixins: [themeMixin, assetMixin, cordMixin, alertMixin],
   components: {},
   computed: {},
   data: function() {
@@ -398,14 +404,25 @@ export default {
     goBack() {
       window.history.back();
     },
-    save() {
-      this.updateCord(this.selectedCord._id, this.selectedCord)
+    rescue() {
+      const data = { rescuers: [{ id: 3, username: "epaulam" }] };
+      this.updateRescuers(this.selectedCord._id, data)
         .then(response => {
-          this.setAlert("Cord pulled successfully!", "#288964", 5);
+          this.setAlert("Cord updated successfully!", "#288964", 5);
           this.selectedCord = response.data.data;
         })
         .catch(err => {
-          this.setAlert(err.message, "#DC2D37", 0);
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
+    },
+    save() {
+      this.updateCord(this.selectedCord._id, this.selectedCord)
+        .then(response => {
+          this.setAlert("Cord updated successfully!", "#288964", 5);
+          this.selectedCord = response.data.data;
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     }
   },

@@ -74,7 +74,10 @@ export default {
         })
         .catch(err => {
           this.setAlert(
-            err.error || err.message || "Unknown error occurred",
+            err.error ||
+              err.message ||
+              err.response.data.error ||
+              "Unknown error occurred",
             "#DC2D37",
             0
           );

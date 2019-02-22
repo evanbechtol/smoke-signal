@@ -181,7 +181,7 @@ export default {
           this.setAlert("Cord pulled successfully!", "#288964", 10);
         })
         .catch(err => {
-          this.setAlert(err.message, "#DC2D37", 0);
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
     getDateTime() {
