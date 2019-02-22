@@ -153,9 +153,9 @@
                         readonly
                         dark
                         :background-color="
-                          selectedCord.status === 'Open' ? 'success' : 'error'
+                          selectedCord.status === 'Open' ? 'success' : 'purple'
                         "
-                        color="info"
+                        color="primary"
                       ></v-text-field>
                     </v-flex>
 
@@ -389,9 +389,72 @@
               </v-layout>
             </v-container>
           </v-card-text>
+
+          <v-card-actions v-if="selectedCord">
+            <v-tooltip right>
+              <template #activator="data">
+                <v-btn
+                  v-on="data.on"
+                  :block="$vuetify.breakpoint.name === 'xs'"
+                  color="purple darken-1"
+                  :disabled="selectedCord.status !== 'Open'"
+                  depressed
+                  dark
+                  @click="confirmCloseDialog = true"
+                  >Unpull Cord</v-btn
+                >
+              </template>
+              <span>My blocker is resolved!</span>
+            </v-tooltip>
+          </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
+
+    <v-dialog
+      v-model="confirmCloseDialog"
+      persistent
+      :fullscreen="$vuetify.breakpoint.name === 'xs'"
+    >
+      <v-card :dark="isDark" :color="`accent ${darken}`">
+        <v-card-title
+          primary-title
+          class="bg hildaLight space-small dark-l0 ma-0"
+        >
+          Are you sure?
+          <v-spacer></v-spacer>
+        </v-card-title>
+
+        <v-card-text>
+          Are you sure that you want to un-pull this cord? By clicking
+          <strong>"Proceed"</strong>, you agree that this blocker is now
+          resolved. If this issue is still blocking you from completing a task,
+          click <strong>"Go Back"</strong>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn
+            color="error darken-1"
+            depressed
+            @click="confirmCloseDialog = false"
+            :block="$vuetify.breakpoint.name === 'xs'"
+          >
+            <v-icon class="mr-2">arrow_back</v-icon>Go Back
+          </v-btn>
+
+          <v-spacer v-if="$vuetify.breakpoint.name !== 'xs'"></v-spacer>
+
+          <v-btn
+            color="success darken-1"
+            depressed
+            @click="unpullCord"
+            :block="$vuetify.breakpoint.name === 'xs'"
+          >
+            Proceed<v-icon class="ml-2">check</v-icon></v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -409,6 +472,7 @@ export default {
   data: function() {
     return {
       addingToDiscussion: false,
+      confirmCloseDialog: false,
       discussion: "",
       loading: false,
       readonly: {
@@ -488,6 +552,10 @@ export default {
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
+    },
+    unpullCord() {
+      this.selectedCord.status = "Resolved";
+      this.save();
     },
     updateDiscussion() {
       this.selectedCord.discussion.push({
