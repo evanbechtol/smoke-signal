@@ -22,7 +22,7 @@
             primary-title
             class="bg hildaLight space-small dark-l0 ma-0"
           >
-            <div v-if="selectedCord">
+            <div v-if="selectedCord && !loading">
               <v-tooltip bottom v-if="$vuetify.breakpoint.name === 'xs'">
                 <template #activator="data">
                   <v-btn
@@ -124,7 +124,7 @@
                               </v-chip>
                             </v-item>-->
 
-                          <v-item>
+                          <v-item class="pulse">
                             <v-chip
                               @click="rescue"
                               outline
@@ -175,9 +175,21 @@
                         label="Application"
                         type="text"
                         v-model="selectedCord.app"
-                        readonly
+                        :readonly="readonly.app"
                         color="info"
-                      ></v-text-field>
+                        @change="appChanged"
+                      >
+                        <v-tooltip bottom offset-y slot="append">
+                          <template #activator="data">
+                            <v-icon
+                              v-on="data.on"
+                              @click="readonly.app = !readonly.app"
+                              >{{ readonly.app ? "edit" : "save" }}
+                            </v-icon>
+                          </template>
+                          <span>Click to edit</span>
+                        </v-tooltip>
+                      </v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
@@ -195,9 +207,21 @@
                         label="Category"
                         type="text"
                         v-model="selectedCord.category"
-                        readonly
+                        :readonly="readonly.category"
                         color="info"
-                      ></v-text-field>
+                        @change="categoryChanged"
+                      >
+                        <v-tooltip bottom offset-y slot="append">
+                          <template #activator="data">
+                            <v-icon
+                              v-on="data.on"
+                              @click="readonly.category = !readonly.category"
+                              >{{ readonly.category ? "edit" : "save" }}
+                            </v-icon>
+                          </template>
+                          <span>Click to edit</span>
+                        </v-tooltip>
+                      </v-text-field>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -220,8 +244,21 @@
                     color="info"
                     box
                     label="Issue Description"
+                    :readonly="readonly.description"
                     v-model="selectedCord.description"
-                  ></v-textarea>
+                    @change="descriptionChanged"
+                  >
+                    <v-tooltip bottom offset-y slot="append">
+                      <template #activator="data">
+                        <v-icon
+                          v-on="data.on"
+                          @click="readonly.description = !readonly.description"
+                          >{{ readonly.description ? "edit" : "save" }}
+                        </v-icon>
+                      </template>
+                      <span>Click to edit</span>
+                    </v-tooltip>
+                  </v-textarea>
                 </v-flex>
 
                 <v-flex xs12>
@@ -294,72 +331,64 @@
 
                   <v-divider></v-divider>
 
-                  <v-timeline
-                    align-top
-                    dense
-                    v-if="selectedCord.discussion.length > 0"
+                  <div
+                    style="max-height: 500px; overflow-y: auto; overflow-x: hidden;"
                   >
-                    <v-timeline-item
-                      color="pink"
-                      small
-                      v-for="(content, index) in selectedCord.discussion"
-                      :key="`discussion-${index}`"
+                    <v-timeline
+                      align-top
+                      dense
+                      v-if="selectedCord.discussion.length > 0"
                     >
-                      <v-avatar slot="icon" size="40">
-                        <!--<img
-                                  src="https://randomuser.me/api/portraits/women/31.jpg"
-                                  alt="Fifi"
-                          />-->
-                        <v-tooltip bottom offset-x>
-                          <template #activator="data">
-                            <v-chip
-                              v-on="data.on"
-                              :color="COLORS[index % 3]"
-                              dark
-                            >
-                              <!--<v-avatar>
-                                  <img
-                                    src="https://randomuser.me/api/portraits/men/35.jpg"
-                                    alt="Claudius"
-                                  />
-                                </v-avatar>-->
-                              {{ getInitials(content.user.username) }}
-                            </v-chip>
-                          </template>
-                          <span>{{ content.user.username }}</span>
-                        </v-tooltip>
-                      </v-avatar>
-                      <v-layout pt-3 wrap row fill-height>
-                        <v-flex xs12 sm2>
-                          <strong>
-                            <!--eslint-disable-next-line-->
+                      <v-timeline-item
+                        color="pink"
+                        small
+                        v-for="(content, index) in selectedCord.discussion"
+                        :key="`discussion-${index}`"
+                      >
+                        <v-avatar slot="icon" size="40">
+                          <!--<img
+                                    src="https://randomuser.me/api/portraits/women/31.jpg"
+                                    alt="Fifi"
+                            />-->
+                          <v-tooltip bottom offset-x>
+                            <template #activator="data">
+                              <v-chip
+                                v-on="data.on"
+                                :color="COLORS[index % 3]"
+                                dark
+                              >
+                                <!--<v-avatar>
+                                    <img
+                                      src="https://randomuser.me/api/portraits/men/35.jpg"
+                                      alt="Claudius"
+                                    />
+                                  </v-avatar>-->
+                                {{ getInitials(content.user.username) }}
+                              </v-chip>
+                            </template>
+                            <span>{{ content.user.username }}</span>
+                          </v-tooltip>
+                        </v-avatar>
+                        <v-layout pt-3 wrap row fill-height>
+                          <v-flex xs12 sm2>
+                            <strong>
+                              <!--eslint-disable-next-line-->
                               {{ convertStringToDate(content.time).toLocaleDateString("en-us") }} -
-                            <!--eslint-disable-next-line-->
+                              <!--eslint-disable-next-line-->
                               {{ convertStringToDate(content.time).toLocaleTimeString("en-us") }}
-                          </strong>
-                        </v-flex>
-                        <v-flex grow>
-                          <p>{{ content.data }}</p>
-                        </v-flex>
-                      </v-layout>
-                    </v-timeline-item>
-                  </v-timeline>
+                            </strong>
+                          </v-flex>
+                          <v-flex grow>
+                            <p>{{ content.data }}</p>
+                          </v-flex>
+                        </v-layout>
+                      </v-timeline-item>
+                    </v-timeline>
+                  </div>
                 </v-flex>
               </v-layout>
             </v-container>
           </v-card-text>
-
-          <v-card-actions v-if="selectedCord">
-            <!--<v-btn color="blue darken-1" flat @click="cancel">Cancel</v-btn>-->
-            <v-btn
-              :block="$vuetify.breakpoint.name === 'xs'"
-              color="blue darken-1"
-              depressed
-              dark
-              @click="save"
-              >Save</v-btn
-            >
-          </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
@@ -380,25 +409,45 @@ export default {
   data: function() {
     return {
       addingToDiscussion: false,
-      discussion: ""
+      discussion: "",
+      loading: false,
+      readonly: {
+        app: true,
+        category: true,
+        description: true
+      }
     };
   },
   created() {
     if (!this.selectedCord) {
+      this.loading = true;
       this.getCordById(this.id)
         .then(response => {
           const cord = response.data.data;
           this.$store.commit("selectedCord", cord);
-          this.$router.push({ path: `/cord/${cord._id}`, props: cord });
+          this.loading = false;
         })
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);
+          this.loading = false;
         });
     }
   },
   methods: {
-    cancel() {
-      this.$emit("cancelItemEdit");
+    appChanged() {
+      if (this.readonly.app) {
+        this.save();
+      }
+    },
+    categoryChanged() {
+      if (this.readonly.category) {
+        this.save();
+      }
+    },
+    descriptionChanged() {
+      if (this.readonly.description) {
+        this.save();
+      }
     },
     computeDuration(date) {
       const now = new Date();
@@ -480,4 +529,8 @@ function msToTime(duration) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.pulse:hover {
+  animation: pulse 1s infinite;
+}
+</style>
