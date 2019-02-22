@@ -53,7 +53,7 @@
                 v-for="(rescuer, index) in props.item.rescuers"
                 size="30"
                 :key="index"
-                :color="genColor()"
+                :color="COLORS[index % 3]"
                 class="white--text mx-1"
               >
                 {{ getInitials(rescuer.username) }}
