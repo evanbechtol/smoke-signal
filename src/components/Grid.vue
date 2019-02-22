@@ -81,7 +81,6 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
 
-
 export default {
   name: "Grid",
   mixins: [themeMixin, cordMixin],
@@ -113,7 +112,9 @@ export default {
   },
   methods: {
     getInitials(item) {
-      return item ? item.slice(0, 2).toLocaleUpperCase() : "";
+      return item && typeof item === "string"
+        ? item.slice(0, 2).toLocaleUpperCase()
+        : "";
     },
     openItem(item) {
       this.getCordById(item._id)

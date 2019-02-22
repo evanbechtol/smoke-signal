@@ -1,5 +1,10 @@
 export const themeMixin = {
-computed: {
+  data: function() {
+    return {
+      COLORS: ["info", "purple", "success"]
+    };
+  },
+  computed: {
     isDark: {
       get: function() {
         return this.$store.getters.isDark;

@@ -52,21 +52,20 @@
                           v-for="(rescuer, index) in selectedCord.rescuers"
                           :key="`rescuer-${index}`"
                         >
-                          <v-chip
-                            close
-                            :color="genColor()"
-                            dark
-                            slot-scope="{ active, toggle }"
-                            :selected="active"
-                          >
-                            <!--<v-avatar>
-                              <img
-                                src="https://randomuser.me/api/portraits/men/35.jpg"
-                                alt="Claudius"
-                              />
-                            </v-avatar>-->
-                            {{ getInitials(rescuer.username) }}
-                          </v-chip>
+                          <v-tooltip bottom offset-x>
+                            <template #activator="data">
+                              <v-chip v-on="data.on" :color="COLORS[index % 3]" dark>
+                                <!--<v-avatar>
+                                  <img
+                                    src="https://randomuser.me/api/portraits/men/35.jpg"
+                                    alt="Claudius"
+                                  />
+                                </v-avatar>-->
+                                {{ getInitials(rescuer.username) }}
+                              </v-chip>
+                            </template>
+                            <span>{{ rescuer.username }}</span>
+                          </v-tooltip>
                         </v-item>
                         <!--
                         <v-item>
@@ -392,7 +391,9 @@ export default {
       return msToTime(parseInt((now - openedOn) / 24));
     },
     getInitials(item) {
-      return item ? item.slice(0, 2).toLocaleUpperCase() : "";
+      return item && typeof item === "string"
+        ? item.slice(0, 2).toLocaleUpperCase()
+        : "";
     },
     goBack() {
       window.history.back();
