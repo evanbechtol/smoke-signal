@@ -72,7 +72,9 @@
                               <template #activator="data">
                                 <v-chip
                                   v-on="data.on"
+                                  :close="canRemoveRescuer(rescuer)"
                                   :color="COLORS[index % 3]"
+                                  @input="removeRescuer(rescuer)"
                                   dark
                                 >
                                   <!--<v-avatar>
@@ -84,7 +86,11 @@
                                   {{ getInitials(rescuer.username) }}
                                 </v-chip>
                               </template>
-                              <span>{{ rescuer.username }}</span>
+                              <span>{{
+                                canRemoveRescuer(rescuer)
+                                  ? "Stop rescuing?"
+                                  : rescuer.username
+                              }}</span>
                             </v-tooltip>
                           </v-item>
                           <!--
@@ -124,7 +130,7 @@
                               </v-chip>
                             </v-item>-->
 
-                          <v-item class="pulse">
+                          <v-item class="pulse" v-if="showRescueButton()">
                             <v-chip
                               @click="rescue"
                               outline
@@ -514,6 +520,9 @@ export default {
         this.save();
       }
     },
+    canRemoveRescuer(rescuer) {
+      return rescuer.username === this.user.username;
+    },
     computeDuration(date) {
       const now = new Date();
       const openedOn = new Date(date);
@@ -530,11 +539,20 @@ export default {
     goBack() {
       window.history.back();
     },
+    removeRescuer(rescuer) {
+      this.selectedCord.rescuers = this.selectedCord.rescuers.filter(function(elem) {
+        return elem.username !== rescuer.username;
+      });
+
+      this.save();
+    },
     rescue() {
-      const data = { rescuers: [{ id: 3, username: "epaulam" }] };
+      const data = {
+        rescuers: [{ _id: this.user._id, username: this.user.username }]
+      };
       this.updateRescuers(this.selectedCord._id, data)
         .then(response => {
-          this.setAlert("Cord updated successfully!", "#288964", 5);
+          this.setAlert("Cord updated successfully!", "#288964", 5000);
           this.selectedCord = response.data.data;
         })
         .catch(err => {
@@ -553,6 +571,14 @@ export default {
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
+    },
+    showRescueButton() {
+      const user = this.user;
+      return this.selectedCord && this.selectedCord.rescuers
+        ? this.selectedCord.rescuers.filter(function(elem) {
+            return elem.username === user.username;
+          }).length === 0
+        : false;
     },
     unpullCord() {
       this.selectedCord.status = "Resolved";
