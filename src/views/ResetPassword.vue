@@ -2,17 +2,23 @@
   <div class="dark-l1 login page">
     <v-layout row justify-start ml-1>
       <v-flex xs12 sm1 class="mt-4">
-        <v-img :src="getImagePath('econ_rgb.svg')" height="160px" contain></v-img>
+        <v-img
+          :src="getImagePath('econ_rgb.svg')"
+          height="160px"
+          contain
+        ></v-img>
       </v-flex>
     </v-layout>
 
-    <v-layout row
-              align-start
-              justify-center
-              fill-height
-              style="height: 80vh;"
-              text-xs-center
-              class="dark">
+    <v-layout
+      row
+      align-start
+      justify-center
+      fill-height
+      style="height: 80vh;"
+      text-xs-center
+      class="dark"
+    >
       <v-flex xs12 sm6 style="margin-top: 16vh;">
         <v-form ref="form" v-model="valid" class="animated faster fadeInDown">
           <v-text-field
@@ -32,7 +38,8 @@
             :error-messages="errors.collect('password')"
             hint="It should be a minimum of 6 characters"
             prepend-inner-icon="lock"
-            type="password">
+            type="password"
+          >
           </v-text-field>
 
           <v-text-field
@@ -52,19 +59,21 @@
             :error-messages="errors.collect('confirmPassword')"
             hint="Must match the password entered above"
             prepend-inner-icon="lock"
-            type="password">
+            type="password"
+          >
           </v-text-field>
-
         </v-form>
         <v-layout row fill-height justify-center align-start>
           <v-flex grow>
-            <v-btn @click="resetPassword"
-                   color="success darken-1"
-                   name="rest password"
-                   :disabled="!valid || !password || !confirmPassword"
-                   :outline="!valid"
-                   :depressed="valid"
-                   block>
+            <v-btn
+              @click="resetPassword"
+              color="success darken-1"
+              name="rest password"
+              :disabled="!valid || !password || !confirmPassword"
+              :outline="!valid"
+              :depressed="valid"
+              block
+            >
               <v-icon dark class="pr-2">update</v-icon>
               Reset Password
             </v-btn>
@@ -160,5 +169,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

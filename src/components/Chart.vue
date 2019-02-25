@@ -1,6 +1,12 @@
 <template>
   <div>
-    <apexcharts id="chart" height="350" :type="type" :options="options" :series="series"></apexcharts>
+    <apexcharts
+      id="chart"
+      height="350"
+      :type="type"
+      :options="options"
+      :series="series"
+    ></apexcharts>
   </div>
 </template>
 
@@ -68,5 +74,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

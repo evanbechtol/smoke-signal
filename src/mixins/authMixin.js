@@ -277,8 +277,7 @@ export const authMixin = {
         }
       });
     },
-    logout() {
-    },
+    logout() {},
     register(body) {
       return new Promise((resolve, reject) => {
         if (!(body && body.email && body.password)) {
@@ -290,10 +289,10 @@ export const authMixin = {
       return minutes <= 1
         ? `error ${this.darken}`
         : minutes > 1 && minutes <= 5
-          ? `warning ${this.darken}`
-          : minutes > 5 && minutes <= 10
-            ? `info ${this.isDark ? "darken-2" : "lighten-2"}`
-            : `info ${this.darken}`;
+        ? `warning ${this.darken}`
+        : minutes > 5 && minutes <= 10
+        ? `info ${this.isDark ? "darken-2" : "lighten-2"}`
+        : `info ${this.darken}`;
     },
     setExpiry() {
       if (this.token !== null && this.token.length > 1) {
@@ -339,8 +338,8 @@ export const authMixin = {
       return minutes <= 1
         ? "error"
         : minutes > 1 && minutes <= 5
-          ? "warning"
-          : "info";
+        ? "warning"
+        : "info";
     },
     getUnixTime() {
       return (new Date().getTime() / 1000) | 0;

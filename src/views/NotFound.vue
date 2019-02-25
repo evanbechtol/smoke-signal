@@ -1,20 +1,28 @@
 <template>
   <div style="height: 100vh;" class="notFound page">
     <video autoplay muted loop id="myVideo">
-      <source :src="getVideoPath('Code - 14214.mp4')" type="video/mp4">
+      <source :src="getVideoPath('Code - 14214.mp4')" type="video/mp4" />
     </video>
 
     <v-layout row wrap fill-height justify-end align-center>
       <v-flex xs12 text-xs-right>
         <div class="content">
           <h1 class="hildaLight display-3">404: Page Not Found</h1>
-          <p>This page doesn't exist, or you just found a glitch in the matrix</p>
-          <v-btn class="animated slow headShake" id="myBtn" color="#0c0c0c" dark :to="{path: '/'}" large>Take me home!</v-btn>
+          <p>
+            This page doesn't exist, or you just found a glitch in the matrix
+          </p>
+          <v-btn
+            class="animated slow headShake"
+            id="myBtn"
+            color="#0c0c0c"
+            dark
+            :to="{ path: '/' }"
+            large
+            >Take me home!</v-btn
+          >
         </div>
       </v-flex>
     </v-layout>
-
-
   </div>
 </template>
 

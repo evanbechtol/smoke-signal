@@ -2,25 +2,29 @@
   <v-app>
     <div id="app" :class="theme">
       <main>
-        <Toolbar color="primary"/>
-        <transition name="routerAnimation" enter-active-class="animated faster fadeIn">
+        <Toolbar color="primary" />
+        <transition
+          name="routerAnimation"
+          enter-active-class="animated faster fadeIn"
+        >
           <router-view></router-view>
         </transition>
         <!--<Footer color="primary"/>-->
-        <v-snackbar :color="alertColor"
-                    :dark="isDark"
-                    v-model="alert"
-                    :multi-line="mode === 'multi-line'"
-                    :timeout="alertTimeout"
-                    :bottom="y === 'bottom'"
-                    :top="y === 'top'"
-                    :left="x === 'left'"
-                    :right="x === 'right'"
-                    :vertical="mode === 'vertical'">
-          <v-icon class="pr-4">{{getAlertIcon()}}</v-icon>{{ alertMessage }}
-          <v-btn :dark="isDark"
-                 icon
-                 @click="toggleAlert(false)">
+        <v-snackbar
+          :color="alertColor"
+          :dark="isDark"
+          v-model="alert"
+          :multi-line="mode === 'multi-line'"
+          :timeout="alertTimeout"
+          :bottom="y === 'bottom'"
+          :top="y === 'top'"
+          :left="x === 'left'"
+          :right="x === 'right'"
+          :vertical="mode === 'vertical'"
+        >
+          <v-icon class="pr-4">{{ getAlertIcon() }}</v-icon
+          >{{ alertMessage }}
+          <v-btn :dark="isDark" icon @click="toggleAlert(false)">
             <v-icon>close</v-icon>
           </v-btn>
         </v-snackbar>

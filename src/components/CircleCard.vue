@@ -1,7 +1,11 @@
 <template>
   <div class="dashCircle" :class="color">
     <v-layout align-center justify-center fill-height>
-      <v-flex text-xs-center pt-3><p class="dark-text hildaLight" style="font-size: 52px;">{{ value }}</p></v-flex>
+      <v-flex text-xs-center pt-3
+        ><p class="dark-text hildaLight" style="font-size: 52px;">
+          {{ value }}
+        </p></v-flex
+      >
     </v-layout>
   </div>
 </template>

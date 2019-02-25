@@ -1,17 +1,11 @@
 <template>
   <v-menu bottom left>
-    <v-btn class="menuBtn"
-           slot="activator"
-           :dark="isDark"
-           icon>
+    <v-btn class="menuBtn" slot="activator" :dark="isDark" icon>
       <v-icon>more_vert</v-icon>
     </v-btn>
 
     <v-list>
-      <v-list-tile
-          v-for="(item, i) in items"
-          :key="i"
-          @click="">
+      <v-list-tile v-for="(item, i) in items" :key="i" @click="">
         <v-list-tile-title>{{ item.title }}</v-list-tile-title>
       </v-list-tile>
     </v-list>
@@ -32,5 +26,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

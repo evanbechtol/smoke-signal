@@ -1,53 +1,74 @@
 <template>
-  <v-flex xs12 :class="{large: $vuetify.breakpoint.smAndUp, fill: $vuetify.breakpoint.xsOnly}">
-    <v-card :color="`accent ${darken}`" :dark="isDark" tile class="space-small mr-1"
-            max-width="500">
+  <v-flex
+    xs12
+    :class="{
+      large: $vuetify.breakpoint.smAndUp,
+      fill: $vuetify.breakpoint.xsOnly
+    }"
+  >
+    <v-card
+      :color="`accent ${darken}`"
+      :dark="isDark"
+      tile
+      class="space-small mr-1"
+      max-width="500"
+    >
       <v-flex offset-xs11>
         <v-tooltip bottom class="menuIcon">
-          <v-btn icon
-                 flat
-                 small
-                 depressed
-                 id="cancelBtn"
-                 slot="activator"
-                 color="error darken-1"
-                 class="mt-2 mr-3"
-                 @click="cancel()"
-                 name="cancel">
+          <v-btn
+            icon
+            flat
+            small
+            depressed
+            id="cancelBtn"
+            slot="activator"
+            color="error darken-1"
+            class="mt-2 mr-3"
+            @click="cancel()"
+            name="cancel"
+          >
             <v-icon>close</v-icon>
           </v-btn>
           <span>Cancel Registration</span>
         </v-tooltip>
-
       </v-flex>
       <v-card-title class="title font-weight-regular justify-space-between">
-        <v-progress-linear :value="registerCompletion" color="info darken-1"></v-progress-linear>
+        <v-progress-linear
+          :value="registerCompletion"
+          color="info darken-1"
+        ></v-progress-linear>
         <span>{{ currentTitle }}</span>
-        <v-avatar color="primary lighten-2"
-                  class="subheading white--text"
-                  size="24"
-                  v-text="step"></v-avatar>
+        <v-avatar
+          color="primary lighten-2"
+          class="subheading white--text"
+          size="24"
+          v-text="step"
+        ></v-avatar>
       </v-card-title>
 
       <v-window v-model="step">
         <v-window-item :value="1">
           <v-card-text>
             <v-form v-model="form.step1.valid" ref="form1">
-              <v-text-field label="First Name"
-                            name="first name"
-                            color="info darken-1"
-                            :rules="nameRules"
-                            v-model="user.firstName"
-                            required
-                            placeholder="John/Jane">
+              <v-text-field
+                label="First Name"
+                name="first name"
+                color="info darken-1"
+                :rules="nameRules"
+                v-model="user.firstName"
+                required
+                placeholder="John/Jane"
+              >
               </v-text-field>
-              <v-text-field label="Last Name"
-                            name="last name"
-                            color="info darken-1"
-                            :rules="nameRules"
-                            v-model="user.lastName"
-                            required
-                            placeholder="Doe">
+              <v-text-field
+                label="Last Name"
+                name="last name"
+                color="info darken-1"
+                :rules="nameRules"
+                v-model="user.lastName"
+                required
+                placeholder="Doe"
+              >
               </v-text-field>
             </v-form>
 
@@ -60,25 +81,29 @@
         <v-window-item :value="2">
           <v-card-text>
             <v-form v-model="form.step2.valid" ref="form1">
-              <v-text-field label="Email"
-                            name="email"
-                            prepend-icon="email"
-                            type="email"
-                            color="info darken-1"
-                            :rules="emailRules"
-                            v-model="user.email"
-                            validate-on-blur
-                            required
-                            placeholder="example@ericsson.com">
+              <v-text-field
+                label="Email"
+                name="email"
+                prepend-icon="email"
+                type="email"
+                color="info darken-1"
+                :rules="emailRules"
+                v-model="user.email"
+                validate-on-blur
+                required
+                placeholder="example@ericsson.com"
+              >
               </v-text-field>
-              <v-text-field label="Username/Signum"
-                            name="username"
-                            prepend-icon="fingerprint"
-                            color="info darken-1"
-                            :rules="usernameRules"
-                            v-model="user.username"
-                            required
-                            placeholder="eevabec">
+              <v-text-field
+                label="Username/Signum"
+                name="username"
+                prepend-icon="fingerprint"
+                color="info darken-1"
+                :rules="usernameRules"
+                v-model="user.username"
+                required
+                placeholder="eevabec"
+              >
               </v-text-field>
             </v-form>
 
@@ -90,39 +115,41 @@
 
         <v-window-item :value="3">
           <v-card-text>
-            <v-form v-model="form.step3.valid"  ref="form2">
+            <v-form v-model="form.step3.valid" ref="form2">
               <v-text-field
-                      ref="password"
-                      name="password"
-                      label="Password"
-                      data-vv-name="password"
-                      data-vv-delay="300"
-                      min="6"
-                      counter
-                      color="info darken-1"
-                      v-validate="'required|min:6|max:100'"
-                      v-model="user.password"
-                      :error-messages="errors.collect('password')"
-                      hint="It should be a minimum of 6 characters"
-                      prepend-icon="lock"
-                      type="password">
+                ref="password"
+                name="password"
+                label="Password"
+                data-vv-name="password"
+                data-vv-delay="300"
+                min="6"
+                counter
+                color="info darken-1"
+                v-validate="'required|min:6|max:100'"
+                v-model="user.password"
+                :error-messages="errors.collect('password')"
+                hint="It should be a minimum of 6 characters"
+                prepend-icon="lock"
+                type="password"
+              >
               </v-text-field>
 
               <v-text-field
-                      label="Password confirmation"
-                      data-vv-as="Password confirmation"
-                      data-vv-name="confirmPassword"
-                      data-vv-delay="300"
-                      target="password"
-                      name="confirm password"
-                      counter
-                      color="info darken-1"
-                      v-validate="'required|confirmed:password'"
-                      v-model="user.confirmPassword"
-                      validate-on-blur
-                      :error-messages="errors.collect('confirmPassword')"
-                      prepend-icon="lock"
-                      type="password">
+                label="Password confirmation"
+                data-vv-as="Password confirmation"
+                data-vv-name="confirmPassword"
+                data-vv-delay="300"
+                target="password"
+                name="confirm password"
+                counter
+                color="info darken-1"
+                v-validate="'required|confirmed:password'"
+                v-model="user.confirmPassword"
+                validate-on-blur
+                :error-messages="errors.collect('confirmPassword')"
+                prepend-icon="lock"
+                type="password"
+              >
               </v-text-field>
               <span class="caption grey--text text--darken-1">
                 Please enter a password for your account
@@ -134,7 +161,9 @@
         <v-window-item :value="4">
           <div class="pa-3 text-xs-center">
             <v-icon size="120px" class="mb-3">sentiment_satisfied_alt</v-icon>
-            <h3 class="title font-weight-light mb-2">Account creation successful</h3>
+            <h3 class="title font-weight-light mb-2">
+              Account creation successful
+            </h3>
             <span class="caption grey--text">Thanks for signing up!</span>
           </div>
         </v-window-item>
@@ -143,27 +172,30 @@
       <v-divider></v-divider>
 
       <v-card-actions>
-        <v-btn :disabled="backDisabled || step === 1"
-               depressed
-               color="primary darken-1"
-               name="back"
-               @click="step--">
+        <v-btn
+          :disabled="backDisabled || step === 1"
+          depressed
+          color="primary darken-1"
+          name="back"
+          @click="step--"
+        >
           <v-icon dark>navigate_before</v-icon>
           Back
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn :disabled="!this.form[`step${this.step}`].valid"
-               color="info darken-1"
-               depressed
-               name="next"
-               @click="validateAndNext()">
+        <v-btn
+          :disabled="!this.form[`step${this.step}`].valid"
+          color="info darken-1"
+          depressed
+          name="next"
+          @click="validateAndNext()"
+        >
           Next
           <v-icon dark>navigate_next</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
   </v-flex>
-
 </template>
 
 <script>

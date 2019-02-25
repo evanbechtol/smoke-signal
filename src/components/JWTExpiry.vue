@@ -3,7 +3,7 @@
     <v-card :dark="isDark" :color="expiryDetails.color" class="px-0 mx-0" tile>
       <v-layout align-center justify-center fill-height>
         <v-flex text-xs-center pt-3>
-          <p>{{expiryDetails.exp}}</p>
+          <p>{{ expiryDetails.exp }}</p>
         </v-flex>
       </v-layout>
     </v-card>
@@ -34,5 +34,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
