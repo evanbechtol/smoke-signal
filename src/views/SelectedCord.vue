@@ -397,7 +397,7 @@
                   v-on="data.on"
                   :block="$vuetify.breakpoint.name === 'xs'"
                   color="purple darken-1"
-                  :disabled="selectedCord.status !== 'Open'"
+                  :disabled="unpullDisabled()"
                   depressed
                   dark
                   @click="confirmCloseDialog = true"
@@ -463,10 +463,11 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { assetMixin } from "../mixins/assetMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
+import { authMixin } from "../mixins/authMixin";
 
 export default {
   name: "SelectedCord",
-  mixins: [themeMixin, assetMixin, cordMixin, alertMixin],
+  mixins: [themeMixin, assetMixin, cordMixin, alertMixin, authMixin],
   components: {},
   computed: {},
   data: function() {
@@ -557,12 +558,17 @@ export default {
       this.selectedCord.status = "Resolved";
       this.save();
     },
+    unpullDisabled() {
+      return !(
+        this.user.username === this.selectedCord.puller.username &&
+        this.user._id === this.selectedCord.puller._id &&
+        this.selectedCord.status === "Open"
+      );
+    },
     updateDiscussion() {
       this.selectedCord.discussion.push({
         time: new Date().toISOString(),
-
-        // Todo: This needs to be the authenticated user
-        user: { id: 1, username: "eevabec" },
+        user: { _id: this.user._id, username: this.user.username },
         data: this.discussion
       });
 
