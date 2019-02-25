@@ -48,6 +48,7 @@ export default {
     document.getElementById("html").style.backgroundColor = color;
     document.getElementById("body").style.backgroundColor = color;
 
+    // For E-Auth application authentication
     this.authenticateApp();
   },
   data() {

@@ -2,7 +2,7 @@ import "../jwt-decode";
 import axios from "axios";
 
 const base = "http://129.192.179.179";
-const appCode = "oKD4PhztZASnapOUcw";
+const appCode = "7MLijGzp-2XS0pmevA";
 
 export const authMixin = {
   data: () => ({
