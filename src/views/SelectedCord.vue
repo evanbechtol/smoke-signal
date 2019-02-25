@@ -602,6 +602,7 @@ export default {
     unpullCord() {
       this.selectedCord.status = "Resolved";
       this.save();
+      this.confirmCloseDialog = false;
     },
     unpullDisabled() {
       return !(
