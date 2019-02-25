@@ -14,6 +14,12 @@ export const socketMixin = {
     },
     SOCKET_REFRESH_ITEM: function(data) {
       this.$store.commit("selectedCord", data);
+    },
+    SOCKET_REFRESH_ERROR: function(data) {
+      this.$store.commit("alert", true);
+      this.$store.commit("alertMessage", data);
+      this.$store.commit("alertColor", "#DC2D37");
+      this.$store.commit("alertTimeout", 0);
     }
   },
   methods: {
