@@ -13,7 +13,6 @@ export const socketMixin = {
       this.$store.commit("gridItems", data);
     },
     SOCKET_REFRESH_GRID_ONE: function(data) {
-      console.log("grid items refreshed");
       this.$store.commit("gridItems", data);
     },
     SOCKET_REFRESH_ITEM: function(data) {
@@ -27,6 +26,12 @@ export const socketMixin = {
     }
   },
   methods: {
+    joinSelectedCordRoom: function(_id) {
+      this.$socket.emit("JOIN_ITEM_ROOM", _id);
+    },
+    leaveSelectedCordRoom: function(_id) {
+      this.$socket.emit("LEAVE_ITEM_ROOM", _id);
+    },
     refreshDiscussion: function(_id) {
       this.$socket.emit("REFRESH_DISCUSSION", _id);
     },

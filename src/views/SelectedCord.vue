@@ -508,6 +508,7 @@ export default {
         .then(response => {
           const cord = response.data.data;
           this.$store.commit("selectedCord", cord);
+          this.joinSelectedCordRoom(cord._id);
           this.loading = false;
         })
         .catch(err => {

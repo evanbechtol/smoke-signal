@@ -27,6 +27,7 @@ import { alertMixin } from "../mixins/alertMixin.js";
 import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
+import { socketMixin } from "../mixins/socketMixin";
 
 const ICONS = {
   info: "mdi-information",
@@ -37,7 +38,7 @@ const ICONS = {
 
 export default {
   name: "home",
-  mixins: [themeMixin, cordMixin, alertMixin],
+  mixins: [themeMixin, cordMixin, alertMixin, socketMixin],
   components: {
     JwtExpiry,
     MenuBtn,
@@ -62,13 +63,17 @@ export default {
       { text: "Category", align: "left", value: "category" },
       { text: "Duration", align: "left", value: "duration" },
       { text: "Hero", align: "left", value: "hero" }
-    ],
+    ]
   }),
   beforeDestroy() {},
   created() {
     this.getCordGridItems();
   },
-  mounted() {},
+  mounted() {
+    if (this.selectedCord) {
+      this.leaveSelectedCordRoom(this.selectedCord._id);
+    }
+  },
   methods: {
     genIcon(color) {
       return ICONS[color];

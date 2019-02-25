@@ -131,6 +131,7 @@ export default {
           const cord = response.data.data;
           this.$store.commit("selectedCord", cord);
           this.$router.push({ path: `/cord/${cord._id}`, props: cord });
+          this.joinSelectedCordRoom(cord._id);
         })
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);
