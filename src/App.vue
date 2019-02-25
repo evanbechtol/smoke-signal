@@ -39,10 +39,11 @@ import Toolbar from "./components/Toolbar";
 import Footer from "./components/Footer";
 import { alertMixin } from "./mixins/alertMixin";
 import { authMixin } from "./mixins/authMixin";
+import { socketMixin } from "./mixins/socketMixin";
 
 export default {
   name: "app",
-  mixins: [themeMixin, alertMixin, authMixin],
+  mixins: [themeMixin, alertMixin, authMixin, socketMixin],
   components: { Footer, Toolbar },
   created() {
     const color = this.isDark ? "#181818" : "#e0e0e0";
