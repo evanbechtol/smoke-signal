@@ -470,10 +470,18 @@ import { assetMixin } from "../mixins/assetMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
+import { socketMixin } from "../mixins/socketMixin";
 
 export default {
   name: "SelectedCord",
-  mixins: [themeMixin, assetMixin, cordMixin, alertMixin, authMixin],
+  mixins: [
+    themeMixin,
+    assetMixin,
+    cordMixin,
+    alertMixin,
+    authMixin,
+    socketMixin
+  ],
   components: {},
   computed: {},
   data: function() {
@@ -552,9 +560,9 @@ export default {
         rescuers: [{ _id: this.user._id, username: this.user.username }]
       };
       this.updateRescuers(this.selectedCord._id, data)
-        .then(response => {
+        .then(() => {
           this.setAlert("Cord updated successfully!", "#288964", 5000);
-          this.selectedCord = response.data.data;
+          this.refreshItem(this.selectedCord._id);
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
@@ -567,7 +575,7 @@ export default {
           response.data.data.discussion.forEach(function(elem) {
             return convertStringToDate(elem);
           });
-          this.selectedCord = response.data.data;
+          this.refreshItem(this.selectedCord._id);
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);

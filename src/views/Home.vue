@@ -43,7 +43,16 @@ export default {
     MenuBtn,
     Grid
   },
-  computed: {},
+  computed: {
+    gridItems: {
+      get: function() {
+        return this.$store.getters.gridItems;
+      },
+      set: function(payload) {
+        this.$store.commit("gridItems", payload);
+      }
+    }
+  },
   data: () => ({
     loading: false,
     headers: [
@@ -54,7 +63,6 @@ export default {
       { text: "Duration", align: "left", value: "duration" },
       { text: "Hero", align: "left", value: "hero" }
     ],
-    gridItems: []
   }),
   beforeDestroy() {},
   created() {

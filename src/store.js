@@ -12,6 +12,9 @@ export default new Vuex.Store({
     alertTimeout: 5000,
     app: "",
     appToken: null,
+    gridItems: [],
+    isConnected: false,
+    socketMessage: "",
     isDark: false,
     isAuthenticated: false,
     isExpiryIntervalSet: false,
@@ -27,10 +30,13 @@ export default new Vuex.Store({
     alertSeverity: state => state.alertSeverity,
     alertTimeout: state => state.alertTimeout,
     appToken: state => state.appToken,
+    gridItems: state => state.gridItems,
+    isConnected: state => state.isConnected,
     isDark: state => state.isDark,
     isAuthenticated: state => state.isAuthenticated,
     isExpiryIntervalSet: state => state.isExpiryIntervalSet,
     selectedCord: state => state.selectedCord,
+    socketMessage: state => state.socketMessage,
     theme: state => state.theme,
     token: state => state.token,
     user: state => state.user
@@ -54,9 +60,15 @@ export default new Vuex.Store({
     appToken: function(state, payload) {
       state.appToken = payload;
     },
+    gridItems: function(state, payload) {
+      state.gridItems = payload;
+    },
     isDark: function(state, payload) {
       localStorage.setItem("vueAppTemplate-isDark", JSON.stringify(payload));
       state.isDark = payload;
+    },
+    isConnected: function(state, payload) {
+      state.isConnected = payload;
     },
     isAuthenticated: function(state, payload) {
       state.isAuthenticated = payload;
@@ -66,6 +78,21 @@ export default new Vuex.Store({
     },
     selectedCord: function(state, payload) {
       state.selectedCord = payload;
+    },
+    SOCKET_CONNECT(state) {
+      state.isConnected = true;
+    },
+    SOCKET_DISCONNECT(state) {
+      state.isConnected = false;
+    },
+    SOCKET_REFRESH_GRID(state) {
+      debugger;
+    },
+    SOCKET_REFRESH_ITEM(state, payload) {
+      state.selectedCord = payload;
+    },
+    socketMessage: function(state, payload) {
+      state.socketMessage = payload;
     },
     theme: function(state, payload) {
       // This can be modified to retrieve from API instead of localstorage

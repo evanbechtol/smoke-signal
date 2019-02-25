@@ -34,6 +34,14 @@
           hide-details
         >
         </v-text-field>
+        <v-tooltip bottom offset-y>
+          <template #activator="data">
+            <v-btn class="ml-4 mt-3" v-on="data.on" @click="refreshGrid" icon>
+              <v-icon>refresh</v-icon>
+            </v-btn>
+          </template>
+          <span>Refresh Grid</span>
+        </v-tooltip>
       </v-toolbar>
       <v-data-table
         :headers="headers"
@@ -80,10 +88,11 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
+import { socketMixin } from "../mixins/socketMixin";
 
 export default {
   name: "Grid",
-  mixins: [themeMixin, cordMixin],
+  mixins: [themeMixin, cordMixin, socketMixin],
   components: { MenuBtn, PullCordDialog },
   computed: {},
   data: () => ({
