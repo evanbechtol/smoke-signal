@@ -143,10 +143,11 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { assetMixin } from "../mixins/assetMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
+import { authMixin } from "../mixins/authMixin";
 
 export default {
   name: "PullCordDialog",
-  mixins: [themeMixin, assetMixin, alertMixin, cordMixin],
+  mixins: [themeMixin, assetMixin, alertMixin, cordMixin, authMixin],
   components: {},
   computed: {},
   data: function() {
@@ -170,8 +171,7 @@ export default {
       this.$emit("closeDialog");
     },
     save() {
-      //Todo: Send actual user once auth setup
-      this.cord.puller = { id: 1, username: "eevabec" };
+      this.cord.puller = { _id: this.user._id, username: this.user.username };
       this.cord.openedOn = this.getDateTime();
       this.createCord(this.cord)
         .then(() => {
