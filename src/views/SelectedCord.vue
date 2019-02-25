@@ -66,6 +66,7 @@
                         <v-item-group multiple>
                           <v-item
                             v-for="(rescuer, index) in selectedCord.rescuers"
+                            class="animated faster fadeIn"
                             :key="`rescuer-${index}`"
                           >
                             <v-tooltip bottom offset-x>
