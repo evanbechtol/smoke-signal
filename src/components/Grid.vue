@@ -44,7 +44,7 @@
         <template slot="items" slot-scope="props">
           <tr @click="openItem(props.item)" class="row">
             <td>{{ props.item.title }}</td>
-            <td>{{ props.item.name }}</td>
+            <td>{{ props.item.puller.username }}</td>
             <td>{{ props.item.app }}</td>
             <td>{{ props.item.category }}</td>
             <td>{{ computeDuration(props.item.openedOn) }}</td>
