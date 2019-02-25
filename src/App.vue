@@ -12,22 +12,64 @@
         <!--<Footer color="primary"/>-->
         <v-snackbar
           :color="alertColor"
+          class="animated faster heartBeat"
           :dark="isDark"
           v-model="alert"
           :multi-line="mode === 'multi-line'"
           :timeout="alertTimeout"
-          :bottom="y === 'bottom'"
-          :top="y === 'top'"
-          :left="x === 'left'"
-          :right="x === 'right'"
+          top
           :vertical="mode === 'vertical'"
         >
-          <v-icon class="pr-4">{{ getAlertIcon() }}</v-icon
-          >{{ alertMessage }}
+          <v-icon class="pr-4">{{ getAlertIcon() }}</v-icon>
+          {{ alertMessage }}
           <v-btn :dark="isDark" icon @click="toggleAlert(false)">
             <v-icon>close</v-icon>
           </v-btn>
         </v-snackbar>
+
+        <v-bottom-sheet
+          :inset="$vuetify.breakpoint.name === 'xs'"
+          :value="cordPullNotification"
+          :hide-overlay="$vuetify.breakpoint.name !== 'xs'"
+        >
+          <v-toolbar dark>
+            <v-icon class="ml-1 mr-2">{{ alertSeverity }}</v-icon>
+            <v-toolbar-title class="hildaLight space-small">
+              {{ cordPullMessage.message }}
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn dark icon @click="closeCordPullNotification">
+                <v-icon>close</v-icon>
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-card tile>
+            <v-card-text>
+              <v-layout row wrap fill-height>
+                <v-flex xs12>
+                  <p>Title: {{ cordPullMessage.data.title }}</p>
+                </v-flex>
+                <v-flex xs12>
+                  <p>Description: {{ cordPullMessage.data.description }}</p>
+                </v-flex>
+                <v-flex xs12>
+                  <v-btn
+                    depressed
+                    color="primary"
+                    class="ml-0"
+                    dark
+                    :to="notificationLink"
+                    :block="$vuetify.breakpoint.name === 'xs'"
+                  >
+                    Check it out!
+                    <v-icon class="ml-2">navigate_next</v-icon>
+                  </v-btn>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
       </main>
     </div>
   </v-app>

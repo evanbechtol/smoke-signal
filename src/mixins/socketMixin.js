@@ -6,6 +6,11 @@ export const socketMixin = {
     disconnect: function() {
       this.$store.commit("SOCKET_DISCONNECT");
     },
+    SOCKET_NOTIFY: function(data) {
+      this.$store.commit("cordPullNotification", true);
+      this.$store.commit("cordPullMessage", data);
+      this.$store.commit("notificationLink", `/cord/${data.data._id}`);
+    },
     SOCKET_REFRESH_DISCUSSION: function(data) {
       console.log("Discussion refresh received");
     },
@@ -32,8 +37,8 @@ export const socketMixin = {
     leaveSelectedCordRoom: function(_id) {
       this.$socket.emit("LEAVE_ITEM_ROOM", _id);
     },
-    refreshDiscussion: function(_id) {
-      this.$socket.emit("REFRESH_DISCUSSION", _id);
+    notify: function(data) {
+      this.$socket.emit("NOTIFY", data);
     },
     refreshGrid: function() {
       this.$socket.emit("REFRESH_GRID_ALL", { query: { status: "Open" } });

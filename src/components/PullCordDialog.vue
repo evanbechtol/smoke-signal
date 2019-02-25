@@ -182,12 +182,16 @@ export default {
       this.cord.puller = { _id: this.user._id, username: this.user.username };
       this.cord.openedOn = this.getDateTime();
       this.createCord(this.cord)
-        .then(() => {
+        .then(response => {
           this.$refs.form.reset();
           this.$emit("closeDialog");
           this.$emit("refreshCordGrid");
           this.setAlert("Cord pulled successfully!", "#288964", 10);
           this.refreshGrid();
+          this.notify({
+            message: "A cord has just been pulled!",
+            data: response.data.data
+          });
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);

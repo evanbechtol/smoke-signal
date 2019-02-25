@@ -6,18 +6,31 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     alert: false,
+    alertClass: "",
     alertColor: "#DC2D37",
     alertMessage: "",
     alertSeverity: "error",
     alertTimeout: 5000,
     app: "",
     appToken: null,
+    cordPullNotification: false,
+    cordPullMessage: {
+      data: {
+        _id: "",
+        app: "",
+        category: "",
+        description: "",
+        puller: { _id: "", username: "" },
+        title: ""
+      }
+    },
     gridItems: [],
     isConnected: false,
     socketMessage: "",
     isDark: false,
     isAuthenticated: false,
     isExpiryIntervalSet: false,
+    notificationLink: "",
     selectedCord: null,
     theme: "light",
     token: null,
@@ -25,6 +38,9 @@ export default new Vuex.Store({
   },
   getters: {
     alert: state => state.alert,
+    cordPullNotification: state => state.cordPullNotification,
+    cordPullMessage: state => state.cordPullMessage,
+    alertClass: state => state.alertClass,
     alertColor: state => state.alertColor,
     alertMessage: state => state.alertMessage,
     alertSeverity: state => state.alertSeverity,
@@ -35,6 +51,7 @@ export default new Vuex.Store({
     isDark: state => state.isDark,
     isAuthenticated: state => state.isAuthenticated,
     isExpiryIntervalSet: state => state.isExpiryIntervalSet,
+    notificationLink: state => state.notificationLink,
     selectedCord: state => state.selectedCord,
     socketMessage: state => state.socketMessage,
     theme: state => state.theme,
@@ -44,6 +61,15 @@ export default new Vuex.Store({
   mutations: {
     alert: function(state, payload) {
       state.alert = payload;
+    },
+    cordPullNotification: function(state, payload) {
+      state.cordPullNotification = payload;
+    },
+    cordPullMessage: function(state, payload) {
+      state.cordPullMessage = payload;
+    },
+    alertClass: function(state, payload) {
+      state.alertClass = payload;
     },
     alertColor: function(state, payload) {
       state.alertColor = payload;
@@ -76,6 +102,9 @@ export default new Vuex.Store({
     isExpiryIntervalSet: function(state, payload) {
       state.isExpiryIntervalSet = payload;
     },
+    notificationLink: function(state, payload) {
+      state.notificationLink = payload;
+    },
     selectedCord: function(state, payload) {
       state.selectedCord = payload;
     },
@@ -84,9 +113,6 @@ export default new Vuex.Store({
     },
     SOCKET_DISCONNECT(state) {
       state.isConnected = false;
-    },
-    SOCKET_REFRESH_GRID(state) {
-      debugger;
     },
     SOCKET_REFRESH_ITEM(state, payload) {
       state.selectedCord = payload;

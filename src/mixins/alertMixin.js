@@ -8,6 +8,22 @@ export const alertMixin = {
         this.$store.commit("alert");
       }
     },
+    cordPullNotification: {
+      get: function() {
+        return this.$store.getters.cordPullNotification;
+      },
+      set: function() {
+        this.$store.commit("cordPullNotification");
+      }
+    },
+    cordPullMessage: {
+      get: function() {
+        return this.$store.getters.cordPullMessage;
+      },
+      set: function() {
+        this.$store.commit("cordPullMessage");
+      }
+    },
     alertColor: {
       get: function() {
         return this.$store.getters.alertColor;
@@ -39,6 +55,14 @@ export const alertMixin = {
       set: function() {
         this.$store.commit("alertTimeout");
       }
+    },
+    notificationLink: {
+      get: function() {
+        return this.$store.getters.notificationLink;
+      },
+      set: function() {
+        this.$store.commit("notificationLink");
+      }
     }
   },
   methods: {
@@ -59,6 +83,9 @@ export const alertMixin = {
     },
     getAlertIcon() {
       return ICONS[this.alertSeverity] || ICONS["error"];
+    },
+    closeCordPullNotification() {
+      this.$store.commit("cordPullNotification", false);
     }
   }
 };
