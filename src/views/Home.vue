@@ -2,7 +2,7 @@
   <div style="height: 100vh;" class="home page mt-5">
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
-        <v-flex xs12>
+        <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
           <grid
             :headers="headers"
             :items="gridItems"
@@ -13,6 +13,53 @@
               <h1>Active Cords</h1>
             </template>
           </grid>
+        </v-flex>
+
+        <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
+          <v-card tile class="my-3">
+            <v-card-title class="hildaLight space-small mx-0 mt-0 bg white--text">
+              {{ item.title }}
+            </v-card-title>
+            <v-card-text>
+              <v-layout row wrap fill-height>
+                <v-flex xs12>
+                  <v-text-field
+                    readonly
+                    label="Application"
+                    :value="item.app"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    readonly
+                    label="Category"
+                    :value="item.category"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    readonly
+                    label="Duration"
+                    :value="computeDuration(item.openedOn)"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-textarea
+                    readonly
+                    v-model="item.description"
+                    label="Description"
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+            
+            <v-card-actions>
+              <v-btn block color="primary" :to="`/cord/${item._id}`">
+                View Details
+                <v-icon class="ml-2">navigate_next</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
@@ -75,6 +122,11 @@ export default {
     }
   },
   methods: {
+    computeDuration(date) {
+      const now = new Date();
+      const openedOn = new Date(date);
+      return msToTime(parseInt((now - openedOn) / 24));
+    },
     genIcon(color) {
       return ICONS[color];
     },
@@ -99,6 +151,19 @@ export default {
     }
   }
 };
+
+function msToTime(duration) {
+  let milliseconds = parseInt((duration % 1000) / 100),
+    seconds = parseInt((duration / 1000) % 60),
+    minutes = parseInt((duration / (1000 * 60)) % 60),
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+  hours = hours < 10 ? "0" + hours : hours;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+}
 </script>
 
 <style scoped>
