@@ -5,6 +5,7 @@
     </v-btn>
 
     <v-list>
+      <!-- eslint-disable-next-line -->
       <v-list-tile v-for="(item, i) in items" :key="i" @click="">
         <v-list-tile-title>{{ item.title }}</v-list-tile-title>
       </v-list-tile>

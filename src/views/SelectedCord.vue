@@ -540,6 +540,7 @@ export default {
       window.history.back();
     },
     removeRescuer(rescuer) {
+      // eslint-disable-next-line
       this.selectedCord.rescuers = this.selectedCord.rescuers.filter(function(elem) {
         return elem.username !== rescuer.username;
       });
