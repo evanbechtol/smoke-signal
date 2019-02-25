@@ -189,6 +189,7 @@
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
+                              :disabled="selectedCord.status !== 'Open'"
                               @click="readonly.app = !readonly.app"
                               >{{ readonly.app ? "edit" : "save" }}
                             </v-icon>
@@ -221,6 +222,7 @@
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
+                              :disabled="selectedCord.status !== 'Open'"
                               @click="readonly.category = !readonly.category"
                               >{{ readonly.category ? "edit" : "save" }}
                             </v-icon>
@@ -258,6 +260,7 @@
                       <template #activator="data">
                         <v-icon
                           v-on="data.on"
+                          :disabled="selectedCord.status !== 'Open'"
                           @click="readonly.description = !readonly.description"
                           >{{ readonly.description ? "edit" : "save" }}
                         </v-icon>
@@ -277,6 +280,7 @@
                           v-if="!addingToDiscussion"
                           color="success"
                           v-on="data.on"
+                          :disabled="selectedCord.status !== 'Open'"
                           @click="addingToDiscussion = !addingToDiscussion"
                         >
                           <v-icon>note_add</v-icon>
@@ -529,7 +533,10 @@ export default {
       }
     },
     canRemoveRescuer(rescuer) {
-      return rescuer.username === this.user.username;
+      return (
+        this.selectedCord.status === "Open" &&
+        rescuer.username === this.user.username
+      );
     },
     computeDuration(date) {
       const now = new Date();
@@ -571,7 +578,7 @@ export default {
     save() {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
-          this.setAlert("Cord updated successfully!", "#288964", 5);
+          this.setAlert("Cord updated successfully!", "#288964", 5000);
           response.data.data.discussion.forEach(function(elem) {
             return convertStringToDate(elem);
           });
@@ -583,7 +590,9 @@ export default {
     },
     showRescueButton() {
       const user = this.user;
-      return this.selectedCord && this.selectedCord.rescuers
+      return this.selectedCord &&
+        this.selectedCord.status === "Open" &&
+        this.selectedCord.rescuers
         ? this.selectedCord.rescuers.filter(function(elem) {
             return elem.username === user.username;
           }).length === 0

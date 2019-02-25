@@ -36,7 +36,7 @@
         </v-text-field>
         <v-tooltip bottom offset-y>
           <template #activator="data">
-            <v-btn class="ml-4 mt-3" v-on="data.on" @click="refreshGrid" icon>
+            <v-btn class="ml-4 mt-3" @click="refreshMyGrid" icon>
               <v-icon>refresh</v-icon>
             </v-btn>
           </template>
@@ -143,6 +143,9 @@ export default {
     },
     refreshCordGrid() {
       this.$emit("refreshCordGrid");
+    },
+    refreshMyGrid() {
+      this.refreshGridOne();
     }
   },
   watch: {

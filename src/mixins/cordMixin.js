@@ -48,8 +48,8 @@ export const cordMixin = {
      * @param query [string | object] Optional - Query to be used to retrieve data
      * @returns {Promise} Returns promise for request being generated
      */
-    getCords(limit = 20, skip = 0, query = null) {
-      const route = `cords?limit=${limit}&skip=${skip}&query=${
+    getCords(limit = 100, skip = 0, query = null) {
+      const route = `cords/status/Open?limit=${limit}&skip=${skip}&query=${
         query === null ? "" : query
       }`;
       const options = {

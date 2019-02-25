@@ -144,10 +144,18 @@ import { assetMixin } from "../mixins/assetMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { authMixin } from "../mixins/authMixin";
+import { socketMixin } from "../mixins/socketMixin";
 
 export default {
   name: "PullCordDialog",
-  mixins: [themeMixin, assetMixin, alertMixin, cordMixin, authMixin],
+  mixins: [
+    themeMixin,
+    assetMixin,
+    alertMixin,
+    cordMixin,
+    authMixin,
+    socketMixin
+  ],
   components: {},
   computed: {},
   data: function() {
@@ -179,6 +187,7 @@ export default {
           this.$emit("closeDialog");
           this.$emit("refreshCordGrid");
           this.setAlert("Cord pulled successfully!", "#288964", 10);
+          this.refreshGrid();
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);

@@ -9,7 +9,11 @@ export const socketMixin = {
     SOCKET_REFRESH_DISCUSSION: function(data) {
       console.log("Discussion refresh received");
     },
-    SOCKET_REFRESH_GRID: function(data) {
+    SOCKET_REFRESH_GRID_ALL: function(data) {
+      this.$store.commit("gridItems", data);
+    },
+    SOCKET_REFRESH_GRID_ONE: function(data) {
+      console.log("grid items refreshed");
       this.$store.commit("gridItems", data);
     },
     SOCKET_REFRESH_ITEM: function(data) {
@@ -27,7 +31,10 @@ export const socketMixin = {
       this.$socket.emit("REFRESH_DISCUSSION", _id);
     },
     refreshGrid: function() {
-      this.$socket.emit("REFRESH_GRID");
+      this.$socket.emit("REFRESH_GRID_ALL", { query: { status: "Open" } });
+    },
+    refreshGridOne: function() {
+      this.$socket.emit("REFRESH_GRID_ONE", { query: { status: "Open" } });
     },
     refreshItem: function(_id) {
       this.$socket.emit("REFRESH_ITEM", _id);
