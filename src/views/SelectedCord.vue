@@ -207,7 +207,11 @@
                         type="text"
                         :value="computeDuration(selectedCord.openedOn)"
                         readonly
-                        color="info"
+                        :background-color="
+                          computeDurationBg(selectedCord.openedOn)
+                        "
+                        dark
+                        color="primary"
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>

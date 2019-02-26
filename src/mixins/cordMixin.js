@@ -19,6 +19,13 @@ export const cordMixin = {
       const openedOn = new Date(date);
       return msToTime(parseInt(now - openedOn));
     },
+    computeDurationBg(duration) {
+      return this.computeDuration(duration).includes("Days")
+        ? "error"
+        : this.computeDuration(duration).includes("Hrs")
+        ? "orangeWarning"
+        : "success";
+    },
     /**
      * @description Attempts to create a new cord using the body provided
      * @param data {object} Body to be used to crete a new cord
