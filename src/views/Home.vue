@@ -5,7 +5,7 @@
         <v-flex xs12>
           <v-layout row wrap justify-space-between align-center fill-height>
             <v-flex xs12 sm4>
-              <v-card tile class="mx-1 my-2">
+              <v-card tile flat class="mx-1 my-2">
                 <v-card-title
                   class="hildaLight space-small dark text-xs-center mx-0"
                   style="background-color: var(--e-dark-status-red)"
@@ -13,14 +13,27 @@
                   <v-icon class="mr-3">error</v-icon> Critical Cords
                 </v-card-title>
                 <v-card-text class="text-xs-center">
-                  <p class="hildaLight space-small big">
-                    {{ criticalCords.length }}
-                  </p>
+                  <v-tooltip bottom offset-y>
+                    <template #activator="data">
+                      <v-btn
+                        v-on="data.on"
+                        dark
+                        large
+                        fab
+                        @click="updateGridItems('criticalCords')"
+                        style="font-size: 2em;"
+                        color="error"
+                      >
+                        {{ criticalCords.length }}
+                      </v-btn>
+                    </template>
+                    <span>Toggle Viewing Critical Cords</span>
+                  </v-tooltip>
                 </v-card-text>
               </v-card>
             </v-flex>
             <v-flex xs12 sm4>
-              <v-card tile class="mx-1 my-2">
+              <v-card tile flat class="mx-1 my-2">
                 <v-card-title
                   class="hildaLight space-small dark text-xs-center mx-0"
                   style="background-color: var(--e-dark-status-orange)"
@@ -28,14 +41,27 @@
                   <v-icon class="mr-3">warning</v-icon> Moderate Cords
                 </v-card-title>
                 <v-card-text class="text-xs-center">
-                  <p class="hildaLight space-small big">
-                    {{ moderateCords.length }}
-                  </p>
+                  <v-tooltip bottom offset-y>
+                    <template #activator="data">
+                      <v-btn
+                        v-on="data.on"
+                        dark
+                        large
+                        fab
+                        @click="updateGridItems('moderateCords')"
+                        style="font-size: 2em;"
+                        color="orangeWarning"
+                      >
+                        {{ moderateCords.length }}
+                      </v-btn>
+                    </template>
+                    <span>Toggle Viewing Moderate Cords</span>
+                  </v-tooltip>
                 </v-card-text>
               </v-card>
             </v-flex>
             <v-flex xs12 sm4>
-              <v-card tile class="mx-1 my-2">
+              <v-card tile flat class="mx-1 my-2">
                 <v-card-title
                   class="hildaLight space-small dark text-xs-center mx-0"
                   style="background-color: var(--e-dark-status-green)"
@@ -43,9 +69,22 @@
                   <v-icon class="mr-3">info</v-icon> New Cords
                 </v-card-title>
                 <v-card-text class="text-xs-center">
-                  <p class="hildaLight space-small big">
-                    {{ newCords.length }}
-                  </p>
+                  <v-tooltip bottom offset-y>
+                    <template #activator="data">
+                      <v-btn
+                        v-on="data.on"
+                        dark
+                        large
+                        fab
+                        @click="updateGridItems('newCords')"
+                        style="font-size: 2em;"
+                        color="success"
+                      >
+                        {{ newCords.length }}
+                      </v-btn>
+                    </template>
+                    <span>Toggle Viewing New Cords</span>
+                  </v-tooltip>
                 </v-card-text>
               </v-card>
             </v-flex>
@@ -55,7 +94,15 @@
         <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
           <grid
             :headers="headers"
-            :items="gridItems"
+            :items="
+              gridItemType === 'newCords'
+                ? newCords
+                : gridItemType === 'criticalCords'
+                ? criticalCords
+                : gridItemType === 'moderateCords'
+                ? moderateCords
+                : gridItems
+            "
             :loading="loading"
             v-on:refreshCordGrid="getCordGridItems"
           >
@@ -157,6 +204,7 @@ export default {
     criticalCords: [],
     moderateCords: [],
     newCords: [],
+    gridItemType: "all",
     loading: false,
     headers: [
       { text: "Title", align: "left", value: "title" },
@@ -198,11 +246,13 @@ export default {
           );
           this.loading = false;
         });
+    },
+    updateGridItems(itemType) {
+      this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
     }
   },
   watch: {
     gridItems: function() {
-      //debugger;
       const _this = this;
       this.criticalCords = this.gridItems.filter(function(elem) {
         return _this.computeDuration(elem.openedOn).includes("Days");
