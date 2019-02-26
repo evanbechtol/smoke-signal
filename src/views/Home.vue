@@ -2,6 +2,56 @@
   <div style="height: 100vh;" class="home page mt-5">
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
+        <v-flex xs12>
+          <v-layout row wrap justify-space-between align-center fill-height>
+            <v-flex xs12 sm4>
+              <v-card tile class="mx-1 my-2">
+                <v-card-title
+                  class="hildaLight space-small dark text-xs-center mx-0"
+                  style="background-color: var(--e-dark-status-red)"
+                >
+                  <v-icon class="mr-3">error</v-icon> Critical Cords
+                </v-card-title>
+                <v-card-text class="text-xs-center">
+                  <p class="hildaLight space-small big">
+                    {{ criticalCords.length }}
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 sm4>
+              <v-card tile class="mx-1 my-2">
+                <v-card-title
+                  class="hildaLight space-small dark text-xs-center mx-0"
+                  style="background-color: var(--e-dark-status-orange)"
+                >
+                  <v-icon class="mr-3">warning</v-icon> Moderate Cords
+                </v-card-title>
+                <v-card-text class="text-xs-center">
+                  <p class="hildaLight space-small big">
+                    {{ moderateCords.length }}
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 sm4>
+              <v-card tile class="mx-1 my-2">
+                <v-card-title
+                  class="hildaLight space-small dark text-xs-center mx-0"
+                  style="background-color: var(--e-dark-status-green)"
+                >
+                  <v-icon class="mr-3">info</v-icon> New Cords
+                </v-card-title>
+                <v-card-text class="text-xs-center">
+                  <p class="hildaLight space-small big">
+                    {{ newCords.length }}
+                  </p>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+
         <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
           <grid
             :headers="headers"
@@ -104,6 +154,9 @@ export default {
     }
   },
   data: () => ({
+    criticalCords: [],
+    moderateCords: [],
+    newCords: [],
     loading: false,
     headers: [
       { text: "Title", align: "left", value: "title" },
@@ -145,6 +198,29 @@ export default {
           );
           this.loading = false;
         });
+    }
+  },
+  watch: {
+    gridItems: function() {
+      //debugger;
+      const _this = this;
+      this.criticalCords = this.gridItems.filter(function(elem) {
+        return _this.computeDuration(elem.openedOn).includes("Days");
+      });
+
+      this.moderateCords = this.gridItems.filter(function(elem) {
+        return (
+          !_this.computeDuration(elem.openedOn).includes("Days") &&
+          _this.computeDuration(elem.openedOn).includes("Hrs")
+        );
+      });
+
+      this.newCords = this.gridItems.filter(function(elem) {
+        return (
+          !_this.computeDuration(elem.openedOn).includes("Days") &&
+          !_this.computeDuration(elem.openedOn).includes("Hrs")
+        );
+      });
     }
   }
 };

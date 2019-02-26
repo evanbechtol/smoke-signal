@@ -198,7 +198,7 @@ export default {
         });
     },
     getDateTime() {
-      return Date().now();
+      return new Date().toISOString();
     }
   },
   props: ["initialDialog"],
