@@ -5,6 +5,7 @@ import store from "./store";
 import VeeValidate from "vee-validate";
 import VTooltip from "v-tooltip";
 import VueClipboards from "vue-clipboards";
+import VueSocketIO from "vue-socket.io";
 import Vuetify from "vuetify";
 import axios from "axios";
 import "vuetify/dist/vuetify.min.css";
@@ -20,6 +21,17 @@ Vue.use(VTooltip);
 Vue.use(VueClipboards);
 Vue.use(Vuetify, { theme });
 Vue.use(axios);
+Vue.use(
+  new VueSocketIO({
+    debug: true,
+    connection: "http://localhost:3000",
+    vuex: {
+      store,
+      actionPrefix: "SOCKET_",
+      mutationPrefix: "SOCKET_"
+    }
+  })
+);
 
 Vue.config.productionTip = false;
 

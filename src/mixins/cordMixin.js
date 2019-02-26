@@ -14,6 +14,18 @@ export const cordMixin = {
     }
   },
   methods: {
+    computeDuration(date) {
+      const now = new Date();
+      const openedOn = new Date(date);
+      return msToTime(parseInt(now - openedOn));
+    },
+    computeDurationBg(duration) {
+      return this.computeDuration(duration).includes("Days")
+        ? "error"
+        : this.computeDuration(duration).includes("Hrs")
+        ? "orangeWarning"
+        : "success";
+    },
     /**
      * @description Attempts to create a new cord using the body provided
      * @param data {object} Body to be used to crete a new cord
@@ -48,8 +60,8 @@ export const cordMixin = {
      * @param query [string | object] Optional - Query to be used to retrieve data
      * @returns {Promise} Returns promise for request being generated
      */
-    getCords(limit = 20, skip = 0, query = null) {
-      const route = `cords?limit=${limit}&skip=${skip}&query=${
+    getCords(limit = 100, skip = 0, query = null) {
+      const route = `cords/status/Open?limit=${limit}&skip=${skip}&query=${
         query === null ? "" : query
       }`;
       const options = {
@@ -153,4 +165,22 @@ function makeRequest(options = null) {
 
 function respondError(message) {
   return { success: false, error: message };
+}
+
+function msToTime(duration) {
+  const seconds = (duration / 1000).toFixed(1);
+  const minutes = (duration / (1000 * 60)).toFixed(1);
+  const hours = (duration / (1000 * 60 * 60)).toFixed(1);
+  const days = (duration / (1000 * 60 * 60 * 24)).toFixed(1);
+
+  if (seconds < 60) {
+    return seconds + " Sec";
+  } else if (minutes < 60) {
+    return minutes + " Min";
+  } else if (hours < 24) {
+    return hours + " Hrs";
+  } else {
+    return days + " Days";
+  }
+  //return `${days > 0 ? days + " Days " : ""} ${hours} Hours ${minutes} Minutes`;
 }

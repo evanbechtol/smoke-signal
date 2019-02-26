@@ -100,7 +100,7 @@ export const authMixin = {
      */
     validateApp() {
       const route = "e_auth/validate/apps";
-
+      // eslint-disable-next-line
       return new Promise((resolve, reject) => {
         axios
           .get(`${base}/${route}?token=${this.appToken}`)
@@ -222,6 +222,7 @@ export const authMixin = {
       });
     },
     eAuthRegister(body = null) {
+      // eslint-disable-next-line
       return new Promise((resolve, reject) => {
         const isValid =
           body &&

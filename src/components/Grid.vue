@@ -34,6 +34,14 @@
           hide-details
         >
         </v-text-field>
+        <v-tooltip bottom offset-y>
+          <template #activator="data">
+            <v-btn class="ml-4 mt-3" @click="refreshMyGrid" icon>
+              <v-icon>refresh</v-icon>
+            </v-btn>
+          </template>
+          <span>Refresh Grid</span>
+        </v-tooltip>
       </v-toolbar>
       <v-data-table
         :headers="headers"
@@ -80,10 +88,11 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
+import { socketMixin } from "../mixins/socketMixin";
 
 export default {
   name: "Grid",
-  mixins: [themeMixin, cordMixin],
+  mixins: [themeMixin, cordMixin, socketMixin],
   components: { MenuBtn, PullCordDialog },
   computed: {},
   data: () => ({
@@ -122,18 +131,17 @@ export default {
           const cord = response.data.data;
           this.$store.commit("selectedCord", cord);
           this.$router.push({ path: `/cord/${cord._id}`, props: cord });
+          this.joinSelectedCordRoom(cord._id);
         })
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);
         });
     },
-    computeDuration(date) {
-      const now = new Date();
-      const openedOn = new Date(date);
-      return msToTime(parseInt((now - openedOn) / 24));
-    },
     refreshCordGrid() {
       this.$emit("refreshCordGrid");
+    },
+    refreshMyGrid() {
+      this.refreshGridOne();
     }
   },
   watch: {
@@ -147,13 +155,15 @@ function msToTime(duration) {
   let milliseconds = parseInt((duration % 1000) / 100),
     seconds = parseInt((duration / 1000) % 60),
     minutes = parseInt((duration / (1000 * 60)) % 60),
-    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24),
+    days = parseInt(duration / (1000 * 60 * 60 * 24));
 
+  days = days < 10 ? "0" + days : days;
   hours = hours < 10 ? "0" + hours : hours;
   minutes = minutes < 10 ? "0" + minutes : minutes;
   seconds = seconds < 10 ? "0" + seconds : seconds;
 
-  return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+  return `${days > 0 ? days + " Days " : ""} ${hours} Hours ${minutes} Minutes`;
 }
 </script>
 

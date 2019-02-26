@@ -3,16 +3,173 @@
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12>
+          <v-layout row wrap justify-space-between align-center fill-height>
+            <v-flex xs12 sm4>
+              <v-card tile flat :dark="isDark" class="mx-1 my-2">
+                <v-card-title
+                  class="hildaLight space-small dark text-xs-center mx-0"
+                  style="background-color: var(--e-dark-status-red)"
+                >
+                  <v-icon class="mr-3">error</v-icon> Critical Cords
+                </v-card-title>
+                <v-card-text class="text-xs-center">
+                  <v-tooltip bottom offset-y>
+                    <template #activator="data">
+                      <v-btn
+                        v-on="data.on"
+                        dark
+                        large
+                        fab
+                        @click="updateGridItems('criticalCords')"
+                        style="font-size: 2em;"
+                        color="error"
+                      >
+                        {{ criticalCords.length }}
+                      </v-btn>
+                    </template>
+                    <span>Toggle Viewing Critical Cords</span>
+                  </v-tooltip>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 sm4>
+              <v-card tile flat :dark="isDark" class="mx-1 my-2">
+                <v-card-title
+                  class="hildaLight space-small dark text-xs-center mx-0"
+                  style="background-color: var(--e-dark-status-orange)"
+                >
+                  <v-icon class="mr-3">warning</v-icon> Moderate Cords
+                </v-card-title>
+                <v-card-text class="text-xs-center">
+                  <v-tooltip bottom offset-y>
+                    <template #activator="data">
+                      <v-btn
+                        v-on="data.on"
+                        dark
+                        large
+                        fab
+                        @click="updateGridItems('moderateCords')"
+                        style="font-size: 2em;"
+                        color="orangeWarning"
+                      >
+                        {{ moderateCords.length }}
+                      </v-btn>
+                    </template>
+                    <span>Toggle Viewing Moderate Cords</span>
+                  </v-tooltip>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 sm4>
+              <v-card tile flat :dark="isDark" class="mx-1 my-2">
+                <v-card-title
+                  class="hildaLight space-small dark text-xs-center mx-0"
+                  style="background-color: var(--e-dark-status-green)"
+                >
+                  <v-icon class="mr-3">info</v-icon> New Cords
+                </v-card-title>
+                <v-card-text class="text-xs-center">
+                  <v-tooltip bottom offset-y>
+                    <template #activator="data">
+                      <v-btn
+                        v-on="data.on"
+                        dark
+                        large
+                        fab
+                        @click="updateGridItems('newCords')"
+                        style="font-size: 2em;"
+                        color="success"
+                      >
+                        {{ newCords.length }}
+                      </v-btn>
+                    </template>
+                    <span>Toggle Viewing New Cords</span>
+                  </v-tooltip>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+
+        <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
           <grid
             :headers="headers"
-            :items="gridItems"
+            :items="
+              gridItemType === 'newCords'
+                ? newCords
+                : gridItemType === 'criticalCords'
+                ? criticalCords
+                : gridItemType === 'moderateCords'
+                ? moderateCords
+                : gridItems
+            "
             :loading="loading"
             v-on:refreshCordGrid="getCordGridItems"
           >
             <template v-slot:title>
-              <h1>Active Cords</h1>
+              <h1>
+                {{
+                  gridItemType === "all"
+                    ? "Active"
+                    : gridItemType === "criticalCords"
+                    ? "Critical"
+                    : gridItemType === "moderateCords"
+                    ? "Moderate"
+                    : "New"
+                }}
+                Cords
+              </h1>
             </template>
           </grid>
+        </v-flex>
+
+        <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
+          <v-card tile class="my-3">
+            <v-card-title
+              class="hildaLight space-small mx-0 mt-0 bg white--text"
+            >
+              {{ item.title }}
+            </v-card-title>
+            <v-card-text>
+              <v-layout row wrap fill-height>
+                <v-flex xs12>
+                  <v-text-field
+                    readonly
+                    label="Application"
+                    :value="item.app"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    readonly
+                    label="Category"
+                    :value="item.category"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    readonly
+                    label="Duration"
+                    :value="computeDuration(item.openedOn)"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-textarea
+                    readonly
+                    v-model="item.description"
+                    label="Description"
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn block color="primary" :to="`/cord/${item._id}`">
+                View Details
+                <v-icon class="ml-2">navigate_next</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
@@ -27,6 +184,7 @@ import { alertMixin } from "../mixins/alertMixin.js";
 import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
+import { socketMixin } from "../mixins/socketMixin";
 
 const ICONS = {
   info: "mdi-information",
@@ -37,14 +195,27 @@ const ICONS = {
 
 export default {
   name: "home",
-  mixins: [themeMixin, cordMixin, alertMixin],
+  mixins: [themeMixin, cordMixin, alertMixin, socketMixin],
   components: {
     JwtExpiry,
     MenuBtn,
     Grid
   },
-  computed: {},
+  computed: {
+    gridItems: {
+      get: function() {
+        return this.$store.getters.gridItems;
+      },
+      set: function(payload) {
+        this.$store.commit("gridItems", payload);
+      }
+    }
+  },
   data: () => ({
+    criticalCords: [],
+    moderateCords: [],
+    newCords: [],
+    gridItemType: "all",
     loading: false,
     headers: [
       { text: "Title", align: "left", value: "title" },
@@ -53,14 +224,17 @@ export default {
       { text: "Category", align: "left", value: "category" },
       { text: "Duration", align: "left", value: "duration" },
       { text: "Hero", align: "left", value: "hero" }
-    ],
-    gridItems: []
+    ]
   }),
   beforeDestroy() {},
   created() {
     this.getCordGridItems();
   },
-  mounted() {},
+  mounted() {
+    if (this.selectedCord) {
+      this.leaveSelectedCordRoom(this.selectedCord._id);
+    }
+  },
   methods: {
     genIcon(color) {
       return ICONS[color];
@@ -83,6 +257,31 @@ export default {
           );
           this.loading = false;
         });
+    },
+    updateGridItems(itemType) {
+      this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
+    }
+  },
+  watch: {
+    gridItems: function() {
+      const _this = this;
+      this.criticalCords = this.gridItems.filter(function(elem) {
+        return _this.computeDuration(elem.openedOn).includes("Days");
+      });
+
+      this.moderateCords = this.gridItems.filter(function(elem) {
+        return (
+          !_this.computeDuration(elem.openedOn).includes("Days") &&
+          _this.computeDuration(elem.openedOn).includes("Hrs")
+        );
+      });
+
+      this.newCords = this.gridItems.filter(function(elem) {
+        return (
+          !_this.computeDuration(elem.openedOn).includes("Days") &&
+          !_this.computeDuration(elem.openedOn).includes("Hrs")
+        );
+      });
     }
   }
 };

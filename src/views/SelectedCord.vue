@@ -66,6 +66,7 @@
                         <v-item-group multiple>
                           <v-item
                             v-for="(rescuer, index) in selectedCord.rescuers"
+                            class="animated faster fadeIn"
                             :key="`rescuer-${index}`"
                           >
                             <v-tooltip bottom offset-x>
@@ -177,7 +178,8 @@
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
-                        box
+                        :box="readonly.app"
+                        :outline="!readonly.app"
                         label="Application"
                         type="text"
                         v-model="selectedCord.app"
@@ -189,6 +191,7 @@
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
+                              :disabled="selectedCord.status !== 'Open'"
                               @click="readonly.app = !readonly.app"
                               >{{ readonly.app ? "edit" : "save" }}
                             </v-icon>
@@ -204,12 +207,17 @@
                         type="text"
                         :value="computeDuration(selectedCord.openedOn)"
                         readonly
-                        color="info"
+                        :background-color="
+                          computeDurationBg(selectedCord.openedOn)
+                        "
+                        dark
+                        color="primary"
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
-                        box
+                        :box="readonly.category"
+                        :outline="!readonly.category"
                         label="Category"
                         type="text"
                         v-model="selectedCord.category"
@@ -221,6 +229,7 @@
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
+                              :disabled="selectedCord.status !== 'Open'"
                               @click="readonly.category = !readonly.category"
                               >{{ readonly.category ? "edit" : "save" }}
                             </v-icon>
@@ -248,7 +257,8 @@
                 <v-flex xs12>
                   <v-textarea
                     color="info"
-                    box
+                    :box="readonly.description"
+                    :outline="!readonly.description"
                     label="Issue Description"
                     :readonly="readonly.description"
                     v-model="selectedCord.description"
@@ -258,6 +268,7 @@
                       <template #activator="data">
                         <v-icon
                           v-on="data.on"
+                          :disabled="selectedCord.status !== 'Open'"
                           @click="readonly.description = !readonly.description"
                           >{{ readonly.description ? "edit" : "save" }}
                         </v-icon>
@@ -277,6 +288,7 @@
                           v-if="!addingToDiscussion"
                           color="success"
                           v-on="data.on"
+                          :disabled="selectedCord.status !== 'Open'"
                           @click="addingToDiscussion = !addingToDiscussion"
                         >
                           <v-icon>note_add</v-icon>
@@ -470,10 +482,18 @@ import { assetMixin } from "../mixins/assetMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
+import { socketMixin } from "../mixins/socketMixin";
 
 export default {
   name: "SelectedCord",
-  mixins: [themeMixin, assetMixin, cordMixin, alertMixin, authMixin],
+  mixins: [
+    themeMixin,
+    assetMixin,
+    cordMixin,
+    alertMixin,
+    authMixin,
+    socketMixin
+  ],
   components: {},
   computed: {},
   data: function() {
@@ -496,6 +516,7 @@ export default {
         .then(response => {
           const cord = response.data.data;
           this.$store.commit("selectedCord", cord);
+          this.joinSelectedCordRoom(cord._id);
           this.loading = false;
         })
         .catch(err => {
@@ -521,12 +542,10 @@ export default {
       }
     },
     canRemoveRescuer(rescuer) {
-      return rescuer.username === this.user.username;
-    },
-    computeDuration(date) {
-      const now = new Date();
-      const openedOn = new Date(date);
-      return msToTime(parseInt((now - openedOn) / 24));
+      return (
+        this.selectedCord.status === "Open" &&
+        rescuer.username === this.user.username
+      );
     },
     convertStringToDate(item) {
       return new Date(item);
@@ -540,6 +559,7 @@ export default {
       window.history.back();
     },
     removeRescuer(rescuer) {
+      // eslint-disable-next-line
       this.selectedCord.rescuers = this.selectedCord.rescuers.filter(function(elem) {
         return elem.username !== rescuer.username;
       });
@@ -551,9 +571,9 @@ export default {
         rescuers: [{ _id: this.user._id, username: this.user.username }]
       };
       this.updateRescuers(this.selectedCord._id, data)
-        .then(response => {
+        .then(() => {
           this.setAlert("Cord updated successfully!", "#288964", 5000);
-          this.selectedCord = response.data.data;
+          this.refreshItem(this.selectedCord._id);
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
@@ -562,11 +582,11 @@ export default {
     save() {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
-          this.setAlert("Cord updated successfully!", "#288964", 5);
+          this.setAlert("Cord updated successfully!", "#288964", 5000);
           response.data.data.discussion.forEach(function(elem) {
             return convertStringToDate(elem);
           });
-          this.selectedCord = response.data.data;
+          this.refreshItem(this.selectedCord._id);
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
@@ -574,7 +594,9 @@ export default {
     },
     showRescueButton() {
       const user = this.user;
-      return this.selectedCord && this.selectedCord.rescuers
+      return this.selectedCord &&
+        this.selectedCord.status === "Open" &&
+        this.selectedCord.rescuers
         ? this.selectedCord.rescuers.filter(function(elem) {
             return elem.username === user.username;
           }).length === 0
@@ -583,6 +605,7 @@ export default {
     unpullCord() {
       this.selectedCord.status = "Resolved";
       this.save();
+      this.confirmCloseDialog = false;
     },
     unpullDisabled() {
       return !(
@@ -613,19 +636,6 @@ export default {
 
 function convertStringToDate(item) {
   return new Date(item);
-}
-
-function msToTime(duration) {
-  let milliseconds = parseInt((duration % 1000) / 100),
-    seconds = parseInt((duration / 1000) % 60),
-    minutes = parseInt((duration / (1000 * 60)) % 60),
-    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
-
-  hours = hours < 10 ? "0" + hours : hours;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 }
 </script>
 
