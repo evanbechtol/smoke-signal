@@ -17,7 +17,9 @@
 
         <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
           <v-card tile class="my-3">
-            <v-card-title class="hildaLight space-small mx-0 mt-0 bg white--text">
+            <v-card-title
+              class="hildaLight space-small mx-0 mt-0 bg white--text"
+            >
               {{ item.title }}
             </v-card-title>
             <v-card-text>
@@ -52,7 +54,7 @@
                 </v-flex>
               </v-layout>
             </v-card-text>
-            
+
             <v-card-actions>
               <v-btn block color="primary" :to="`/cord/${item._id}`">
                 View Details
@@ -156,13 +158,15 @@ function msToTime(duration) {
   let milliseconds = parseInt((duration % 1000) / 100),
     seconds = parseInt((duration / 1000) % 60),
     minutes = parseInt((duration / (1000 * 60)) % 60),
-    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24),
+    days = parseInt(duration / (1000 * 60 * 60 * 24));
 
+  days = days < 10 ? "0" + days : days;
   hours = hours < 10 ? "0" + hours : hours;
   minutes = minutes < 10 ? "0" + minutes : minutes;
   seconds = seconds < 10 ? "0" + seconds : seconds;
 
-  return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+  return `${days > 0 ? days + " Days " : ""} ${hours} Hours ${minutes} Minutes`;
 }
 </script>
 
