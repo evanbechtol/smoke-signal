@@ -5,7 +5,7 @@
         <v-flex xs12>
           <v-layout row wrap justify-space-between align-center fill-height>
             <v-flex xs12 sm4>
-              <v-card tile flat class="mx-1 my-2">
+              <v-card tile flat :dark="isDark" class="mx-1 my-2">
                 <v-card-title
                   class="hildaLight space-small dark text-xs-center mx-0"
                   style="background-color: var(--e-dark-status-red)"
@@ -33,7 +33,7 @@
               </v-card>
             </v-flex>
             <v-flex xs12 sm4>
-              <v-card tile flat class="mx-1 my-2">
+              <v-card tile flat :dark="isDark" class="mx-1 my-2">
                 <v-card-title
                   class="hildaLight space-small dark text-xs-center mx-0"
                   style="background-color: var(--e-dark-status-orange)"
@@ -61,7 +61,7 @@
               </v-card>
             </v-flex>
             <v-flex xs12 sm4>
-              <v-card tile flat class="mx-1 my-2">
+              <v-card tile flat :dark="isDark" class="mx-1 my-2">
                 <v-card-title
                   class="hildaLight space-small dark text-xs-center mx-0"
                   style="background-color: var(--e-dark-status-green)"
