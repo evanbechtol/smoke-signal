@@ -178,7 +178,8 @@
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
-                        box
+                        :box="readonly.app"
+                        :outline="!readonly.app"
                         label="Application"
                         type="text"
                         v-model="selectedCord.app"
@@ -211,7 +212,8 @@
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
-                        box
+                        :box="readonly.category"
+                        :outline="!readonly.category"
                         label="Category"
                         type="text"
                         v-model="selectedCord.category"
@@ -251,7 +253,8 @@
                 <v-flex xs12>
                   <v-textarea
                     color="info"
-                    box
+                    :box="readonly.description"
+                    :outline="!readonly.description"
                     label="Issue Description"
                     :readonly="readonly.description"
                     v-model="selectedCord.description"
