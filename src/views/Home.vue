@@ -107,7 +107,18 @@
             v-on:refreshCordGrid="getCordGridItems"
           >
             <template v-slot:title>
-              <h1>{{ gridItemType === 'all' ? 'Active' : gridItemType === 'criticalCords' ? 'Critical' : gridItemType === 'moderateCords' ? 'Moderate' : 'New' }} Cords</h1>
+              <h1>
+                {{
+                  gridItemType === "all"
+                    ? "Active"
+                    : gridItemType === "criticalCords"
+                    ? "Critical"
+                    : gridItemType === "moderateCords"
+                    ? "Moderate"
+                    : "New"
+                }}
+                Cords
+              </h1>
             </template>
           </grid>
         </v-flex>
