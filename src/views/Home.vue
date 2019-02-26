@@ -124,11 +124,6 @@ export default {
     }
   },
   methods: {
-    computeDuration(date) {
-      const now = new Date();
-      const openedOn = new Date(date);
-      return msToTime(parseInt((now - openedOn) / 24));
-    },
     genIcon(color) {
       return ICONS[color];
     },
@@ -153,21 +148,6 @@ export default {
     }
   }
 };
-
-function msToTime(duration) {
-  let milliseconds = parseInt((duration % 1000) / 100),
-    seconds = parseInt((duration / 1000) % 60),
-    minutes = parseInt((duration / (1000 * 60)) % 60),
-    hours = parseInt((duration / (1000 * 60 * 60)) % 24),
-    days = parseInt(duration / (1000 * 60 * 60 * 24));
-
-  days = days < 10 ? "0" + days : days;
-  hours = hours < 10 ? "0" + hours : hours;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  return `${days > 0 ? days + " Days " : ""} ${hours} Hours ${minutes} Minutes`;
-}
 </script>
 
 <style scoped>

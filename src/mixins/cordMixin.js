@@ -14,6 +14,11 @@ export const cordMixin = {
     }
   },
   methods: {
+    computeDuration(date) {
+      const now = new Date();
+      const openedOn = new Date(date);
+      return msToTime(parseInt(now - openedOn));
+    },
     /**
      * @description Attempts to create a new cord using the body provided
      * @param data {object} Body to be used to crete a new cord
@@ -153,4 +158,22 @@ function makeRequest(options = null) {
 
 function respondError(message) {
   return { success: false, error: message };
+}
+
+function msToTime(duration) {
+  const seconds = (duration / 1000).toFixed(1);
+  const minutes = (duration / (1000 * 60)).toFixed(1);
+  const hours = (duration / (1000 * 60 * 60)).toFixed(1);
+  const days = (duration / (1000 * 60 * 60 * 24)).toFixed(1);
+
+  if (seconds < 60) {
+    return seconds + " Sec";
+  } else if (minutes < 60) {
+    return minutes + " Min";
+  } else if (hours < 24) {
+    return hours + " Hrs";
+  } else {
+    return days + " Days";
+  }
+  //return `${days > 0 ? days + " Days " : ""} ${hours} Hours ${minutes} Minutes`;
 }

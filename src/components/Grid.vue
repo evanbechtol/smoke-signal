@@ -137,11 +137,6 @@ export default {
           this.setAlert(err.message, "#DC2D37", 0);
         });
     },
-    computeDuration(date) {
-      const now = new Date();
-      const openedOn = new Date(date);
-      return msToTime(parseInt((now - openedOn) / 24));
-    },
     refreshCordGrid() {
       this.$emit("refreshCordGrid");
     },
