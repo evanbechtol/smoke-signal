@@ -85,7 +85,7 @@ let router = new Router({
         isAdmin: false
       },
       component: () =>
-        import(/* webpackChunkName: "metrics" */ "./views/Metrics2.vue")
+        import(/* webpackChunkName: "metrics" */ "./views/Metrics.vue")
     },
     {
       path: "/resetPassword",
@@ -115,7 +115,10 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem("token") == null && localStorage.getItem("user") == null) {
+    if (
+      localStorage.getItem("token") == null &&
+      localStorage.getItem("user") == null
+    ) {
       next({
         path: "/login",
         params: { nextUrl: to.fullPath }
