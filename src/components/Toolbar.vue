@@ -6,9 +6,9 @@
         style="margin: 8px;"
       ></v-toolbar-side-icon>
       <v-toolbar-title class="space-base" style="margin: 8px;">
-        <router-link class="link white--text" to="/"
-          >AnA Smoke Signal</router-link
-        >
+        <router-link class="link white--text" to="/">
+          AnA Smoke Signal
+        </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
@@ -48,30 +48,40 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <v-list-tile avatar tag="div" v-if="isAuthenticated">
-          <v-list-tile-avatar>
-            <img src="https://randomuser.me/api/portraits/men/85.jpg" />
-          </v-list-tile-avatar>
+        <v-list-group value="true">
+          <v-list-tile
+            slot="activator"
+            avatar
+            tag="div"
+            v-if="isAuthenticated || user"
+          >
+            <v-list-tile-avatar>
+              <v-icon large>fingerprint</v-icon>
+            </v-list-tile-avatar>
 
-          <v-list-tile-content>
-            <v-list-tile-title>{{
-              user.username || user.email
-            }}</v-list-tile-title>
-          </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                {{ user.username || user.email }}
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
 
-          <v-list-tile-action>
-            <v-btn icon @click.stop="mini = !mini">
-              <v-icon>chevron_left</v-icon>
-            </v-btn>
-          </v-list-tile-action>
-        </v-list-tile>
+          <v-list-tile to="/profile">
+            <v-list-tile-title>
+              <v-icon class="mx-4">face</v-icon>My Profile
+            </v-list-tile-title>
+            <v-list-tile-action>
+              <v-icon v-text="i"></v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list-group>
       </v-list>
 
       <jwt-expiry v-if="isAuthenticated && token"></jwt-expiry>
 
       <v-list class="pt-0" dense>
         <v-divider light class="mb-1"></v-divider>
-        <v-list-tile id="selectContainer">
+        <v-list-tile id="selectContainer" class="mt-3">
           <v-select
             id="select"
             class="mb-2 pt-3"
