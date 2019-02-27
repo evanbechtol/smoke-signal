@@ -12,11 +12,7 @@
           :dark="isDark"
           :color="`accent ${darken}`"
           :class="isSmall ? 'mt-0' : 'mt-5'"
-          :style="
-            isSmall
-              ? 'z-index: 99'
-              : 'z-index: default'
-          "
+          :style="isSmall ? 'z-index: 99' : 'z-index: default'"
         >
           <v-card-title
             primary-title
@@ -450,11 +446,7 @@
       </v-flex>
     </v-layout>
 
-    <v-dialog
-      v-model="confirmCloseDialog"
-      persistent
-      :fullscreen="isSmall"
-    >
+    <v-dialog v-model="confirmCloseDialog" persistent :fullscreen="isSmall">
       <v-card :dark="isDark" :color="`accent ${darken}`">
         <v-card-title
           primary-title
