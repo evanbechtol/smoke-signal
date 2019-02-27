@@ -302,7 +302,7 @@
                 <v-flex xs12>
                   <div class="hildaLight space-small">
                     Discussion
-                    <v-tooltip right v-if="!addingToDiscussion">
+                    <v-tooltip right v-if="!(addingToDiscussion || isResolved)">
                       <template #activator="data">
                         <v-btn
                           icon
