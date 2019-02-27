@@ -123,7 +123,7 @@
         </v-flex>
 
         <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
-          <v-card tile class="my-3">
+          <v-card tile :dark="isDark" :color="`accent ${darken}`" class="my-3">
             <v-card-title
               class="hildaLight space-small mx-0 mt-0 bg white--text"
             >
@@ -133,6 +133,7 @@
               <v-layout row wrap fill-height>
                 <v-flex xs12>
                   <v-text-field
+                    :color="`info ${darken}`"
                     readonly
                     label="Application"
                     :value="item.app"
@@ -140,6 +141,7 @@
                 </v-flex>
                 <v-flex xs12>
                   <v-text-field
+                    :color="`info ${darken}`"
                     readonly
                     label="Category"
                     :value="item.category"
@@ -147,6 +149,7 @@
                 </v-flex>
                 <v-flex xs12>
                   <v-text-field
+                    :color="`info ${darken}`"
                     readonly
                     label="Duration"
                     :value="computeDuration(item.openedOn)"
@@ -154,6 +157,7 @@
                 </v-flex>
                 <v-flex xs12>
                   <v-textarea
+                    :color="`info ${darken}`"
                     readonly
                     v-model="item.description"
                     label="Description"

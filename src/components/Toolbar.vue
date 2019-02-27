@@ -70,9 +70,6 @@
             <v-list-tile-title>
               <v-icon class="mx-4">face</v-icon>My Profile
             </v-list-tile-title>
-            <v-list-tile-action>
-              <v-icon v-text="i"></v-icon>
-            </v-list-tile-action>
           </v-list-tile>
         </v-list-group>
       </v-list>
