@@ -7,7 +7,6 @@ import VTooltip from "v-tooltip";
 import VueClipboards from "vue-clipboards";
 import VueSocketIO from "vue-socket.io";
 import Vuetify from "vuetify";
-import axios from "axios";
 import "vuetify/dist/vuetify.min.css";
 import "./registerServiceWorker";
 import "./css/materialIcons.css";
@@ -20,7 +19,7 @@ Vue.use(VeeValidate);
 Vue.use(VTooltip);
 Vue.use(VueClipboards);
 Vue.use(Vuetify, { theme });
-Vue.use(axios);
+//Vue.use(VueAxios, axios);
 Vue.use(
   new VueSocketIO({
     debug: true,
