@@ -2,7 +2,7 @@
   <div style="height: 100vh;" class="home page mt-5">
     <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
-        <v-flex xs12>
+        <v-flex xs12 class="hidden-xs-only">
           <v-layout row wrap justify-space-between align-center fill-height>
             <v-flex xs12 sm4>
               <v-card tile flat :dark="isDark" class="mx-1 my-2">
@@ -15,17 +15,20 @@
                 <v-card-text class="text-xs-center">
                   <v-tooltip bottom offset-y>
                     <template #activator="data">
-                      <v-btn
+                      <!-- <v-btn
                         v-on="data.on"
                         dark
                         large
                         fab
-                        @click="updateGridItems('criticalCords')"
                         style="font-size: 2em;"
                         color="error"
                       >
                         {{ criticalCords.length }}
-                      </v-btn>
+                      </v-btn>-->
+                      <circle-card
+                        color="error"
+                        :value="criticalCords.length"
+                      ></circle-card>
                     </template>
                     <span>Toggle Viewing Critical Cords</span>
                   </v-tooltip>
@@ -43,17 +46,20 @@
                 <v-card-text class="text-xs-center">
                   <v-tooltip bottom offset-y>
                     <template #activator="data">
-                      <v-btn
+                      <!--<v-btn
                         v-on="data.on"
                         dark
                         large
                         fab
-                        @click="updateGridItems('moderateCords')"
                         style="font-size: 2em;"
                         color="orangeWarning"
                       >
                         {{ moderateCords.length }}
-                      </v-btn>
+                      </v-btn>-->
+                      <circle-card
+                        color="orangeWarning"
+                        :value="moderateCords.length"
+                      ></circle-card>
                     </template>
                     <span>Toggle Viewing Moderate Cords</span>
                   </v-tooltip>
@@ -71,17 +77,20 @@
                 <v-card-text class="text-xs-center">
                   <v-tooltip bottom offset-y>
                     <template #activator="data">
-                      <v-btn
+                      <!--<v-btn
                         v-on="data.on"
                         dark
                         large
                         fab
-                        @click="updateGridItems('newCords')"
                         style="font-size: 2em;"
                         color="success"
                       >
                         {{ newCords.length }}
-                      </v-btn>
+                      </v-btn>-->
+                      <circle-card
+                        color="success"
+                        :value="newCords.length"
+                      ></circle-card>
                     </template>
                     <span>Toggle Viewing New Cords</span>
                   </v-tooltip>
@@ -94,31 +103,22 @@
         <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
           <grid
             :headers="headers"
-            :items="
-              gridItemType === 'newCords'
-                ? newCords
-                : gridItemType === 'criticalCords'
-                ? criticalCords
-                : gridItemType === 'moderateCords'
-                ? moderateCords
-                : gridItems
-            "
+            :items="filteredGridItems"
             :loading="loading"
+            v-on:toggleMyCords="updateGridItems('myCords')"
             v-on:refreshCordGrid="getCordGridItems"
           >
             <template v-slot:title>
-              <h1>
-                {{
-                  gridItemType === "all"
-                    ? "Active"
-                    : gridItemType === "criticalCords"
-                    ? "Critical"
-                    : gridItemType === "moderateCords"
-                    ? "Moderate"
-                    : "New"
-                }}
-                Cords
-              </h1>
+              <v-select
+                dense
+                solo-inverted
+                flat
+                class="mt-3"
+                v-model="selectItemType"
+                :items="selectItems"
+                item-text="label"
+                item-value="value"
+              ></v-select>
             </template>
           </grid>
         </v-flex>
@@ -185,23 +185,30 @@ import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
 import { socketMixin } from "../mixins/socketMixin";
-
-const ICONS = {
-  info: "mdi-information",
-  warning: "mdi-alert",
-  error: "mdi-alert-circle",
-  success: "mdi-check-circle"
-};
+import { authMixin } from "../mixins/authMixin";
+import CircleCard from "../components/CircleCard";
 
 export default {
   name: "home",
-  mixins: [themeMixin, cordMixin, alertMixin, socketMixin],
+  mixins: [themeMixin, cordMixin, alertMixin, socketMixin, authMixin],
   components: {
+    CircleCard,
     JwtExpiry,
     MenuBtn,
     Grid
   },
   computed: {
+    filteredGridItems: function() {
+      return this.gridItemType === "all"
+        ? this.gridItems
+        : this.gridItemType === "criticalCords"
+        ? this.criticalCords
+        : this.gridItemType === "moderateCords"
+        ? this.moderateCords
+        : this.gridItemType === "newCords"
+        ? this.newCords
+        : this.myCords;
+    },
     gridItems: {
       get: function() {
         return this.$store.getters.gridItems;
@@ -214,8 +221,17 @@ export default {
   data: () => ({
     criticalCords: [],
     moderateCords: [],
+    myCords: [],
     newCords: [],
     gridItemType: "all",
+    selectItemType: "all",
+    selectItems: [
+      { label: "All Cords", value: "all" },
+      { label: "Critical Cords", value: "criticalCords" },
+      { label: "Moderate Cords", value: "moderateCords" },
+      { label: "My Cords", value: "myCords" },
+      { label: "New Cords", value: "newCords" }
+    ],
     loading: false,
     headers: [
       { text: "Title", align: "left", value: "title" },
@@ -236,9 +252,6 @@ export default {
     }
   },
   methods: {
-    genIcon(color) {
-      return ICONS[color];
-    },
     getCordGridItems() {
       this.loading = true;
       this.getCords()
@@ -259,10 +272,14 @@ export default {
         });
     },
     updateGridItems(itemType) {
-      this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
+      this.gridItemType = this.selectedItemType =
+        this.gridItemType === itemType ? "all" : itemType;
     }
   },
   watch: {
+    selectItemType: function(value) {
+      this.gridItemType = value;
+    },
     gridItems: function() {
       const _this = this;
       this.criticalCords = this.gridItems.filter(function(elem) {
@@ -281,6 +298,10 @@ export default {
           !_this.computeDuration(elem.openedOn).includes("Days") &&
           !_this.computeDuration(elem.openedOn).includes("Hrs")
         );
+      });
+
+      this.myCords = this.gridItems.filter(function(elem) {
+        return elem.puller.username === _this.user.username;
       });
     }
   }

@@ -56,8 +56,8 @@ export default {
 <style scoped>
 .dashCircle {
   margin: 0 auto;
-  height: 150px;
-  width: 150px;
+  height: 100px;
+  width: 100px;
   border-radius: 90px;
 }
 
