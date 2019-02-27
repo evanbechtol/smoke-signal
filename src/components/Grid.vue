@@ -55,7 +55,13 @@
             <td>{{ props.item.puller.username }}</td>
             <td>{{ props.item.app }}</td>
             <td>{{ props.item.category }}</td>
-            <td>{{ computeDuration(props.item.openedOn) }}</td>
+            <td>
+              {{
+                resolved
+                  ? new Date(props.item.openedOn).toLocaleDateString("en-US")
+                  : computeDuration(props.item.openedOn)
+              }}
+            </td>
             <td>
               <v-avatar
                 v-for="(rescuer, index) in props.item.rescuers"
@@ -102,6 +108,10 @@ export default {
     search: ""
   }),
   props: {
+    resolved: {
+      type: Boolean,
+      default: false
+    },
     headers: {
       type: Array,
       default: function() {

@@ -159,9 +159,7 @@
                         v-model="selectedCord.status"
                         readonly
                         dark
-                        :background-color="
-                          selectedCord.status === 'Open' ? 'success' : 'purple'
-                        "
+                        :background-color="!isResolved ? 'success' : 'purple'"
                         color="primary"
                       ></v-text-field>
                     </v-flex>
@@ -187,7 +185,12 @@
                         color="info"
                         @change="appChanged"
                       >
-                        <v-tooltip bottom offset-y slot="append">
+                        <v-tooltip
+                          bottom
+                          offset-y
+                          slot="append"
+                          v-if="isMine && !isResolved"
+                        >
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
@@ -203,14 +206,22 @@
                     <v-flex xs12 sm4>
                       <v-text-field
                         box
-                        label="Duration"
+                        :label="isResolved ? 'Opened On' : 'Duration'"
                         type="text"
-                        :value="computeDuration(selectedCord.openedOn)"
+                        :value="
+                          isResolved
+                            ? new Date(
+                                selectedCord.openedOn
+                              ).toLocaleDateString('en-US')
+                            : computeDuration(selectedCord.openedOn)
+                        "
                         readonly
                         :background-color="
-                          computeDurationBg(selectedCord.openedOn)
+                          isResolved
+                            ? ''
+                            : computeDurationBg(selectedCord.openedOn)
                         "
-                        dark
+                        :dark="selectedCord.status !== 'Resolved'"
                         color="primary"
                       ></v-text-field>
                     </v-flex>
@@ -225,7 +236,12 @@
                         color="info"
                         @change="categoryChanged"
                       >
-                        <v-tooltip bottom offset-y slot="append">
+                        <v-tooltip
+                          bottom
+                          offset-y
+                          slot="append"
+                          v-if="isMine && !isResolved"
+                        >
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
@@ -264,7 +280,12 @@
                     v-model="selectedCord.description"
                     @change="descriptionChanged"
                   >
-                    <v-tooltip bottom offset-y slot="append">
+                    <v-tooltip
+                      bottom
+                      offset-y
+                      slot="append"
+                      v-if="isMine && !isResolved"
+                    >
                       <template #activator="data">
                         <v-icon
                           v-on="data.on"
@@ -495,7 +516,14 @@ export default {
     socketMixin
   ],
   components: {},
-  computed: {},
+  computed: {
+    isResolved: function() {
+      return this.selectedCord.status === "Resolved";
+    },
+    isMine: function() {
+      return this.selectedCord.puller.username === this.user.username;
+    }
+  },
   data: function() {
     return {
       addingToDiscussion: false,

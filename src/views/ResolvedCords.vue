@@ -4,6 +4,7 @@
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
           <grid
+            resolved
             :headers="headers"
             :items="filteredGridItems"
             :loading="loading"
@@ -50,8 +51,8 @@
                 <v-flex xs12>
                   <v-text-field
                     readonly
-                    label="Duration"
-                    :value="computeDuration(item.openedOn)"
+                    label="Opened On"
+                    :value="new Date(item.openedOn).toLocaleDateString('en-US')"
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12>
@@ -125,7 +126,7 @@ export default {
       { text: "Name", align: "left", value: "name" },
       { text: "App", align: "left", value: "app" },
       { text: "Category", align: "left", value: "category" },
-      { text: "Opened On", align: "left", value: "duration" },
+      { text: "Opened On", align: "left", value: "openedOn" },
       { text: "Hero", align: "left", value: "hero" }
     ]
   }),
