@@ -105,7 +105,6 @@
             :headers="headers"
             :items="filteredGridItems"
             :loading="loading"
-            v-on:toggleMyCords="updateGridItems('myCords')"
             v-on:refreshCordGrid="getCordGridItems"
           >
             <template v-slot:title>
