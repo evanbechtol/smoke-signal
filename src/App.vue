@@ -70,6 +70,8 @@
             </v-card-text>
           </v-card>
         </v-bottom-sheet>
+
+        <!--<badge-card></badge-card>-->
       </main>
     </div>
   </v-app>
@@ -82,11 +84,12 @@ import Footer from "./components/Footer";
 import { alertMixin } from "./mixins/alertMixin";
 import { authMixin } from "./mixins/authMixin";
 import { socketMixin } from "./mixins/socketMixin";
+import BadgeCard from "./components/BadgeCard";
 
 export default {
   name: "app",
   mixins: [themeMixin, alertMixin, authMixin, socketMixin],
-  components: { Footer, Toolbar },
+  components: { BadgeCard, Footer, Toolbar },
   created() {
     const color = this.isDark ? "#181818" : "#e0e0e0";
 

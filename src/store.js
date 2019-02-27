@@ -13,6 +13,7 @@ export default new Vuex.Store({
     alertTimeout: 5000,
     app: "",
     appToken: null,
+    badgeCard: false,
     cordPullNotification: false,
     cordPullMessage: {
       data: {
@@ -46,6 +47,7 @@ export default new Vuex.Store({
     alertSeverity: state => state.alertSeverity,
     alertTimeout: state => state.alertTimeout,
     appToken: state => state.appToken,
+    badgeCard: state => state.badgeCard,
     gridItems: state => state.gridItems,
     isConnected: state => state.isConnected,
     isDark: state => state.isDark,
@@ -85,6 +87,9 @@ export default new Vuex.Store({
     },
     appToken: function(state, payload) {
       state.appToken = payload;
+    },
+    badgeCard: function(state, payload) {
+      state.badgeCard = payload;
     },
     gridItems: function(state, payload) {
       state.gridItems = payload;
