@@ -131,7 +131,7 @@
                               </v-chip>
                             </v-item>-->
 
-                          <v-item class="pulse" v-if="showRescueButton()">
+                          <v-item class="pulse" v-if="showRescueButton">
                             <v-chip
                               @click="rescue"
                               outline
@@ -194,7 +194,7 @@
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
-                              :disabled="selectedCord.status !== 'Open'"
+                              :disabled="isResolved"
                               @click="readonly.app = !readonly.app"
                               >{{ readonly.app ? "edit" : "save" }}
                             </v-icon>
@@ -245,7 +245,7 @@
                           <template #activator="data">
                             <v-icon
                               v-on="data.on"
-                              :disabled="selectedCord.status !== 'Open'"
+                              :disabled="isResolved"
                               @click="readonly.category = !readonly.category"
                               >{{ readonly.category ? "edit" : "save" }}
                             </v-icon>
@@ -289,7 +289,7 @@
                       <template #activator="data">
                         <v-icon
                           v-on="data.on"
-                          :disabled="selectedCord.status !== 'Open'"
+                          :disabled="isResolved"
                           @click="readonly.description = !readonly.description"
                           >{{ readonly.description ? "edit" : "save" }}
                         </v-icon>
@@ -309,7 +309,7 @@
                           v-if="!addingToDiscussion"
                           color="success"
                           v-on="data.on"
-                          :disabled="selectedCord.status !== 'Open'"
+                          :disabled="isResolved"
                           @click="addingToDiscussion = !addingToDiscussion"
                         >
                           <v-icon>note_add</v-icon>
@@ -436,7 +436,7 @@
                   v-on="data.on"
                   :block="$vuetify.breakpoint.name === 'xs'"
                   color="purple darken-1"
-                  :disabled="unpullDisabled()"
+                  :disabled="unpullDisabled"
                   depressed
                   dark
                   @click="confirmCloseDialog = true"
@@ -517,6 +517,23 @@ export default {
   ],
   components: {},
   computed: {
+    showRescueButton() {
+      const user = this.user;
+      return this.selectedCord &&
+        this.selectedCord.status === "Open" &&
+        this.selectedCord.rescuers
+        ? this.selectedCord.rescuers.filter(function(elem) {
+            return elem.username === user.username;
+          }).length === 0
+        : false;
+    },
+    unpullDisabled() {
+      return !(
+        this.user.username === this.selectedCord.puller.username &&
+        this.user._id === this.selectedCord.puller._id &&
+        this.selectedCord.status === "Open"
+      );
+    },
     isResolved: function() {
       return this.selectedCord.status === "Resolved";
     },
@@ -620,27 +637,10 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
-    showRescueButton() {
-      const user = this.user;
-      return this.selectedCord &&
-        this.selectedCord.status === "Open" &&
-        this.selectedCord.rescuers
-        ? this.selectedCord.rescuers.filter(function(elem) {
-            return elem.username === user.username;
-          }).length === 0
-        : false;
-    },
     unpullCord() {
       this.selectedCord.status = "Resolved";
       this.save();
       this.confirmCloseDialog = false;
-    },
-    unpullDisabled() {
-      return !(
-        this.user.username === this.selectedCord.puller.username &&
-        this.user._id === this.selectedCord.puller._id &&
-        this.selectedCord.status === "Open"
-      );
     },
     updateDiscussion() {
       this.selectedCord.discussion.push({
