@@ -429,7 +429,7 @@
             </v-container>
           </v-card-text>
 
-          <v-card-actions v-if="selectedCord">
+          <v-card-actions v-if="selectedCord && isMine && !isResolved">
             <v-tooltip right>
               <template #activator="data">
                 <v-btn
