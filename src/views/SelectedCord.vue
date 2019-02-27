@@ -1,5 +1,5 @@
 <template>
-  <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0' : 'mt-5'">
+  <v-container :class="isSmall ? 'pa-0' : 'mt-5'">
     <v-layout
       row
       fill-height
@@ -11,9 +11,9 @@
         <v-card
           :dark="isDark"
           :color="`accent ${darken}`"
-          :class="$vuetify.breakpoint.name === 'xs' ? 'mt-0' : 'mt-5'"
+          :class="isSmall ? 'mt-0' : 'mt-5'"
           :style="
-            $vuetify.breakpoint.name === 'xs'
+            isSmall
               ? 'z-index: 99'
               : 'z-index: default'
           "
@@ -23,7 +23,7 @@
             class="bg hildaLight space-small dark-l0 ma-0"
           >
             <div v-if="selectedCord && !loading">
-              <v-tooltip bottom v-if="$vuetify.breakpoint.name === 'xs'">
+              <v-tooltip bottom v-if="isSmall">
                 <template #activator="data">
                   <v-btn
                     fab
@@ -339,7 +339,7 @@
                                 color="error"
                                 class="mb-4"
                                 @click="addingToDiscussion = false"
-                                :block="$vuetify.breakpoint.name === 'xs'"
+                                :block="isSmall"
                               >
                                 <v-icon size="20" class="mr-2">close</v-icon
                                 >Cancel
@@ -356,7 +356,7 @@
                                 "
                                 color="info"
                                 class="mb-4"
-                                :block="$vuetify.breakpoint.name === 'xs'"
+                                :block="isSmall"
                               >
                                 <v-icon size="20" class="mr-2">create</v-icon
                                 >Submit Discussion
@@ -434,7 +434,7 @@
               <template #activator="data">
                 <v-btn
                   v-on="data.on"
-                  :block="$vuetify.breakpoint.name === 'xs'"
+                  :block="isSmall"
                   color="purple darken-1"
                   :disabled="unpullDisabled"
                   depressed
@@ -453,7 +453,7 @@
     <v-dialog
       v-model="confirmCloseDialog"
       persistent
-      :fullscreen="$vuetify.breakpoint.name === 'xs'"
+      :fullscreen="isSmall"
     >
       <v-card :dark="isDark" :color="`accent ${darken}`">
         <v-card-title
@@ -476,7 +476,7 @@
             color="error darken-1"
             depressed
             @click="confirmCloseDialog = false"
-            :block="$vuetify.breakpoint.name === 'xs'"
+            :block="isSmall"
           >
             <v-icon class="mr-2">arrow_back</v-icon>Go Back
           </v-btn>
@@ -487,7 +487,7 @@
             color="success darken-1"
             depressed
             @click="unpullCord"
-            :block="$vuetify.breakpoint.name === 'xs'"
+            :block="isSmall"
           >
             Proceed<v-icon class="ml-2">check</v-icon></v-btn
           >

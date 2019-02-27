@@ -5,6 +5,9 @@ export const themeMixin = {
     };
   },
   computed: {
+    isSmall: function() {
+      return this.$vuetify.breakpoint.name === "xs";
+    },
     isDark: {
       get: function() {
         return this.$store.getters.isDark;

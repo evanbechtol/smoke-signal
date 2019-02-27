@@ -6,11 +6,11 @@
     leave-active-class="animated faster slideOutDown"
   >
     <v-bottom-sheet
-      :class="$vuetify.breakpoint.name === 'xs' ? 'mobile' : 'desktop'"
-      :inset="$vuetify.breakpoint.name !== 'xs'"
+      :class="isSmall ? 'mobile' : 'desktop'"
+      :inset="!isSmall"
       :value="badgeCard"
-      :hide-overlay="$vuetify.breakpoint.name !== 'xs'"
-      :max-width="$vuetify.breakpoint.name === 'xs' ? '100%' : '20%'"
+      :hide-overlay="!isSmall"
+      :max-width="isSmall ? '100%' : '20%'"
     >
       <v-card :dark="isDark" :color="`accent ${darken}`" height="400">
         <v-card-title
@@ -52,15 +52,11 @@ export default {
   computed: {},
   data: function() {
     return {
-      badgeDisplay: "",
-      isMobile: false
+      badgeDisplay: ""
     };
   },
   created() {},
-  mounted() {
-    this.isMobile = this.$vuetify.breakpoint.name === "xs";
-    // this.badgeDisplay = this.isMobile ? "mobile" : "desktop";
-  },
+  mounted() {},
   methods: {
     cancel() {
       this.$store.commit("badgeCard", false);

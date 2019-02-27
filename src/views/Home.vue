@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100vh;" class="home page mt-5">
-    <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
+    <v-container :class="isSmall ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12 class="hidden-xs-only">
           <v-layout row wrap justify-space-between align-center fill-height>
@@ -100,7 +100,7 @@
           </v-layout>
         </v-flex>
 
-        <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
+        <v-flex xs12 v-if="!isSmall">
           <grid
             :headers="headers"
             :items="filteredGridItems"

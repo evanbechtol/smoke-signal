@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    persistent
-    :fullscreen="$vuetify.breakpoint.name === 'xs'"
-  >
+  <v-dialog v-model="dialog" persistent :fullscreen="isSmall">
     <v-card :dark="isDark" :color="`accent ${darken}`">
       <v-card-title
         primary-title
@@ -115,12 +111,12 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-spacer v-if="$vuetify.breakpoint.name !== 'xs'"></v-spacer>
+        <v-spacer v-if="!isSmall"></v-spacer>
         <v-btn
           color="error darken-1"
           depressed
           @click="cancel"
-          :block="$vuetify.breakpoint.name === 'xs'"
+          :block="isSmall"
         >
           <v-icon class="mr-2">close</v-icon>Cancel
         </v-btn>
@@ -129,7 +125,7 @@
           :disabled="!formValid"
           depressed
           @click="save"
-          :block="$vuetify.breakpoint.name === 'xs'"
+          :block="isSmall"
         >
           <v-icon class="mr-2">check</v-icon>Pull It!</v-btn
         >

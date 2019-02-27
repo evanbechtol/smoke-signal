@@ -1,8 +1,8 @@
 <template>
   <div style="height: 100vh;" class="home page mt-5">
-    <v-container :class="$vuetify.breakpoint.name === 'xs' ? 'pa-0 ma-0' : ''">
+    <v-container :class="isSmall ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
-        <v-flex xs12 v-if="$vuetify.breakpoint.name !== 'xs'">
+        <v-flex xs12 v-if="!isSmall">
           <grid
             resolved
             :headers="headers"
@@ -25,7 +25,7 @@
           </grid>
         </v-flex>
 
-        <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
+        <v-flex v-else xs12 v-for="(item, index) in filteredGridItems" :key="index">
           <v-card tile class="my-3">
             <v-card-title
               class="hildaLight space-small mx-0 mt-0 bg white--text"
