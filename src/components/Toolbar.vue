@@ -121,9 +121,14 @@ export default {
       items: [
         { title: "Login", icon: "account_circle", path: "/login" },
         {
-          title: "My Profile",
-          icon: "account_circle",
-          path: "/profile"
+          title: "Dashboard",
+          icon: "dashboard",
+          path: "/"
+        },
+        {
+          title: "Resolved Cords",
+          icon: "assignment_turned_in",
+          path: "/resolved"
         },
         { title: "Admin", icon: "settings", path: "/admin" }
       ],

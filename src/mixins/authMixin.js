@@ -212,7 +212,7 @@ export const authMixin = {
                 this.$store.commit("user", response.data.user || null);
                 this.$store.commit("isAuthenticated", true);
                 this.setExpiry();
-                resolve();
+                resolve(response);
               }
             })
             .catch(err => {

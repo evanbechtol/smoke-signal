@@ -14,19 +14,30 @@ let router = new Router({
       path: "/",
       name: "home",
       meta: {
-        guest: true,
-        requiresAuth: false,
+        guest: false,
+        requiresAuth: true,
         isAdmin: false
       },
       component: () => import(/* webpackChunkName: "home" */ "./views/Home.vue")
+    },
+    {
+      path: "/resolved",
+      name: "resolved",
+      meta: {
+        guest: false,
+        requiresAuth: true,
+        isAdmin: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "resolvedCords" */ "./views/ResolvedCords.vue")
     },
     {
       path: "/cord/:id",
       name: "cordView",
       props: true,
       meta: {
-        guest: true,
-        requiresAuth: false,
+        guest: false,
+        requiresAuth: true,
         isAdmin: false
       },
       component: () =>
@@ -104,7 +115,7 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem("token") == null) {
+    if (localStorage.getItem("token") == null && localStorage.getItem("user") == null) {
       next({
         path: "/login",
         params: { nextUrl: to.fullPath }
