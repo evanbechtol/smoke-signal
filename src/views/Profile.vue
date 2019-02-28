@@ -82,7 +82,7 @@
                         <div class="circle">
                           <v-layout align-center justify-center fill-height>
                             <v-flex text-xs-center pt-3>
-                              <p class="dark-text hildaLight">
+                              <p class="dark-text hildaLight" style="font-size: 1.6em;">
                                 {{ userStats.cordsPulled }}
                               </p>
                             </v-flex>
@@ -100,7 +100,7 @@
                         <div class="circle">
                           <v-layout align-center justify-center fill-height>
                             <v-flex text-xs-center pt-3>
-                              <p class="dark-text hildaLight">
+                              <p class="dark-text hildaLight" style="font-size: 1.6em;">
                                 {{ userStats.rescuesProvided }}
                               </p>
                             </v-flex>
@@ -118,7 +118,7 @@
                         <div class="circle">
                           <v-layout align-center justify-center fill-height>
                             <v-flex text-xs-center pt-3>
-                              <p class="dark-text hildaLight">
+                              <p class="dark-text hildaLight" style="font-size: 1.6em;">
                                 {{ userStats.mostActiveApp._id }}
                               </p>
                             </v-flex>
@@ -186,11 +186,17 @@
                   :items="selectItems"
                   item-text="label"
                   item-value="value"
-                ></v-select>
+                  :hint="`Number of cords: ${filteredCords.length}`"
+                  persistent-hint
+                >
+                </v-select>
               </v-flex>
             </v-layout>
           </v-card-title>
-          <v-card-text class="ma-0 pa-0">
+          <v-card-text
+            class="ma-0 pa-0"
+            style="max-height: 486px; overflow-y: scroll;"
+          >
             <v-list three-line class="py-0">
               <template v-for="(item, index) in filteredCords">
                 <v-list-tile
