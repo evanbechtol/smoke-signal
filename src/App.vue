@@ -98,6 +98,13 @@ export default {
     document.getElementById("html").style.backgroundColor = color;
     document.getElementById("body").style.backgroundColor = color;
 
+    const theme = localStorage.getItem("vueAppTemplate-theme");
+
+    if (theme !== null) {
+      this.$store.commit("theme", theme);
+    } else {
+      this.$store.commit("theme", this.isDark ? "dark" : "light");
+    }
     // For E-Auth application authentication
     this.authenticateApp();
   },

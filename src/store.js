@@ -127,17 +127,18 @@ export default new Vuex.Store({
     },
     theme: function(state, payload) {
       // This can be modified to retrieve from API instead of localstorage
-      localStorage.setItem("vueAppTemplate-theme", JSON.stringify(payload));
+      localStorage.setItem(
+        "vueAppTemplate-theme",
+        typeof payload !== "string" ? JSON.stringify(payload) : payload
+      );
       state.theme = payload;
       state.isDark = state.theme === "dark";
     },
-    token: function(state, payload) {
+    token: function(state, payload = null) {
       if (payload) {
         let parsedPayload =
           typeof payload === "string" ? payload : JSON.stringify(payload);
         localStorage.setItem("token", parsedPayload);
-      } else {
-        payload = null;
       }
 
       state.token = payload;
@@ -147,9 +148,7 @@ export default new Vuex.Store({
         typeof payload === "string" ? payload : JSON.stringify(payload);
       localStorage.setItem("user", parsedPayload);
 
-      let storePayload =
-        typeof payload === "string" ? JSON.parse(payload) : payload;
-      state.user = storePayload;
+      state.user = typeof payload === "string" ? JSON.parse(payload) : payload;
     }
   },
   actions: {}
