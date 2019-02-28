@@ -351,70 +351,6 @@
                 <v-flex xs12>
                   <div class="hildaLight space-small">
                     Discussion
-                    <v-tooltip right v-if="!(addingToDiscussion || isResolved)">
-                      <template #activator="data">
-                        <v-btn
-                          icon
-                          v-if="!addingToDiscussion"
-                          color="success"
-                          v-on="data.on"
-                          :disabled="isResolved"
-                          @click="addingToDiscussion = !addingToDiscussion"
-                        >
-                          <v-icon>note_add</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Add to discussion</span>
-                    </v-tooltip>
-
-                    <transition
-                      name="auth-animation"
-                      mode="out-in"
-                      enter-active-class="animated faster fadeIn"
-                    >
-                      <v-layout column fill-height v-if="addingToDiscussion">
-                        <v-flex xs12>
-                          <v-textarea
-                            v-model="discussion"
-                            box
-                            counter
-                            hint="Must be at least 10 characters"
-                          ></v-textarea>
-                        </v-flex>
-                        <v-flex xs12>
-                          <v-layout row wrap fill-height>
-                            <v-flex xs12 sm2>
-                              <v-btn
-                                color="error"
-                                class="mb-4"
-                                @click="addingToDiscussion = false"
-                                :block="isSmall"
-                              >
-                                <v-icon size="20" class="mr-2">close</v-icon
-                                >Cancel
-                              </v-btn>
-                            </v-flex>
-                            <v-flex xs12 sm1>
-                              <v-btn
-                                @click="updateDiscussion"
-                                :disabled="
-                                  !addingToDiscussion || discussion.length < 10
-                                "
-                                :outline="
-                                  !addingToDiscussion || discussion.length < 10
-                                "
-                                color="info"
-                                class="mb-4"
-                                :block="isSmall"
-                              >
-                                <v-icon size="20" class="mr-2">create</v-icon
-                                >Submit Discussion
-                              </v-btn>
-                            </v-flex>
-                          </v-layout>
-                        </v-flex>
-                      </v-layout>
-                    </transition>
                   </div>
 
                   <v-divider></v-divider>
@@ -467,12 +403,42 @@
                             </strong>
                           </v-flex>
                           <v-flex grow>
-                            <p>{{ content.data }}</p>
+                            <p v-html="content.data"></p>
                           </v-flex>
                         </v-layout>
                       </v-timeline-item>
                     </v-timeline>
                   </div>
+                </v-flex>
+                <v-flex grow>
+                  <v-layout column fill-height>
+                    <v-flex xs12>
+                      <v-textarea
+                        v-model="discussion"
+                        outline
+                        counter
+                        color="info"
+                        hint="Must be at least 10 characters"
+                      ></v-textarea>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-layout row wrap fill-height>
+                        <v-flex xs12 sm1>
+                          <v-btn
+                            @click="updateDiscussion"
+                            :disabled="discussion.length < 10"
+                            :outline="discussion.length < 10"
+                            color="info"
+                            class="mb-4"
+                            :block="isSmall"
+                          >
+                            <v-icon size="20" class="mr-2">create</v-icon>Submit
+                            Discussion
+                          </v-btn>
+                        </v-flex>
+                      </v-layout>
+                    </v-flex>
+                  </v-layout>
                 </v-flex>
               </v-layout>
             </v-container>
