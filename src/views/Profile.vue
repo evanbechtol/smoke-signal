@@ -66,7 +66,69 @@
                 Statistics
               </v-card-title>
               <v-card-text>
-                <v-text-field
+                <v-layout
+                  row
+                  wrap
+                  align-start
+                  justify-space-between
+                  fill-height
+                >
+                  <v-flex xs6 sm4>
+                    <div>
+                      <div class="ma-0 hildaLight text-xs-center">
+                        Cords Pulled
+                      </div>
+                      <v-card-text class="ma-0 text-xs-center">
+                        <div class="circle">
+                          <v-layout align-center justify-center fill-height>
+                            <v-flex text-xs-center pt-3>
+                              <p class="dark-text hildaLight">
+                                {{ userStats.cordsPulled }}
+                              </p>
+                            </v-flex>
+                          </v-layout>
+                        </div>
+                      </v-card-text>
+                    </div>
+                  </v-flex>
+                  <v-flex xs6 sm4>
+                    <div>
+                      <div class="ma-0 hildaLight text-xs-center">
+                        Users Rescued
+                      </div>
+                      <v-card-text class="ma-0 text-xs-center">
+                        <div class="circle">
+                          <v-layout align-center justify-center fill-height>
+                            <v-flex text-xs-center pt-3>
+                              <p class="dark-text hildaLight">
+                                {{ userStats.rescuesProvided }}
+                              </p>
+                            </v-flex>
+                          </v-layout>
+                        </div>
+                      </v-card-text>
+                    </div>
+                  </v-flex>
+                  <v-flex xs6 sm4>
+                    <div>
+                      <div class="ma-0 hildaLight text-xs-center">
+                        Most Active App
+                      </div>
+                      <v-card-text class="ma-0 text-xs-center">
+                        <div class="circle">
+                          <v-layout align-center justify-center fill-height>
+                            <v-flex text-xs-center pt-3>
+                              <p class="dark-text hildaLight">
+                                {{ userStats.mostActiveApp._id }}
+                              </p>
+                            </v-flex>
+                          </v-layout>
+                        </div>
+                      </v-card-text>
+                    </div>
+                  </v-flex>
+                </v-layout>
+                <!-- <v-text-field
                   :dark="isDark"
                   name="cords pulled"
                   label="Cords Pulled"
@@ -98,7 +160,7 @@
                   prepend-inner-icon="star"
                   type="text"
                 >
-                </v-text-field>
+                </v-text-field>-->
               </v-card-text>
             </v-card>
           </v-flex>
@@ -110,6 +172,7 @@
           class="animated fast slideInRight"
           :dark="isDark"
           :color="`accent ${darken}`"
+          height="200px"
         >
           <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
             <v-layout row wrap fill-height justify-start align-center>
@@ -176,9 +239,11 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { cordMixin } from "../mixins/cordMixin";
+import CircleCard from "../components/CircleCard";
 
 export default {
   name: "Profile",
+  components: { CircleCard },
   mixins: [themeMixin, alertMixin, authMixin, cordMixin],
   computed: {
     userString: function() {
@@ -249,5 +314,23 @@ export default {
 <style scoped>
 .tileHover:hover {
   background-color: var(--e-dark-brand-blue) !important;
+}
+.circle {
+  height: 100px;
+  width: 100px;
+  /*background-color: var(--e-dark-brand-blue);*/
+  background: var(--e-dark-status-red); /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to bottom,
+    var(--e-dark-status-orange),
+    var(--e-dark-status-red)
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    var(--e-dark-status-orange),
+    var(--e-dark-status-red)
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  border-radius: 50px;
+  margin: 0 auto;
 }
 </style>
