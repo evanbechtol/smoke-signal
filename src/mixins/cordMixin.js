@@ -97,6 +97,20 @@ export const cordMixin = {
       return makeRequest(options);
     },
     /**
+     * @description Attempts to retrieve all cords with the status and user provided
+     * @param user {object} Object matching the user to search for
+     * @param status {string} Case-sensitive Status to search for
+     * @returns {Promise} Returns promise for request being generated
+     */
+    getCordsByUser(user, status = "Open") {
+      const route = `cords/user/${user}?status=${status}`;
+      const options = {
+        method: "GET",
+        url: `${baseUrl}/${route}`
+      };
+      return makeRequest(options);
+    },
+    /**
      * @description Attempts to update the cord matching the provided Object ID
      * @param id {string} Object ID for the cord to update
      * @param data {object} Body to use when updating the cord
