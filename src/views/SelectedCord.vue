@@ -296,6 +296,59 @@
                 </v-flex>
 
                 <v-flex xs12>
+                  <v-flex xs12>
+                    <v-combobox
+                      v-model="selectedCord.tags"
+                      :items="selectedCord.tags"
+                      :color="`info ${darken}`"
+                      :dark="isDark"
+                      :readonly="readonly.tags"
+                      hide-selected
+                      hint="Add some tags/keywords"
+                      label="Tags"
+                      box
+                      multiple
+                      persistent-hint
+                      small-chips
+                    >
+                      <v-tooltip
+                        bottom
+                        offset-y
+                        slot="append"
+                        v-if="isMine && !isResolved"
+                      >
+                        <template #activator="data">
+                          <v-icon
+                            v-on="data.on"
+                            :disabled="isResolved"
+                            @click="readonly.tags = !readonly.tags"
+                            >{{ readonly.tags ? "edit" : "save" }}
+                          </v-icon>
+                        </template>
+                        <span>Click to edit</span>
+                      </v-tooltip>
+                      <template
+                        slot="selection"
+                        slot-scope="{ item, parent, selected }"
+                      >
+                        <v-chip color="info" :selected="selected" label small>
+                          <span class="pr-2">
+                            {{ item }}
+                          </span>
+                          <v-icon
+                            small
+                            @click="parent.selectItem(item)"
+                            v-if="!readonly.tags"
+                          >
+                            close
+                          </v-icon>
+                        </v-chip>
+                      </template>
+                    </v-combobox>
+                  </v-flex>
+                </v-flex>
+
+                <v-flex xs12>
                   <div class="hildaLight space-small">
                     Discussion
                     <v-tooltip right v-if="!(addingToDiscussion || isResolved)">
@@ -542,7 +595,8 @@ export default {
       readonly: {
         app: true,
         category: true,
-        description: true
+        description: true,
+        tags: true
       }
     };
   },
@@ -649,6 +703,13 @@ export default {
     addingToDiscussion: function() {
       if (this.addingToDiscussion === false) {
         this.discussion = "";
+      }
+    },
+    "selectedCord.tags": {
+      handler: function(after, before) {
+        if (after.length !== before.length) {
+          this.save();
+        }
       }
     }
   }
