@@ -74,10 +74,11 @@
         <v-list-tile id="selectContainer" class="mt-3">
           <v-select
             id="select"
-            class="mb-2 pt-3"
+            class="my-2 pt-3"
             color="info"
+            background-color="accent darken-1"
+            box
             dark
-            dense
             :items="themes"
             item-text="label"
             item-value="value"
