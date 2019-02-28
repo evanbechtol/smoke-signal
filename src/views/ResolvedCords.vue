@@ -25,7 +25,12 @@
           </grid>
         </v-flex>
 
-        <v-flex v-else xs12 v-for="(item, index) in filteredGridItems" :key="index">
+        <v-flex
+          v-else
+          xs12
+          v-for="(item, index) in filteredGridItems"
+          :key="index"
+        >
           <v-card tile class="my-3">
             <v-card-title
               class="hildaLight space-small mx-0 mt-0 bg white--text"

@@ -1,47 +1,117 @@
 <template>
-  <v-container style="height: 100vh;" class="light-l1 profile page">
-    <v-layout row wrap align-start justify-start fill-height mt-5>
-      <v-flex xs12 sm12 md4 ma-5 class="animated fast slideInLeft">
-        <v-text-field
-          name="username"
-          label="Signum"
-          color="info"
-          readonly
-          :value="user.username"
-          prepend-inner-icon="lock"
-          type="text"
-        >
-        </v-text-field>
-        <v-text-field
-          name="name"
-          label="Name"
-          color="info"
-          readonly
-          :value="`${user.firstname} ${user.lastname}`"
-          prepend-inner-icon="lock"
-          type="text"
-        >
-        </v-text-field>
-        <v-text-field
-          name="email"
-          label="Email"
-          color="info"
-          readonly
-          :value="user.email"
-          prepend-inner-icon="lock"
-          :append-icon="emailVerified ? 'verified_user' : 'warning'"
-          persistent-hint
-          :hint="
-            emailVerified ? 'Email verified' : 'Email has not been verified'
-          "
-          type="email"
-        >
-        </v-text-field>
+  <v-container
+    style="height: 100vh;"
+    class="light-l1 profile page"
+    :class="isSmall ? 'px-1' : 'px-4'"
+  >
+    <v-layout row wrap align-start justify-center fill-height mt-5>
+      <v-flex xs12 sm12 md4 mt-5 class="animated fast slideInLeft">
+        <v-layout column justify-start align-space-around fill-height>
+          <v-flex xs12 sm6 grow>
+            <v-card :dark="isDark">
+              <v-card-title
+                class="hildaLight bg dark space-small big mx-0 mt-0"
+              >
+                User Details
+              </v-card-title>
+              <v-card-text>
+                <v-text-field
+                  :dark="isDark"
+                  name="username"
+                  label="Signum"
+                  color="info"
+                  readonly
+                  :value="user.username"
+                  prepend-inner-icon="lock"
+                  type="text"
+                >
+                </v-text-field>
+                <v-text-field
+                  :dark="isDark"
+                  name="name"
+                  label="Name"
+                  color="info"
+                  readonly
+                  :value="`${user.firstname} ${user.lastname}`"
+                  prepend-inner-icon="lock"
+                  type="text"
+                >
+                </v-text-field>
+                <v-text-field
+                  :dark="isDark"
+                  name="email"
+                  label="Email"
+                  color="info"
+                  readonly
+                  :value="user.email"
+                  prepend-inner-icon="lock"
+                  :append-icon="emailVerified ? 'verified_user' : 'warning'"
+                  persistent-hint
+                  :hint="
+                    emailVerified
+                      ? 'Email verified'
+                      : 'Email has not been verified'
+                  "
+                  type="email"
+                >
+                </v-text-field>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+          <v-flex xs12 sm6 grow mt-4>
+            <v-card :dark="isDark">
+              <v-card-title
+                class="hildaLight bg dark space-small big mx-0 mt-0"
+              >
+                Statistics
+              </v-card-title>
+              <v-card-text>
+                <v-text-field
+                  :dark="isDark"
+                  name="cords pulled"
+                  label="Cords Pulled"
+                  color="info"
+                  readonly
+                  :value="userStats.cordsPulled"
+                  prepend-inner-icon="live_help"
+                  type="number"
+                >
+                </v-text-field>
+                <v-text-field
+                  :dark="isDark"
+                  name="number of rescues"
+                  label="Users Rescued"
+                  color="info"
+                  readonly
+                  :value="userStats.rescuesProvided"
+                  prepend-inner-icon="verified_user"
+                  type="text"
+                >
+                </v-text-field>
+                <v-text-field
+                  :dark="isDark"
+                  name="app most active on"
+                  label="Most Help Provided For"
+                  color="info"
+                  readonly
+                  :value="userStats.mostActiveApp._id"
+                  prepend-inner-icon="star"
+                  type="text"
+                >
+                </v-text-field>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
       </v-flex>
 
-      <v-flex xs12 sm12 md6 mt-5 mx-4>
-        <v-card class="animated fast slideInRight">
-          <v-card-title class="hildaLight dark ma-0 pt-4 pl-3 pb-0">
+      <v-flex xs12 sm12 md6 mt-5 :class="isSmall ? 'mx-0' : 'mx-4'">
+        <v-card
+          class="animated fast slideInRight"
+          :dark="isDark"
+          :color="`accent ${darken}`"
+        >
+          <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
             <v-layout row wrap fill-height justify-start align-center>
               <v-flex xs12 sm4>
                 <v-select
@@ -57,37 +127,39 @@
               </v-flex>
             </v-layout>
           </v-card-title>
-          <v-card-text>
-            <v-list three-line>
+          <v-card-text class="ma-0 pa-0">
+            <v-list three-line class="py-0">
               <template v-for="(item, index) in filteredCords">
-                <v-layout
-                  row
-                  align-center
-                  justify-start
-                  fill-height
-                  :key="`layout-${index}`"
+                <v-list-tile
+                  :key="`tile-${index}`"
+                  class="tileHover py-2"
+                  @click="goToSelectedCord(item)"
                 >
-                  <v-flex xs12 grow>
-                    <v-list-tile :key="`tile-${index}`" class="mb-3" @click="">
-                      <v-list-tile-content>
-                        <v-list-tile-title>{{ item.app }}</v-list-tile-title>
-                        <div class="ml-3">
-                          <v-list-tile-sub-title
-                            ><strong>Category:</strong>
-                            {{ item.category }}</v-list-tile-sub-title
-                          >
-                          <v-list-tile-sub-title
-                            ><strong>Opened on:</strong>
-                            {{ item.openedOn }}</v-list-tile-sub-title
-                          >
-                        </div>
-                      </v-list-tile-content>
-                    </v-list-tile>
-                  </v-flex>
-                </v-layout>
+                  <v-list-tile-content>
+                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                    <div class="ml-3">
+                      <v-list-tile-sub-title>
+                        <strong>Application:</strong>
+                        {{ item.app }}
+                      </v-list-tile-sub-title>
+                      <v-list-tile-sub-title>
+                        <strong>Category:</strong>
+                        {{ item.category }}
+                      </v-list-tile-sub-title>
+                      <v-list-tile-sub-title>
+                        <strong>Opened on:</strong>
+                        {{
+                          new Date(item.openedOn).toLocaleDateString("en-US")
+                        }}
+                      </v-list-tile-sub-title>
+                    </div>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-icon>navigate_next</v-icon>
+                  </v-list-tile-action>
+                </v-list-tile>
                 <v-divider
                   v-if="index !== filteredCords.length - 1"
-                  class="mb-3"
                   :key="`divider-${index}`"
                 ></v-divider>
               </template>
@@ -131,7 +203,8 @@ export default {
     selectItems: [
       { label: "My Active Cords", value: "myActiveCords" },
       { label: "My Resolved Cords", value: "myResolvedCords" }
-    ]
+    ],
+    userStats: []
   }),
   created() {},
   mounted() {
@@ -142,8 +215,21 @@ export default {
       .catch(err => {
         this.setAlert(err.response.data.error, "#DC2D37", 0);
       });
+
+    this.getUserStats(this.userString)
+      .then(response => {
+        this.userStats = response.data.data;
+      })
+      .catch(err => {
+        this.setAlert(err.response.data.error, "#DC2D37", 0);
+      });
   },
-  methods: {},
+  methods: {
+    goToSelectedCord(cord) {
+      this.$store.commit("selectedCord", cord);
+      this.$router.push({ path: `/cord/${cord._id}`, props: cord });
+    }
+  },
   watch: {
     selectItemType: function(value) {
       if (value === "myResolvedCords" && this.resolvedCords.length === 0) {
@@ -160,4 +246,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.tileHover:hover {
+  background-color: var(--e-dark-brand-blue) !important;
+}
+</style>

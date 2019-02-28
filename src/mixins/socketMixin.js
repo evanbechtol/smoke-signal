@@ -11,9 +11,7 @@ export const socketMixin = {
       this.$store.commit("cordPullMessage", data);
       this.$store.commit("notificationLink", `/cord/${data.data._id}`);
     },
-    SOCKET_REFRESH_DISCUSSION: function(data) {
-      console.log("Discussion refresh received");
-    },
+    SOCKET_REFRESH_DISCUSSION: function() {},
     SOCKET_REFRESH_GRID_ALL: function(data) {
       this.$store.commit("gridItems", data);
     },

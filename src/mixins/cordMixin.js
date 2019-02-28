@@ -111,6 +111,19 @@ export const cordMixin = {
       return makeRequest(options);
     },
     /**
+     * @description Attempts to retrieve statistics for user provided
+     * @param user {object} Object matching the user to search for
+     * @returns {Promise} Returns promise for request being generated
+     */
+    getUserStats(user) {
+      const route = `cords/stats/${user}`;
+      const options = {
+        method: "GET",
+        url: `${baseUrl}/${route}`
+      };
+      return makeRequest(options);
+    },
+    /**
      * @description Attempts to update the cord matching the provided Object ID
      * @param id {string} Object ID for the cord to update
      * @param data {object} Body to use when updating the cord
