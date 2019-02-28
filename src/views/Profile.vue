@@ -1,8 +1,9 @@
 <template>
   <v-container
+    fluid
     style="height: 100vh;"
     class="light-l1 profile page"
-    :class="isSmall ? 'px-1' : 'px-4'"
+    :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
     <v-layout row wrap align-start justify-center fill-height mt-5>
       <v-flex xs12 sm12 md4 mt-5 class="animated fast slideInLeft">
