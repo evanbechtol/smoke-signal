@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar v-bind:color="color" dark fixed app>
+    <v-toolbar v-bind:color="color" dark app>
       <v-toolbar-side-icon
         @click.stop="drawer = !drawer"
         style="margin: 8px;"
@@ -36,7 +36,6 @@
       class="nav"
       :style="{ backgroundColor: '#0c0c0c' }"
       :mini-variant="mini"
-      absolute
       app
       dark
       temporary
@@ -72,14 +71,17 @@
       <jwt-expiry v-if="isAuthenticated && token"></jwt-expiry>
 
       <v-list class="pt-0" dense>
-        <v-divider light class="mb-1"></v-divider>
         <v-list-tile id="selectContainer" class="mt-3">
           <v-select
             id="select"
             class="mb-2 pt-3"
+            color="info"
             dark
             dense
             :items="themes"
+            item-text="label"
+            item-value="value"
+            :value="theme"
             @change="toggleTheme"
             label="Theme Selection"
           >
@@ -134,7 +136,10 @@ export default {
         },
         { title: "Admin", icon: "settings", path: "/admin" }
       ],
-      themes: ["Dark", "Light"]
+      themes: [
+        { label: "Dark", value: "dark" },
+        { label: "Light", value: "light" }
+      ]
     };
   },
   created() {},
