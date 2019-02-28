@@ -105,6 +105,37 @@
                 >
                 </v-textarea>
               </v-flex>
+
+              <v-flex xs12>
+                <v-combobox
+                  v-model="cord.tags"
+                  :items="cord.tags"
+                  :color="`info ${darken}`"
+                  :dark="isDark"
+                  :search-input.sync="search"
+                  hide-selected
+                  hint="Add some tags/keywords"
+                  label="Tags"
+                  box
+                  multiple
+                  persistent-hint
+                  small-chips
+                >
+                  <template
+                    slot="selection"
+                    slot-scope="{ item, parent, selected }"
+                  >
+                    <v-chip color="info" :selected="selected" label small>
+                      <span class="pr-2">
+                        {{ item }}
+                      </span>
+                      <v-icon small @click="parent.selectItem(item)">
+                        close
+                      </v-icon>
+                    </v-chip>
+                  </template>
+                </v-combobox>
+              </v-flex>
             </v-layout>
           </v-form>
         </v-container>
@@ -165,7 +196,8 @@ export default {
           (value && value.length >= 10) || "Must be at least 10 characters",
         maximum: value =>
           (value && value.length <= 30) || "Please limit to 30 characters"
-      }
+      },
+      search: ""
     };
   },
   created() {},
