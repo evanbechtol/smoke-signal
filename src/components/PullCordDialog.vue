@@ -28,7 +28,7 @@
                       hint="What is the problem?"
                       required
                       counter
-                      max="30"
+                      max="100"
                       :rules="[rules.required, rules.maximum]"
                     >
                     </v-text-field>
@@ -195,7 +195,7 @@ export default {
         minimum: value =>
           (value && value.length >= 10) || "Must be at least 10 characters",
         maximum: value =>
-          (value && value.length <= 30) || "Please limit to 30 characters"
+          (value && value.length <= 100) || "Please limit to 100 characters"
       },
       search: ""
     };

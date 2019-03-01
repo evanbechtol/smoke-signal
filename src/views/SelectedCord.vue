@@ -172,31 +172,15 @@
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
-                        :box="readonly.app"
-                        :outline="!readonly.app"
+                        :box="readonly"
+                        :outline="!readonly"
                         label="Application"
                         type="text"
                         v-model="selectedCord.app"
-                        :readonly="readonly.app"
+                        :readonly="readonly"
                         color="info"
                         @change="appChanged"
                       >
-                        <v-tooltip
-                          bottom
-                          offset-y
-                          slot="append"
-                          v-if="isMine && !isResolved"
-                        >
-                          <template #activator="data">
-                            <v-icon
-                              v-on="data.on"
-                              :disabled="isResolved"
-                              @click="readonly.app = !readonly.app"
-                              >{{ readonly.app ? "edit" : "save" }}
-                            </v-icon>
-                          </template>
-                          <span>Click to edit</span>
-                        </v-tooltip>
                       </v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
@@ -223,31 +207,15 @@
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
-                        :box="readonly.category"
-                        :outline="!readonly.category"
+                        :box="readonly"
+                        :outline="!readonly"
                         label="Category"
                         type="text"
                         v-model="selectedCord.category"
-                        :readonly="readonly.category"
+                        :readonly="readonly"
                         color="info"
                         @change="categoryChanged"
                       >
-                        <v-tooltip
-                          bottom
-                          offset-y
-                          slot="append"
-                          v-if="isMine && !isResolved"
-                        >
-                          <template #activator="data">
-                            <v-icon
-                              v-on="data.on"
-                              :disabled="isResolved"
-                              @click="readonly.category = !readonly.category"
-                              >{{ readonly.category ? "edit" : "save" }}
-                            </v-icon>
-                          </template>
-                          <span>Click to edit</span>
-                        </v-tooltip>
                       </v-text-field>
                     </v-flex>
                   </v-layout>
@@ -267,31 +235,19 @@
                 </v-flex>
 
                 <v-flex xs12>
+                  <div v-if="readonly" v-html="selectedCord.description"></div>
                   <v-textarea
+                    v-if="!readonly"
+                    class="animated faster slideInDown"
                     color="info"
-                    :box="readonly.description"
-                    :outline="!readonly.description"
+                    :box="readonly"
+                    :outline="!readonly"
                     label="Issue Description"
-                    :readonly="readonly.description"
+                    height="500px"
+                    :readonly="readonly"
                     v-model="selectedCord.description"
                     @change="descriptionChanged"
                   >
-                    <v-tooltip
-                      bottom
-                      offset-y
-                      slot="append"
-                      v-if="isMine && !isResolved"
-                    >
-                      <template #activator="data">
-                        <v-icon
-                          v-on="data.on"
-                          :disabled="isResolved"
-                          @click="readonly.description = !readonly.description"
-                          >{{ readonly.description ? "edit" : "save" }}
-                        </v-icon>
-                      </template>
-                      <span>Click to edit</span>
-                    </v-tooltip>
                   </v-textarea>
                 </v-flex>
 
@@ -302,7 +258,7 @@
                       :items="selectedCord.tags"
                       :color="`info ${darken}`"
                       :dark="isDark"
-                      :readonly="readonly.tags"
+                      :readonly="readonly"
                       hide-selected
                       hint="Add some tags/keywords"
                       label="Tags"
@@ -311,22 +267,6 @@
                       persistent-hint
                       small-chips
                     >
-                      <v-tooltip
-                        bottom
-                        offset-y
-                        slot="append"
-                        v-if="isMine && !isResolved"
-                      >
-                        <template #activator="data">
-                          <v-icon
-                            v-on="data.on"
-                            :disabled="isResolved"
-                            @click="readonly.tags = !readonly.tags"
-                            >{{ readonly.tags ? "edit" : "save" }}
-                          </v-icon>
-                        </template>
-                        <span>Click to edit</span>
-                      </v-tooltip>
                       <template
                         slot="selection"
                         slot-scope="{ item, parent, selected }"
@@ -338,7 +278,7 @@
                           <v-icon
                             small
                             @click="parent.selectItem(item)"
-                            v-if="!readonly.tags"
+                            v-if="!readonly"
                           >
                             close
                           </v-icon>
@@ -460,6 +400,18 @@
               </template>
               <span>My blocker is resolved!</span>
             </v-tooltip>
+
+            <v-btn
+              :class="isSmall ? 'ml-0' : 'ml-3'"
+              :block="isSmall"
+              :outline="readonly"
+              :color="readonly ? 'info darken-1' : 'success darken-1'"
+              :disabled="unpullDisabled"
+              dark
+              @click="readonly = !readonly"
+            >
+              {{ readonly ? "Edit Cord" : "Save Cord" }}
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -558,12 +510,7 @@ export default {
       confirmCloseDialog: false,
       discussion: "",
       loading: false,
-      readonly: {
-        app: true,
-        category: true,
-        description: true,
-        tags: true
-      }
+      readonly: true
     };
   },
   created() {
@@ -584,17 +531,17 @@ export default {
   },
   methods: {
     appChanged() {
-      if (this.readonly.app) {
+      if (this.readonly) {
         this.save();
       }
     },
     categoryChanged() {
-      if (this.readonly.category) {
+      if (this.readonly) {
         this.save();
       }
     },
     descriptionChanged() {
-      if (this.readonly.description) {
+      if (this.readonly) {
         this.save();
       }
     },
@@ -621,7 +568,9 @@ export default {
         return elem.username !== rescuer.username;
       });
 
-      this.save();
+      if (this.readonly) {
+        this.save();
+      }
     },
     rescue() {
       const data = {
@@ -675,9 +624,19 @@ export default {
     },
     "selectedCord.tags": {
       handler: function(after, before) {
-        if (after.length !== before.length) {
+        if (
+          this.readonly &&
+          after &&
+          before &&
+          after.length !== before.length
+        ) {
           this.save();
         }
+      }
+    },
+    readonly: function() {
+      if (this.readonly) {
+        this.save();
       }
     }
   }

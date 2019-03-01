@@ -132,6 +132,7 @@ export default {
       { text: "App", align: "left", value: "app" },
       { text: "Category", align: "left", value: "category" },
       { text: "Opened On", align: "left", value: "openedOn" },
+      { text: "Resolved On", align: "left", value: "resolvedOn" },
       { text: "Hero", align: "left", value: "hero" }
     ]
   }),

@@ -48,18 +48,22 @@
             <v-card-text>
               <v-layout row wrap fill-height>
                 <v-flex xs12>
-                  <p>Title: {{ cordPullMessage.data.title }}</p>
+                  <p class="hildaLight">
+                    <strong>{{ cordPullMessage.data.title }}</strong>
+                  </p>
                 </v-flex>
                 <v-flex xs12>
-                  <p>Description: {{ cordPullMessage.data.description }}</p>
+                  <div style="height: 100px; overflow-x: hidden;">
+                    <div v-html="cordPullMessage.data.description"></div>
+                  </div>
                 </v-flex>
                 <v-flex xs12>
                   <v-btn
                     depressed
-                    color="primary"
-                    class="ml-0"
+                    color="info"
+                    class="ml-0 mt-4"
                     dark
-                    :to="notificationLink"
+                    @click="goToCord"
                     :block="$vuetify.breakpoint.name === 'xs'"
                   >
                     Check it out!
@@ -127,7 +131,11 @@ export default {
       mode: ""
     };
   },
-  methods: {},
+  methods: {
+    goToCord: function() {
+      this.$router.push({ path: this.notificationLink });
+    }
+  },
   mounted() {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
