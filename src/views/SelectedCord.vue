@@ -202,12 +202,12 @@
                     <v-flex xs12 sm4>
                       <v-text-field
                         box
-                        :label="isResolved ? 'Opened On' : 'Duration'"
+                        :label="isResolved ? 'Resolved On' : 'Duration'"
                         type="text"
                         :value="
                           isResolved
                             ? new Date(
-                                selectedCord.openedOn
+                                selectedCord.resolvedOn
                               ).toLocaleDateString('en-US')
                             : computeDuration(selectedCord.openedOn)
                         "
@@ -651,6 +651,7 @@ export default {
     },
     unpullCord() {
       this.selectedCord.status = "Resolved";
+      this.selectedCord.resolvedOn = new Date().toISOString();
       this.save();
       this.confirmCloseDialog = false;
     },
@@ -662,6 +663,7 @@ export default {
       });
 
       this.save();
+      this.discussion = "";
     }
   },
   props: ["id"],
