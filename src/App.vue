@@ -2,7 +2,7 @@
   <v-app>
     <div id="app" :class="theme">
       <main>
-        <Toolbar color="primary" />
+        <Toolbar color="primary" :expiryDetails="expiryDetails" />
         <transition
           name="routerAnimation"
           enter-active-class="animated faster fadeIn"
@@ -123,6 +123,7 @@ export default {
 
     if (token) {
       this.$store.commit("token", token);
+      this.setExpiry();
     }
 
     if (user) {

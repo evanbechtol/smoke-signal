@@ -83,7 +83,10 @@
                         <div class="circle">
                           <v-layout align-center justify-center fill-height>
                             <v-flex text-xs-center pt-3>
-                              <p class="dark-text hildaLight" style="font-size: 1.6em;">
+                              <p
+                                class="dark-text hildaLight"
+                                style="font-size: 1.6em;"
+                              >
                                 {{ userStats.cordsPulled }}
                               </p>
                             </v-flex>
@@ -101,7 +104,10 @@
                         <div class="circle">
                           <v-layout align-center justify-center fill-height>
                             <v-flex text-xs-center pt-3>
-                              <p class="dark-text hildaLight" style="font-size: 1.6em;">
+                              <p
+                                class="dark-text hildaLight"
+                                style="font-size: 1.6em;"
+                              >
                                 {{ userStats.rescuesProvided }}
                               </p>
                             </v-flex>
@@ -119,8 +125,11 @@
                         <div class="circle">
                           <v-layout align-center justify-center fill-height>
                             <v-flex text-xs-center pt-3>
-                              <p class="dark-text hildaLight" style="font-size: 1.6em;">
-                                {{ userStats.mostActiveApp._id }}
+                              <p
+                                class="dark-text hildaLight"
+                                style="font-size: 1.6em;"
+                              >
+                                {{ activeApp || "" }}
                               </p>
                             </v-flex>
                           </v-layout>
@@ -253,6 +262,9 @@ export default {
   components: { CircleCard },
   mixins: [themeMixin, alertMixin, authMixin, cordMixin],
   computed: {
+    activeApp: function() {
+      return this.userStats.mostActiveApp._id;
+    },
     userString: function() {
       return JSON.stringify({
         _id: this.user._id,
@@ -276,18 +288,13 @@ export default {
       { label: "My Active Cords", value: "myActiveCords" },
       { label: "My Resolved Cords", value: "myResolvedCords" }
     ],
-    userStats: []
+    userStats: {
+      cordsPulled: "",
+      rescuesProvided: "",
+      mostActiveApp: { _id: 0, count: 0 }
+    }
   }),
-  created() {},
-  mounted() {
-    this.getCordsByUser(this.userString, "Open")
-      .then(response => {
-        this.activeCords = response.data.data;
-      })
-      .catch(err => {
-        this.setAlert(err.response.data.error, "#DC2D37", 0);
-      });
-
+  created() {
     this.getUserStats(this.userString)
       .then(response => {
         this.userStats = response.data.data;
@@ -295,7 +302,15 @@ export default {
       .catch(err => {
         this.setAlert(err.response.data.error, "#DC2D37", 0);
       });
+    this.getCordsByUser(this.userString, "Open")
+      .then(response => {
+        this.activeCords = response.data.data;
+      })
+      .catch(err => {
+        this.setAlert(err.response.data.error, "#DC2D37", 0);
+      });
   },
+  mounted() {},
   methods: {
     goToSelectedCord(cord) {
       this.$store.commit("selectedCord", cord);

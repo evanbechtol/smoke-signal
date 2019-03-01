@@ -68,7 +68,7 @@
         </v-list-group>
       </v-list>
 
-      <jwt-expiry v-if="isAuthenticated && token"></jwt-expiry>
+      <!--<jwt-expiry v-if="isAuthenticated && token" :expiryDetails="expiryDetails"></jwt-expiry>-->
 
       <v-list class="pt-0" dense>
         <v-list-tile id="selectContainer" class="mt-3">
@@ -117,7 +117,9 @@ export default {
   name: "toolbar",
   components: { JwtExpiry },
   mixins: [authMixin, themeMixin],
-  props: ["color"],
+  props: {
+    color: String
+  },
   data() {
     return {
       drawer: null,
@@ -143,7 +145,9 @@ export default {
       ]
     };
   },
-  created() {},
+  created() {
+    this.setExpiry();
+  },
   methods: {
     toggleTheme(value) {
       this.$store.commit("theme", value.toLowerCase());

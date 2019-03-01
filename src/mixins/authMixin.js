@@ -14,6 +14,9 @@ export const authMixin = {
       type: Object,
       value: {}
     },
+    tokenLife: {
+      type: String
+    },
     intervalMessages: {
       type: Array,
       value: []
@@ -28,12 +31,23 @@ export const authMixin = {
         this.$store.commit("appToken");
       }
     },
+    darken: function() {
+      return this.isDark === true ? "darken-1" : "";
+    },
     isAuthenticated: {
       get: function() {
         return this.$store.getters.isAuthenticated;
       },
       set: function() {
         this.$store.commit("isAuthenticated");
+      }
+    },
+    isDark: {
+      get: function() {
+        return this.$store.getters.isDark;
+      },
+      set: function() {
+        this.$store.commit("isDark");
       }
     },
     isExpiryIntervalSet: {
@@ -208,8 +222,12 @@ export const authMixin = {
           axios(options)
             .then(response => {
               if (response && response.data) {
+                const parsedToken = window.jwt_decode(response.data.token);
                 this.$store.commit("token", response.data.token || null);
-                this.$store.commit("user", response.data.user || null);
+                this.$store.commit(
+                  "user",
+                  response.data.user || parsedToken.user || null
+                );
                 this.$store.commit("isAuthenticated", true);
                 this.setExpiry();
                 resolve(response);
@@ -301,6 +319,7 @@ export const authMixin = {
         const expires = decoded.exp;
         const rightNow = this.getUnixTime();
         const minutes = Math.floor((expires - rightNow) / 60);
+
         this.expiryDetails = {
           warning: minutes <= this.whenToWarn,
           expired: expires < rightNow,

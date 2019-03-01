@@ -11,26 +11,12 @@
 </template>
 
 <script>
-import { authMixin } from "../mixins/authMixin";
 import { themeMixin } from "../mixins/themeMixin";
 
 export default {
   name: "jwt-expiry",
-  mixins: [authMixin, themeMixin],
-  components: {},
-  computed: {},
-  data: () => ({}),
-  props: [],
-  beforeCreate() {},
-  created() {},
-  beforeDestroy() {},
-  destroyed() {},
-  beforeMount() {},
-  mounted() {},
-  beforeUpdate() {},
-  updated() {},
-  methods: {},
-  watch: {}
+  mixins: [themeMixin],
+  props: ["expiryDetails"]
 };
 </script>
 

@@ -28,7 +28,7 @@
           style="max-width: 300px;"
           color="primary"
           append-icon="search"
-          label="Search"
+          label="Search By Title"
           single-line
           hide-details
         >
