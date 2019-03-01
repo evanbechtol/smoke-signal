@@ -47,7 +47,7 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <v-list-group value="true" v-if="isAuthenticated || user">
+        <v-list-group v-if="isAuthenticated || user">
           <v-list-tile slot="activator" avatar tag="div">
             <v-list-tile-avatar>
               <v-icon large>fingerprint</v-icon>
