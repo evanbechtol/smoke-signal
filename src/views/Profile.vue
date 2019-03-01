@@ -6,7 +6,7 @@
     :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
     <v-layout row wrap align-start justify-center fill-height mt-5>
-      <v-flex xs12 sm12 md4 mt-5 class="animated fast slideInLeft">
+      <v-flex xs12 sm12 md5 mt-5 class="animated fast slideInLeft">
         <v-layout column justify-start align-space-around fill-height>
           <v-flex xs12 sm6 grow>
             <v-card :dark="isDark">
