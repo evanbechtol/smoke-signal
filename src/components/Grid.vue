@@ -7,14 +7,13 @@
           <v-tooltip right class="ml-3">
             <template #activator="data">
               <v-btn
-                icon
+                depressed
                 v-if="!pullingCord"
                 color="error"
-                class="animated slow pulse infinite"
                 v-on="data.on"
                 @click="pullingCord = !pullingCord"
               >
-                <v-icon>flag</v-icon>
+                <v-icon class="mr-3">flag</v-icon>Pull My Cord
               </v-btn>
             </template>
             <span>{{ "Pull My Cord" }}</span>
@@ -46,6 +45,7 @@
       <v-data-table
         :headers="headers"
         :items="items"
+        :custom-sort="customSort"
         :search="search"
         :loading="gridLoading"
       >
@@ -108,9 +108,8 @@ export default {
     search: ""
   }),
   props: {
-    resolved: {
-      type: Boolean,
-      default: false
+    customSort: {
+      type: Function
     },
     headers: {
       type: Array,
@@ -127,7 +126,11 @@ export default {
     loading: {
       type: Boolean,
       default: false
-    }
+    },
+    resolved: {
+      type: Boolean,
+      default: false
+    },
   },
   methods: {
     getInitials(item) {

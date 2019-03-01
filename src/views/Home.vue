@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100vh;" class="home page mt-5">
-    <v-container :class="isSmall ? 'pa-0 ma-0' : ''">
+    <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12 class="hidden-xs-only">
           <v-layout row wrap justify-space-between align-center fill-height>
@@ -100,10 +100,97 @@
           </v-layout>
         </v-flex>
 
+        <!-- For large screens -->
         <v-flex xs12 v-if="!isSmall">
+          <!--<v-card
+            class="animated fast slideInRight"
+            :dark="isDark"
+            :color="`accent ${darken}`"
+            height="200px"
+          >
+            <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
+              <v-layout row wrap fill-height justify-start align-center>
+                <v-flex xs12 sm4>
+                  <v-select
+                    dense
+                    solo-inverted
+                    flat
+                    dark
+                    v-model="selectItemType"
+                    :items="selectItems"
+                    item-text="label"
+                    item-value="value"
+                    :hint="`Number of cords: ${filteredGridItems.length}`"
+                    persistent-hint
+                  >
+                  </v-select>
+                </v-flex>
+                <v-spacer></v-spacer>
+                <v-flex shrink>
+                  <v-tooltip right class="ml-3">
+                    <template #activator="data">
+                      <v-btn
+                        depressed
+                        color="error"
+                        class="mb-4"
+                        v-on="data.on"
+                        @click="pullingCord = !pullingCord"
+                      >
+                        <v-icon class="mr-3">flag</v-icon>Pull Cord
+                      </v-btn>
+                    </template>
+                    <span>{{ "Pull My Cord" }}</span>
+                  </v-tooltip>
+                </v-flex>
+              </v-layout>
+            </v-card-title>
+            <v-card-text
+              class="ma-0 pa-0"
+              style="max-height: 486px; overflow-y: scroll;"
+            >
+              <v-list three-line class="py-0">
+                <template v-for="(item, index) in filteredGridItems">
+                  <v-list-tile
+                    :key="`tile-${index}`"
+                    class="tileHover py-2"
+                    @click="goToSelectedCord(item)"
+                  >
+                    <v-list-tile-content>
+                      <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                      <div class="ml-3">
+                        <v-list-tile-sub-title>
+                          <strong>Application:</strong>
+                          {{ item.app }}
+                        </v-list-tile-sub-title>
+                        <v-list-tile-sub-title>
+                          <strong>Category:</strong>
+                          {{ item.category }}
+                        </v-list-tile-sub-title>
+                        <v-list-tile-sub-title>
+                          <strong>Opened on:</strong>
+                          {{
+                            new Date(item.openedOn).toLocaleDateString("en-US")
+                          }}
+                        </v-list-tile-sub-title>
+                      </div>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                      <v-icon>navigate_next</v-icon>
+                    </v-list-tile-action>
+                  </v-list-tile>
+                  <v-divider
+                    v-if="index !== filteredGridItems.length - 1"
+                    :key="`divider-${index}`"
+                  ></v-divider>
+                </template>
+              </v-list>
+            </v-card-text>
+          </v-card>-->
+
           <grid
             :headers="headers"
             :items="filteredGridItems"
+            :custom-sort="gridCustomSort"
             :loading="loading"
             v-on:refreshCordGrid="getCordGridItems"
           >
@@ -122,6 +209,7 @@
           </grid>
         </v-flex>
 
+        <!-- For small screens -->
         <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
           <v-card tile :dark="isDark" :color="`accent ${darken}`" class="my-3">
             <v-card-title
@@ -176,6 +264,11 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <pull-cord-dialog
+      :initial-dialog="pullingCord"
+      v-on:closeDialog="pullingCord = false"
+      v-on:refreshCordGrid="getCordGridItems"
+    ></pull-cord-dialog>
   </div>
 </template>
 
@@ -190,6 +283,7 @@ import Grid from "../components/Grid";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import CircleCard from "../components/CircleCard";
+import PullCordDialog from "../components/PullCordDialog";
 
 export default {
   name: "home",
@@ -198,7 +292,8 @@ export default {
     CircleCard,
     JwtExpiry,
     MenuBtn,
-    Grid
+    Grid,
+    PullCordDialog
   },
   computed: {
     filteredGridItems: function() {
@@ -226,6 +321,7 @@ export default {
     moderateCords: [],
     myCords: [],
     newCords: [],
+    pullingCord: false,
     gridItemType: "all",
     selectItemType: "all",
     selectItems: [
@@ -255,6 +351,40 @@ export default {
     }
   },
   methods: {
+    gridCustomSort(items, index, isDesc) {
+      //debugger;
+      items.sort((a, b) => {
+        switch (index) {
+          case "title":
+          case "app":
+          case "category":
+            if (!isDesc) {
+              return compareString(a[index], b[index]);
+            } else {
+              return compareString(b[index], a[index]);
+            }
+          case "duration":
+            if (!isDesc) {
+              return compareString(a.openedOn, b.openedOn);
+            } else {
+              return compareString(b.openedOn, a.openedOn);
+            }
+          case "hero":
+            if (!isDesc) {
+              return compareString(a.rescuers.length, b.rescuers.length);
+            } else {
+              return compareString(b.rescuers.length, a.rescuers.length);
+            }
+          case "name":
+            if (!isDesc) {
+              return compareString(a.puller.username, b.puller.username);
+            } else {
+              return compareString(b.puller.username, a.puller.username);
+            }
+        }
+      });
+      return items;
+    },
     getCordGridItems() {
       this.loading = true;
       this.getCords()
@@ -309,6 +439,16 @@ export default {
     }
   }
 };
+
+/**
+ * @description Compare strings
+ * @param a {string} First String to compare
+ * @param b {string} Second String to compare
+ * @returns {number} Returns -1 if a < b. Returns 1 if a > b. Returns 0 if strings are equivalent
+ */
+function compareString(a, b) {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
 </script>
 
 <style scoped>
