@@ -10,10 +10,6 @@ export const authMixin = {
       type: String,
       value: ""
     },
-    expiryDetails: {
-      type: Object,
-      value: {}
-    },
     tokenLife: {
       type: String
     },
@@ -34,20 +30,20 @@ export const authMixin = {
     darken: function() {
       return this.isDark === true ? "darken-1" : "";
     },
+    expiryDetails: {
+      get: function() {
+        return this.$store.getters.expiryDetails;
+      },
+      set: function() {
+        this.$store.commit("expiryDetails");
+      }
+    },
     isAuthenticated: {
       get: function() {
         return this.$store.getters.isAuthenticated;
       },
       set: function() {
         this.$store.commit("isAuthenticated");
-      }
-    },
-    isDark: {
-      get: function() {
-        return this.$store.getters.isDark;
-      },
-      set: function() {
-        this.$store.commit("isDark");
       }
     },
     isExpiryIntervalSet: {
@@ -75,17 +71,7 @@ export const authMixin = {
       }
     }
   },
-  mounted() {
-    // This is not needed for firebase authentication
-    /*const _this = this;
-    this.setExpiry();
-    if (!this.isExpiryIntervalSet) {
-      setInterval(function() {
-        _this.setExpiry();
-      }, _this.frequency * 1000);
-      this.$store.commit("isExpiryIntervalSet", true);
-    }*/
-  },
+  mounted() {},
   methods: {
     /**
      * @description Authenticate the application, and store the returned JWT if provided
@@ -320,7 +306,7 @@ export const authMixin = {
         const rightNow = this.getUnixTime();
         const minutes = Math.floor((expires - rightNow) / 60);
 
-        this.expiryDetails = {
+        this.$store.commit("expiryDetails", {
           warning: minutes <= this.whenToWarn,
           expired: expires < rightNow,
           minutes: minutes,
@@ -333,7 +319,7 @@ export const authMixin = {
             minutes === 1
               ? `You will be logged out in ${minutes} minute, due to inactivity`
               : `You will be logged out in ${minutes} minutes, due to inactivity`
-        };
+        });
 
         if (minutes > 0 && this.isAuthenticated === false) {
           this.$store.commit("isAuthenticated", true);

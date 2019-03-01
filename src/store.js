@@ -14,7 +14,6 @@ export default new Vuex.Store({
     app: "",
     appToken: null,
     badgeCard: false,
-    cordPullNotification: false,
     cordPullMessage: {
       data: {
         _id: "",
@@ -25,22 +24,26 @@ export default new Vuex.Store({
         title: ""
       }
     },
+    cordPullNotification: false,
+    expiryDetails: {
+      iat: "",
+      exp: "",
+      tokenLife: ""
+    },
     gridItems: [],
-    isConnected: false,
-    socketMessage: "",
-    isDark: false,
     isAuthenticated: false,
+    isConnected: false,
+    isDark: false,
     isExpiryIntervalSet: false,
     notificationLink: "",
     selectedCord: null,
+    socketMessage: "",
     theme: "light",
     token: null,
     user: null
   },
   getters: {
     alert: state => state.alert,
-    cordPullNotification: state => state.cordPullNotification,
-    cordPullMessage: state => state.cordPullMessage,
     alertClass: state => state.alertClass,
     alertColor: state => state.alertColor,
     alertMessage: state => state.alertMessage,
@@ -48,6 +51,9 @@ export default new Vuex.Store({
     alertTimeout: state => state.alertTimeout,
     appToken: state => state.appToken,
     badgeCard: state => state.badgeCard,
+    cordPullNotification: state => state.cordPullNotification,
+    cordPullMessage: state => state.cordPullMessage,
+    expiryDetails: state => state.expiryDetails,
     gridItems: state => state.gridItems,
     isConnected: state => state.isConnected,
     isDark: state => state.isDark,
@@ -63,12 +69,6 @@ export default new Vuex.Store({
   mutations: {
     alert: function(state, payload) {
       state.alert = payload;
-    },
-    cordPullNotification: function(state, payload) {
-      state.cordPullNotification = payload;
-    },
-    cordPullMessage: function(state, payload) {
-      state.cordPullMessage = payload;
     },
     alertClass: function(state, payload) {
       state.alertClass = payload;
@@ -90,6 +90,15 @@ export default new Vuex.Store({
     },
     badgeCard: function(state, payload) {
       state.badgeCard = payload;
+    },
+    cordPullNotification: function(state, payload) {
+      state.cordPullNotification = payload;
+    },
+    cordPullMessage: function(state, payload) {
+      state.cordPullMessage = payload;
+    },
+    expiryDetails: function(state, payload) {
+      state.expiryDetails = payload;
     },
     gridItems: function(state, payload) {
       state.gridItems = payload;

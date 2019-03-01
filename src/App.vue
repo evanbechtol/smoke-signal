@@ -2,7 +2,7 @@
   <v-app>
     <div id="app" :class="theme">
       <main>
-        <Toolbar color="primary" :expiryDetails="expiryDetails" />
+        <Toolbar color="primary" />
         <transition
           name="routerAnimation"
           enter-active-class="animated faster fadeIn"
@@ -92,6 +92,17 @@ export default {
   components: { BadgeCard, Footer, Toolbar },
   created() {
     const color = this.isDark ? "#181818" : "#e0e0e0";
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (token) {
+      this.$store.commit("token", token);
+      this.setExpiry();
+    }
+
+    if (user) {
+      this.$store.commit("user", user);
+    }
 
     document.getElementById("html").style.height = "100vh";
     document.getElementById("body").style.height = "100vh";

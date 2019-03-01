@@ -40,7 +40,7 @@
       dark
       temporary
     >
-      <v-list class="pa-1">
+      <v-list class="pa-0">
         <v-list-tile v-if="mini" @click.stop="mini = !mini">
           <v-list-tile-action>
             <v-icon>chevron_right</v-icon>
@@ -68,26 +68,32 @@
         </v-list-group>
       </v-list>
 
-      <!--<jwt-expiry v-if="isAuthenticated && token" :expiryDetails="expiryDetails"></jwt-expiry>-->
+      <jwt-expiry
+        v-if="isAuthenticated && token"
+        :expiry-details="expiryDetails"
+      ></jwt-expiry>
 
       <v-list class="pt-0" dense>
-        <v-list-tile id="selectContainer" class="mt-3">
-          <v-select
-            id="select"
-            class="my-2 pt-3"
-            color="info"
-            background-color="accent darken-1"
-            box
-            dark
-            :items="themes"
-            item-text="label"
-            item-value="value"
-            :value="theme"
-            @change="toggleTheme"
-            label="Theme Selection"
-          >
-          </v-select>
-        </v-list-tile>
+        <v-select
+          id="select"
+          flat
+          full-width
+          solo-inverted
+          color="info"
+          dark
+          :items="themes"
+          item-text="label"
+          item-value="value"
+          :value="theme"
+          @change="toggleTheme"
+          label="Theme Selection"
+          hint="Theme Selection"
+          persistent-hint
+        >
+          <template v-slot:prepend-inner>
+            <v-icon class="mr-3">compare</v-icon>
+          </template>
+        </v-select>
         <v-divider light class="py-1 mt-2"></v-divider>
         <v-list-tile
           v-for="item in items"
