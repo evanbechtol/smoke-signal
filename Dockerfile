@@ -1,7 +1,11 @@
 FROM scmgr.eams.ericsson.net:5005/docker/node-base:10.15.2
 
+# Sinopia workaround (doesn't like modules with "." in the name)
+RUN echo svg.select.js:registry=https://registry.npmjs.org/ >> ~/.npmrc /
+    echo @vue/cli-service:registry=https://registry.npmjs.org/ >> ~/.npmrc
+
 # install simple http server for serving static content
-RUN npm install -g spa-http-server
+RUN npm install -g spa-http-server @vue/cli-service
 
 # create the "app" folder if it doesn't exist
 RUN mkdir -p /app
@@ -11,9 +15,6 @@ WORKDIR /app
 
 # copy both 'package.json' and 'package-lock.json' (if available)
 COPY package*.json ./
-
-# Sinopia workaround (doesn't like modules with "." in the name)
-RUN echo svg.select.js:registry=https://registry.npmjs.org/ >> ~/.npmrc
 
 # install project dependencies
 RUN npm install --production
