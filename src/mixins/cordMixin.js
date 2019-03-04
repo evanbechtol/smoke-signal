@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = process.env.APIBASE || "http://localhost:3000";
+const baseUrl = process.env.VUE_APP_API_BASE;
 
 export const cordMixin = {
   computed: {

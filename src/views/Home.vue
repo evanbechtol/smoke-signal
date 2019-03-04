@@ -360,12 +360,11 @@ export default {
       { text: "Hero", align: "left", value: "hero" }
     ]
   }),
-  beforeDestroy() {},
   created() {
-    if (this.user) {
-      this.getCordGridItems();
-    } else {
+    if (!this.user) {
       this.$router.push({ path: "/login", name: "login" });
+    } else if (this.appToken) {
+      this.getCordGridItems();
     }
   },
   mounted() {
@@ -432,6 +431,11 @@ export default {
     }
   },
   watch: {
+    appToken: function(value) {
+      if (value) {
+        this.getCordGridItems();
+      }
+    },
     selectItemType: function(value) {
       this.gridItemType = value;
     },
