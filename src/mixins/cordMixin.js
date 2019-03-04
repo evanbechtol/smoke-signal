@@ -61,7 +61,7 @@ export const cordMixin = {
      * @returns {Promise} Returns promise for request being generated
      */
     getCords(limit = 100, skip = 0, query = null) {
-      const route = `cords/status/Open?limit=${limit}&skip=${skip}&query=${
+      const route = `cords?limit=${limit}&skip=${skip}&query=${
         query === null ? "" : query
       }`;
       const options = {

@@ -309,7 +309,6 @@
                         <v-chip
                           dark
                           color="#a56ebe"
-                          :selected="selected"
                           label
                           small
                         >

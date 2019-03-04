@@ -277,16 +277,20 @@ export default {
     filteredCords: function() {
       return this.selectItemType === "myActiveCords"
         ? this.activeCords
-        : this.resolvedCords;
+        : this.selectItemType === "myResolvedCords"
+        ? this.resolvedCords
+        : this.rescueCords;
     }
   },
   data: () => ({
     activeCords: [],
+    rescueCords: [],
     resolvedCords: [],
     selectItemType: "myActiveCords",
     selectItems: [
       { label: "My Active Cords", value: "myActiveCords" },
-      { label: "My Resolved Cords", value: "myResolvedCords" }
+      { label: "My Resolved Cords", value: "myResolvedCords" },
+      { label: "Rescues", value: "myRescueCords" }
     ],
     userStats: {
       cordsPulled: "",
@@ -305,6 +309,18 @@ export default {
     this.getCordsByUser(this.userString, "Open")
       .then(response => {
         this.activeCords = response.data.data;
+      })
+      .catch(err => {
+        this.setAlert(err.response.data.error, "#DC2D37", 0);
+      });
+
+    const query = {
+      
+      rescuers: { _id: this.user._id, username: this.user.username }
+    };
+    this.getCords(100, 0, JSON.stringify(query))
+      .then(response => {
+        this.rescueCords = response.data.data;
       })
       .catch(err => {
         this.setAlert(err.response.data.error, "#DC2D37", 0);

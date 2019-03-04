@@ -409,7 +409,7 @@ export default {
     },
     getCordGridItems() {
       this.loading = true;
-      this.getCords()
+      this.getCordsByStatus("Open")
         .then(response => {
           this.gridItems = response.data.data;
           this.loading = false;
