@@ -9,266 +9,285 @@
         align-center
         fill-height
       >
-        <v-flex xs12 class="hidden-xs-only">
-          <v-layout row wrap justify-space-between align-center fill-height>
-            <v-flex xs12 sm4>
-              <v-card tile flat :dark="isDark" class="mx-1 my-2">
-                <v-card-title
-                  class="hildaLight space-small dark text-xs-center mx-0"
-                  style="background-color: var(--e-dark-status-red)"
-                >
-                  <v-icon class="mr-3">error</v-icon> Critical Cords
-                </v-card-title>
-                <v-card-text class="text-xs-center">
-                  <v-tooltip bottom offset-y>
-                    <template #activator="data">
-                      <!-- <v-btn
-                        v-on="data.on"
-                        dark
-                        large
-                        fab
-                        style="font-size: 2em;"
-                        color="error"
-                      >
-                        {{ criticalCords.length }}
-                      </v-btn>-->
-                      <circle-card
-                        color="error"
-                        :value="criticalCords.length"
-                      ></circle-card>
-                    </template>
-                    <span>Toggle Viewing Critical Cords</span>
-                  </v-tooltip>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-            <v-flex xs12 sm4>
-              <v-card tile flat :dark="isDark" class="mx-1 my-2">
-                <v-card-title
-                  class="hildaLight space-small dark text-xs-center mx-0"
-                  style="background-color: var(--e-dark-status-orange)"
-                >
-                  <v-icon class="mr-3">warning</v-icon> Moderate Cords
-                </v-card-title>
-                <v-card-text class="text-xs-center">
-                  <v-tooltip bottom offset-y>
-                    <template #activator="data">
-                      <!--<v-btn
-                        v-on="data.on"
-                        dark
-                        large
-                        fab
-                        style="font-size: 2em;"
-                        color="orangeWarning"
-                      >
-                        {{ moderateCords.length }}
-                      </v-btn>-->
-                      <circle-card
-                        color="orangeWarning"
-                        :value="moderateCords.length"
-                      ></circle-card>
-                    </template>
-                    <span>Toggle Viewing Moderate Cords</span>
-                  </v-tooltip>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-            <v-flex xs12 sm4>
-              <v-card tile flat :dark="isDark" class="mx-1 my-2">
-                <v-card-title
-                  class="hildaLight space-small dark text-xs-center mx-0"
-                  style="background-color: var(--e-dark-status-green)"
-                >
-                  <v-icon class="mr-3">info</v-icon> New Cords
-                </v-card-title>
-                <v-card-text class="text-xs-center">
-                  <v-tooltip bottom offset-y>
-                    <template #activator="data">
-                      <!--<v-btn
-                        v-on="data.on"
-                        dark
-                        large
-                        fab
-                        style="font-size: 2em;"
-                        color="success"
-                      >
-                        {{ newCords.length }}
-                      </v-btn>-->
-                      <circle-card
-                        color="success"
-                        :value="newCords.length"
-                      ></circle-card>
-                    </template>
-                    <span>Toggle Viewing New Cords</span>
-                  </v-tooltip>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-          </v-layout>
-        </v-flex>
-
-        <!-- For large screens -->
-        <v-flex xs12 v-if="!isSmall">
-          <!--<v-card
-            class="animated fast slideInRight"
-            :dark="isDark"
-            :color="`accent ${darken}`"
-            height="200px"
-          >
-            <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
-              <v-layout row wrap fill-height justify-start align-center>
-                <v-flex xs12 sm4>
-                  <v-select
-                    dense
-                    solo-inverted
-                    flat
-                    dark
-                    v-model="selectItemType"
-                    :items="selectItems"
-                    item-text="label"
-                    item-value="value"
-                    :hint="`Number of cords: ${filteredGridItems.length}`"
-                    persistent-hint
+        <div v-if="appToken" style="width: 100%;">
+          <v-flex xs12 class="hidden-xs-only">
+            <v-layout row wrap justify-space-between align-center fill-height>
+              <v-flex xs12 sm4>
+                <v-card tile flat :dark="isDark" class="mx-1 my-2">
+                  <v-card-title
+                    class="hildaLight space-small dark text-xs-center mx-0"
+                    style="background-color: var(--e-dark-status-red)"
                   >
-                  </v-select>
-                </v-flex>
-                <v-spacer></v-spacer>
-                <v-flex shrink>
-                  <v-tooltip right class="ml-3">
-                    <template #activator="data">
-                      <v-btn
-                        depressed
-                        color="error"
-                        class="mb-4"
-                        v-on="data.on"
-                        @click="pullingCord = !pullingCord"
-                      >
-                        <v-icon class="mr-3">flag</v-icon>Pull Cord
-                      </v-btn>
-                    </template>
-                    <span>{{ "Pull My Cord" }}</span>
-                  </v-tooltip>
-                </v-flex>
-              </v-layout>
-            </v-card-title>
-            <v-card-text
-              class="ma-0 pa-0"
-              style="max-height: 486px; overflow-y: scroll;"
-            >
-              <v-list three-line class="py-0">
-                <template v-for="(item, index) in filteredGridItems">
-                  <v-list-tile
-                    :key="`tile-${index}`"
-                    class="tileHover py-2"
-                    @click="goToSelectedCord(item)"
+                    <v-icon class="mr-3">error</v-icon> Critical Cords
+                  </v-card-title>
+                  <v-card-text class="text-xs-center">
+                    <v-tooltip bottom offset-y>
+                      <template #activator="data">
+                        <!-- <v-btn
+                          v-on="data.on"
+                          dark
+                          large
+                          fab
+                          style="font-size: 2em;"
+                          color="error"
+                        >
+                          {{ criticalCords.length }}
+                        </v-btn>-->
+                        <circle-card
+                          color="error"
+                          :value="criticalCords.length"
+                        ></circle-card>
+                      </template>
+                      <span>Toggle Viewing Critical Cords</span>
+                    </v-tooltip>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex xs12 sm4>
+                <v-card tile flat :dark="isDark" class="mx-1 my-2">
+                  <v-card-title
+                    class="hildaLight space-small dark text-xs-center mx-0"
+                    style="background-color: var(--e-dark-status-orange)"
                   >
-                    <v-list-tile-content>
-                      <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                      <div class="ml-3">
-                        <v-list-tile-sub-title>
-                          <strong>Application:</strong>
-                          {{ item.app }}
-                        </v-list-tile-sub-title>
-                        <v-list-tile-sub-title>
-                          <strong>Category:</strong>
-                          {{ item.category }}
-                        </v-list-tile-sub-title>
-                        <v-list-tile-sub-title>
-                          <strong>Opened on:</strong>
-                          {{
-                            new Date(item.openedOn).toLocaleDateString("en-US")
-                          }}
-                        </v-list-tile-sub-title>
-                      </div>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-icon>navigate_next</v-icon>
-                    </v-list-tile-action>
-                  </v-list-tile>
-                  <v-divider
-                    v-if="index !== filteredGridItems.length - 1"
-                    :key="`divider-${index}`"
-                  ></v-divider>
-                </template>
-              </v-list>
-            </v-card-text>
-          </v-card>-->
+                    <v-icon class="mr-3">warning</v-icon> Moderate Cords
+                  </v-card-title>
+                  <v-card-text class="text-xs-center">
+                    <v-tooltip bottom offset-y>
+                      <template #activator="data">
+                        <!--<v-btn
+                          v-on="data.on"
+                          dark
+                          large
+                          fab
+                          style="font-size: 2em;"
+                          color="orangeWarning"
+                        >
+                          {{ moderateCords.length }}
+                        </v-btn>-->
+                        <circle-card
+                          color="orangeWarning"
+                          :value="moderateCords.length"
+                        ></circle-card>
+                      </template>
+                      <span>Toggle Viewing Moderate Cords</span>
+                    </v-tooltip>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex xs12 sm4>
+                <v-card tile flat :dark="isDark" class="mx-1 my-2">
+                  <v-card-title
+                    class="hildaLight space-small dark text-xs-center mx-0"
+                    style="background-color: var(--e-dark-status-green)"
+                  >
+                    <v-icon class="mr-3">info</v-icon> New Cords
+                  </v-card-title>
+                  <v-card-text class="text-xs-center">
+                    <v-tooltip bottom offset-y>
+                      <template #activator="data">
+                        <!--<v-btn
+                          v-on="data.on"
+                          dark
+                          large
+                          fab
+                          style="font-size: 2em;"
+                          color="success"
+                        >
+                          {{ newCords.length }}
+                        </v-btn>-->
+                        <circle-card
+                          color="success"
+                          :value="newCords.length"
+                        ></circle-card>
+                      </template>
+                      <span>Toggle Viewing New Cords</span>
+                    </v-tooltip>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </v-flex>
 
-          <grid
-            :headers="headers"
-            :items="filteredGridItems"
-            :custom-sort="gridCustomSort"
-            :loading="loading"
-            v-on:refreshCordGrid="getCordGridItems"
-          >
-            <template v-slot:title>
-              <v-select
-                dense
-                solo-inverted
-                flat
-                class="mt-3"
-                v-model="selectItemType"
-                :items="selectItems"
-                item-text="label"
-                item-value="value"
-              ></v-select>
-            </template>
-          </grid>
-        </v-flex>
-
-        <!-- For small screens -->
-        <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
-          <v-card tile :dark="isDark" :color="`accent ${darken}`" class="my-3">
-            <v-card-title
-              class="hildaLight space-small mx-0 mt-0 bg white--text"
+          <!-- For large screens -->
+          <v-flex xs12 v-if="!isSmall">
+            <!--<v-card
+              class="animated fast slideInRight"
+              :dark="isDark"
+              :color="`accent ${darken}`"
+              height="200px"
             >
-              {{ item.title }}
-            </v-card-title>
-            <v-card-text>
-              <v-layout row wrap fill-height>
-                <v-flex xs12>
-                  <v-text-field
-                    :color="`info ${darken}`"
-                    readonly
-                    label="Application"
-                    :value="item.app"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12>
-                  <v-text-field
-                    :color="`info ${darken}`"
-                    readonly
-                    label="Category"
-                    :value="item.category"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12>
-                  <v-text-field
-                    :color="`info ${darken}`"
-                    readonly
-                    label="Duration"
-                    :value="computeDuration(item.openedOn)"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12>
-                  <v-textarea
-                    :color="`info ${darken}`"
-                    readonly
-                    v-model="item.description"
-                    label="Description"
-                  ></v-textarea>
-                </v-flex>
-              </v-layout>
-            </v-card-text>
+              <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
+                <v-layout row wrap fill-height justify-start align-center>
+                  <v-flex xs12 sm4>
+                    <v-select
+                      dense
+                      solo-inverted
+                      flat
+                      dark
+                      v-model="selectItemType"
+                      :items="selectItems"
+                      item-text="label"
+                      item-value="value"
+                      :hint="`Number of cords: ${filteredGridItems.length}`"
+                      persistent-hint
+                    >
+                    </v-select>
+                  </v-flex>
+                  <v-spacer></v-spacer>
+                  <v-flex shrink>
+                    <v-tooltip right class="ml-3">
+                      <template #activator="data">
+                        <v-btn
+                          depressed
+                          color="error"
+                          class="mb-4"
+                          v-on="data.on"
+                          @click="pullingCord = !pullingCord"
+                        >
+                          <v-icon class="mr-3">flag</v-icon>Pull Cord
+                        </v-btn>
+                      </template>
+                      <span>{{ "Pull My Cord" }}</span>
+                    </v-tooltip>
+                  </v-flex>
+                </v-layout>
+              </v-card-title>
+              <v-card-text
+                class="ma-0 pa-0"
+                style="max-height: 486px; overflow-y: scroll;"
+              >
+                <v-list three-line class="py-0">
+                  <template v-for="(item, index) in filteredGridItems">
+                    <v-list-tile
+                      :key="`tile-${index}`"
+                      class="tileHover py-2"
+                      @click="goToSelectedCord(item)"
+                    >
+                      <v-list-tile-content>
+                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                        <div class="ml-3">
+                          <v-list-tile-sub-title>
+                            <strong>Application:</strong>
+                            {{ item.app }}
+                          </v-list-tile-sub-title>
+                          <v-list-tile-sub-title>
+                            <strong>Category:</strong>
+                            {{ item.category }}
+                          </v-list-tile-sub-title>
+                          <v-list-tile-sub-title>
+                            <strong>Opened on:</strong>
+                            {{
+                              new Date(item.openedOn).toLocaleDateString("en-US")
+                            }}
+                          </v-list-tile-sub-title>
+                        </div>
+                      </v-list-tile-content>
+                      <v-list-tile-action>
+                        <v-icon>navigate_next</v-icon>
+                      </v-list-tile-action>
+                    </v-list-tile>
+                    <v-divider
+                      v-if="index !== filteredGridItems.length - 1"
+                      :key="`divider-${index}`"
+                    ></v-divider>
+                  </template>
+                </v-list>
+              </v-card-text>
+            </v-card>-->
 
-            <v-card-actions>
-              <v-btn block color="primary" :to="`/cord/${item._id}`">
-                View Details
-                <v-icon class="ml-2">navigate_next</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
+            <grid
+              :headers="headers"
+              :items="filteredGridItems"
+              :custom-sort="gridCustomSort"
+              :loading="loading"
+              v-on:refreshCordGrid="getCordGridItems"
+            >
+              <template v-slot:title>
+                <v-select
+                  dense
+                  solo-inverted
+                  flat
+                  class="mt-3"
+                  v-model="selectItemType"
+                  :items="selectItems"
+                  item-text="label"
+                  item-value="value"
+                ></v-select>
+              </template>
+            </grid>
+          </v-flex>
+
+          <!-- For small screens -->
+          <v-flex v-else xs12 v-for="(item, index) in gridItems" :key="index">
+            <v-card
+              tile
+              :dark="isDark"
+              :color="`accent ${darken}`"
+              class="my-3"
+            >
+              <v-card-title
+                class="hildaLight space-small mx-0 mt-0 bg white--text"
+              >
+                {{ item.title }}
+              </v-card-title>
+              <v-card-text>
+                <v-layout row wrap fill-height>
+                  <v-flex xs12>
+                    <v-text-field
+                      :color="`info ${darken}`"
+                      readonly
+                      label="Application"
+                      :value="item.app"
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12>
+                    <v-text-field
+                      :color="`info ${darken}`"
+                      readonly
+                      label="Category"
+                      :value="item.category"
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12>
+                    <v-text-field
+                      :color="`info ${darken}`"
+                      readonly
+                      label="Duration"
+                      :value="computeDuration(item.openedOn)"
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12>
+                    <v-textarea
+                      :color="`info ${darken}`"
+                      readonly
+                      v-model="item.description"
+                      label="Description"
+                    ></v-textarea>
+                  </v-flex>
+                </v-layout>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-btn block color="primary" :to="`/cord/${item._id}`">
+                  View Details
+                  <v-icon class="ml-2">navigate_next</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </div>
+
+        <div
+          v-else
+          style="z-index: 99; width: 100%;"
+          class="text-xs-center mt-5"
+        >
+          <p>Please wait! Loading Data</p>
+          <v-progress-linear
+            :indeterminate="true"
+            color="primary"
+          ></v-progress-linear>
+        </div>
       </v-layout>
 
       <v-layout v-else align-center justify-center column fill-height>
