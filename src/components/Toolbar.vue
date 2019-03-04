@@ -13,7 +13,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <router-link
-          v-if="!(isAuthenticated && user.email)"
+          v-if="!(isAuthenticated && user && user.email)"
           class="link"
           to="/login"
           name="login"
@@ -52,7 +52,7 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <v-list-group v-if="isAuthenticated || user">
+        <v-list-group v-if="isAuthenticated && user">
           <v-list-tile slot="activator" avatar tag="div">
             <v-list-tile-avatar>
               <v-icon large>fingerprint</v-icon>

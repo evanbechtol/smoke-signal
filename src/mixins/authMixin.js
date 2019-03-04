@@ -282,7 +282,11 @@ export const authMixin = {
         }
       });
     },
-    logout() {},
+    logout() {
+      this.$store.commit("user", null);
+      this.$store.commit("token", null);
+      this.$router.push({ path: "/login", name: "login" });
+    },
     register(body) {
       return new Promise((resolve, reject) => {
         if (!(body && body.email && body.password)) {
