@@ -1,7 +1,7 @@
 FROM scmgr.eams.ericsson.net:5005/docker/node-base:10.15.2
 
 # Sinopia workaround (doesn't like modules with "." in the name)
-RUN echo svg.select.js:registry=https://registry.npmjs.org/ >> ~/.npmrc /
+RUN echo svg.select.js:registry=https://registry.npmjs.org/ >> ~/.npmrc && \
     echo @vue/cli-service:registry=https://registry.npmjs.org/ >> ~/.npmrc
 
 # install simple http server for serving static content
