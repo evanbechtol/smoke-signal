@@ -35,6 +35,7 @@ export const cordMixin = {
       const route = `cords`;
       const options = {
         method: "POST",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`,
         data
       };
@@ -49,6 +50,7 @@ export const cordMixin = {
       const route = `cords/${id}`;
       const options = {
         method: "DELETE",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
       return makeRequest(options);
@@ -66,6 +68,7 @@ export const cordMixin = {
       }`;
       const options = {
         method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
       return makeRequest(options);
@@ -79,6 +82,7 @@ export const cordMixin = {
       const route = `cords/${id}`;
       const options = {
         method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
       return makeRequest(options);
@@ -92,6 +96,7 @@ export const cordMixin = {
       const route = `cords/status/${status}`;
       const options = {
         method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
       return makeRequest(options);
@@ -106,6 +111,7 @@ export const cordMixin = {
       const route = `cords/user/${user}?status=${status}`;
       const options = {
         method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
       return makeRequest(options);
@@ -119,6 +125,7 @@ export const cordMixin = {
       const route = `cords/stats/${user}`;
       const options = {
         method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
       return makeRequest(options);
@@ -133,6 +140,7 @@ export const cordMixin = {
       const route = `cords/${id}`;
       const options = {
         method: "PUT",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`,
         data
       };
@@ -148,6 +156,7 @@ export const cordMixin = {
       const route = `cords/rescuers/${id}`;
       const options = {
         method: "PUT",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`,
         data
       };
