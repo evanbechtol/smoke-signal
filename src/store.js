@@ -148,14 +148,20 @@ export default new Vuex.Store({
         let parsedPayload =
           typeof payload === "string" ? payload : JSON.stringify(payload);
         localStorage.setItem("token", parsedPayload);
+      } else {
+        localStorage.removeItem("token");
       }
 
       state.token = payload;
     },
     user: function(state, payload) {
-      let parsedPayload =
-        typeof payload === "string" ? payload : JSON.stringify(payload);
-      localStorage.setItem("user", parsedPayload);
+      if (payload) {
+        let parsedPayload =
+          typeof payload === "string" ? payload : JSON.stringify(payload);
+        localStorage.setItem("user", parsedPayload);
+      } else {
+        localStorage.removeItem("user");
+      }
 
       state.user = typeof payload === "string" ? JSON.parse(payload) : payload;
     }

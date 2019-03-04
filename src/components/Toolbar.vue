@@ -12,7 +12,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
-        <router-link class="link" to="/login" name="help">
+        <router-link class="link" to="/login" name="login">
           <v-tooltip bottom class="menuIcon">
             <v-btn slot="activator" icon name="help"
               ><v-icon>account_circle</v-icon></v-btn
@@ -21,7 +21,7 @@
           </v-tooltip>
         </router-link>
 
-        <router-link v-if="isAuthenticated && user.email" class="link" to="/">
+        <router-link v-if="isAuthenticated && user.email" class="link" to="/" name="logout">
           <v-tooltip bottom class="menuIcon">
             <v-btn slot="activator" icon @click="logout()">
               <v-icon>logout</v-icon>

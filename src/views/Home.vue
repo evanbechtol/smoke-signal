@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100vh;" class="home page mt-5">
-    <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''">
+    <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''" v-if="isAuthenticated && user">
       <v-layout row wrap justify-center align-center fill-height>
         <v-flex xs12 class="hidden-xs-only">
           <v-layout row wrap justify-space-between align-center fill-height>
@@ -343,7 +343,11 @@ export default {
   }),
   beforeDestroy() {},
   created() {
-    this.getCordGridItems();
+    if (this.user) {
+      this.getCordGridItems();
+    } else {
+      this.$router.push({ path: "/login", name: "login" });
+    }
   },
   mounted() {
     if (this.selectedCord) {
@@ -413,28 +417,32 @@ export default {
       this.gridItemType = value;
     },
     gridItems: function() {
-      const _this = this;
-      this.criticalCords = this.gridItems.filter(function(elem) {
-        return _this.computeDuration(elem.openedOn).includes("Days");
-      });
+      if (this.user) {
+        const _this = this;
+        this.criticalCords = this.gridItems.filter(function(elem) {
+          return _this.computeDuration(elem.openedOn).includes("Days");
+        });
 
-      this.moderateCords = this.gridItems.filter(function(elem) {
-        return (
-          !_this.computeDuration(elem.openedOn).includes("Days") &&
-          _this.computeDuration(elem.openedOn).includes("Hrs")
-        );
-      });
+        this.moderateCords = this.gridItems.filter(function(elem) {
+          return (
+            !_this.computeDuration(elem.openedOn).includes("Days") &&
+            _this.computeDuration(elem.openedOn).includes("Hrs")
+          );
+        });
 
-      this.newCords = this.gridItems.filter(function(elem) {
-        return (
-          !_this.computeDuration(elem.openedOn).includes("Days") &&
-          !_this.computeDuration(elem.openedOn).includes("Hrs")
-        );
-      });
+        this.newCords = this.gridItems.filter(function(elem) {
+          return (
+            !_this.computeDuration(elem.openedOn).includes("Days") &&
+            !_this.computeDuration(elem.openedOn).includes("Hrs")
+          );
+        });
 
-      this.myCords = this.gridItems.filter(function(elem) {
-        return elem.puller.username === _this.user.username;
-      });
+        if (this.user) {
+          this.myCords = this.gridItems.filter(function(elem) {
+            return elem.puller.username === _this.user.username;
+          });
+        }
+      }
     }
   }
 };
