@@ -477,8 +477,4 @@ function compareString(a, b) {
 }
 </script>
 
-<style scoped>
-.dashCard {
-  height: 320px;
-}
-</style>
+<style scoped></style>

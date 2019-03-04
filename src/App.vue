@@ -28,6 +28,7 @@
         </v-snackbar>
 
         <v-bottom-sheet
+          v-if="user && isAuthenticated"
           :inset="$vuetify.breakpoint.name === 'xs'"
           :value="cordPullNotification"
           :hide-overlay="$vuetify.breakpoint.name !== 'xs'"
@@ -133,6 +134,7 @@ export default {
   },
   methods: {
     goToCord: function() {
+      this.$store.commit("cordPullNotification", false);
       this.$router.push({ path: this.notificationLink });
     }
   },
