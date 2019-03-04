@@ -275,7 +275,7 @@
                         <v-chip
                           color="info"
                           :selected="selected"
-                          dark
+                          :dark="!isDark"
                           label
                           small
                         >
@@ -307,7 +307,8 @@
                         :key="`tag-${index}`"
                       >
                         <v-chip
-                          color="#e0e0e0"
+                          dark
+                          color="#a56ebe"
                           :selected="selected"
                           label
                           small
