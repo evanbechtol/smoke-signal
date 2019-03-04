@@ -249,11 +249,13 @@
                     @change="descriptionChanged"
                   >
                   </v-textarea>
+                  <v-divider></v-divider>
                 </v-flex>
 
                 <v-flex xs12>
                   <v-flex xs12>
                     <v-combobox
+                      v-if="!readonly"
                       v-model="selectedCord.tags"
                       :items="selectedCord.tags"
                       :color="`info ${darken}`"
@@ -262,7 +264,6 @@
                       hide-selected
                       hint="Add some tags/keywords"
                       label="Tags"
-                      box
                       multiple
                       persistent-hint
                       small-chips
@@ -271,7 +272,13 @@
                         slot="selection"
                         slot-scope="{ item, parent, selected }"
                       >
-                        <v-chip color="info" :selected="selected" label small>
+                        <v-chip
+                          color="info"
+                          :selected="selected"
+                          dark
+                          label
+                          small
+                        >
                           <span class="pr-2">
                             {{ item }}
                           </span>
@@ -285,6 +292,35 @@
                         </v-chip>
                       </template>
                     </v-combobox>
+
+                    <v-layout
+                      v-else
+                      row
+                      wrap
+                      justify-start
+                      align-center
+                      fill-height
+                    >
+                      <v-flex
+                        shrink
+                        v-for="(item, index) in selectedCord.tags"
+                        :key="`tag-${index}`"
+                      >
+                        <v-chip
+                          color="#e0e0e0"
+                          :selected="selected"
+                          label
+                          small
+                        >
+                          <span class="pr-2">
+                            {{ item }}
+                          </span>
+                          <v-icon small v-if="!readonly">
+                            close
+                          </v-icon>
+                        </v-chip>
+                      </v-flex>
+                    </v-layout>
                   </v-flex>
                 </v-flex>
 

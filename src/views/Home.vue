@@ -352,7 +352,6 @@ export default {
   },
   methods: {
     gridCustomSort(items, index, isDesc) {
-      //debugger;
       items.sort((a, b) => {
         switch (index) {
           case "title":
