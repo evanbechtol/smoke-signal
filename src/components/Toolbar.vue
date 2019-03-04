@@ -27,10 +27,12 @@
         </router-link>
 
         <router-link v-else class="link" to="/" name="logout">
-          <v-tooltip bottom class="menuIcon">
-            <v-btn slot="activator" icon @click="logout()">
-              <v-icon>logout</v-icon>
-            </v-btn>
+          <v-tooltip left offset-x class="menuIcon">
+            <template #activator="data">
+              <v-btn v-on="data.on" icon @click="logout()">
+                <v-icon>logout</v-icon>
+              </v-btn>
+            </template>
             <span>Logout</span>
           </v-tooltip>
         </router-link>
