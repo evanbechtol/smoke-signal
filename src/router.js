@@ -77,8 +77,8 @@ let router = new Router({
         import(/* webpackChunkName: "admin" */ "./views/Admin.vue")
     },
     {
-      path: "/metrics2",
-      name: "metrics2",
+      path: "/metrics",
+      name: "metrics",
       meta: {
         guest: false,
         requiresAuth: true,

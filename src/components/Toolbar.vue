@@ -152,7 +152,13 @@ export default {
     };
   },
   created() {
-    this.setExpiry();
+    if (!this.isExpiryIntervalSet) {
+      const _this = this;
+      setInterval(function() {
+        _this.setExpiry();
+      }, 60000);
+      this.$store.commit("isExpiryIntervalSet", true);
+    }
   },
   methods: {
     toggleTheme(value) {
