@@ -1,8 +1,8 @@
 import "../jwt-decode";
 import axios from "axios";
 
-const base = "http://129.192.179.179";
-const appCode = "7MLijGzp-2XS0pmevA";
+const base = process.env.EAUTH || "http://129.192.179.179";
+const appCode = process.env.APPCODE || "7MLijGzp-2XS0pmevA";
 
 export const authMixin = {
   data: () => ({
