@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM scmgr.eams.ericsson.net:5005/docker/node-base:10.15.2
 
 # install simple http server for serving static content
 RUN npm install -g spa-http-server
