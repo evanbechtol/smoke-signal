@@ -1,7 +1,14 @@
 <template>
   <div style="height: 100vh;" class="home page mt-5">
-    <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''" v-if="isAuthenticated && user">
-      <v-layout row wrap justify-center align-center fill-height>
+    <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''">
+      <v-layout
+        v-if="isAuthenticated && user"
+        row
+        wrap
+        justify-center
+        align-center
+        fill-height
+      >
         <v-flex xs12 class="hidden-xs-only">
           <v-layout row wrap justify-space-between align-center fill-height>
             <v-flex xs12 sm4>
@@ -261,6 +268,18 @@
               </v-btn>
             </v-card-actions>
           </v-card>
+        </v-flex>
+      </v-layout>
+
+      <v-layout v-else align-center justify-center column fill-height>
+        <v-flex grow>
+          <div class="hildaLight">Please login to view this page</div>
+        </v-flex>
+        <v-flex grow>
+          <img
+            src="https://media.giphy.com/media/5Zesu5VPNGJlm/giphy.gif"
+            alt="please login"
+          />
         </v-flex>
       </v-layout>
     </v-container>
