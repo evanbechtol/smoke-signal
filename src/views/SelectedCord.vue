@@ -224,7 +224,7 @@
                 <v-flex xs12 sm6 align-self-center grow>
                   <v-img
                     contain
-                    v-if="files.length > 0"
+                    v-if="readonly && files.length > 0"
                     max-height="530"
                     :src="
                       `http://localhost:3000/uploads/${
@@ -239,10 +239,14 @@
                     align-center
                     justify-center
                   >
-                    <v-flex grow>
-                      <v-img height="240">
+                    <v-flex xs12 sm6 align-self-center grow>
+                      <v-img v-if="readonly" height="240">
                         <v-icon size="240">image</v-icon>
                       </v-img>
+                      <upload-file
+                        v-else
+                        v-on:fileAttached="setFile"
+                      ></upload-file>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -251,12 +255,10 @@
                   <div v-if="readonly" v-html="selectedCord.description"></div>
                   <v-textarea
                     v-if="!readonly"
-                    class="animated faster slideInDown"
                     color="info"
                     :box="readonly"
                     :outline="!readonly"
                     label="Issue Description"
-                    height="500px"
                     :readonly="readonly"
                     v-model="selectedCord.description"
                     @change="descriptionChanged"
@@ -511,6 +513,7 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
+import UploadFile from "../components/Upload.vue";
 
 export default {
   name: "SelectedCord",
@@ -522,7 +525,7 @@ export default {
     authMixin,
     socketMixin
   ],
-  components: {},
+  components: { UploadFile },
   computed: {
     files: function() {
       return this.selectedCord.files && this.selectedCord.files.length > 0
@@ -555,8 +558,14 @@ export default {
   },
   data: function() {
     return {
+      appDirty: false,
+      categoryDirty: false,
+      descriptionDirty: false,
       addingToDiscussion: false,
       confirmCloseDialog: false,
+      formData: function() {
+        return new FormData();
+      },
       discussion: "",
       loading: false,
       readonly: true
@@ -580,19 +589,13 @@ export default {
   },
   methods: {
     appChanged() {
-      if (this.readonly) {
-        this.save();
-      }
+      this.appDirty = true;
     },
     categoryChanged() {
-      if (this.readonly) {
-        this.save();
-      }
+      this.categoryDirty = true;
     },
     descriptionChanged() {
-      if (this.readonly) {
-        this.save();
-      }
+      this.descriptionDirty = true;
     },
     canRemoveRescuer(rescuer) {
       return (
@@ -647,6 +650,19 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
+    setFile(data) {
+      this.formData = data;
+    },
+    updateFile() {
+      this.uploadFileByCordId(this.selectedCord._id, this.formData)
+        .then(() => {
+          this.setAlert("Cord updated successfully!", "#288964", 5000);
+          this.refreshItem(this.selectedCord._id);
+        })
+        .catch(err => {
+          throw err;
+        });
+    },
     unpullCord() {
       this.selectedCord.status = "Resolved";
       this.selectedCord.resolvedOn = new Date().toISOString();
@@ -684,7 +700,16 @@ export default {
       }
     },
     readonly: function() {
-      if (this.readonly) {
+      if (
+        typeof this.formData.get === "function" &&
+        this.formData.get("cordFile")
+      ) {
+        this.updateFile();
+      }
+
+      const dataChanged =
+        this.appDirty || this.categoryDirty || this.descriptionDirty;
+      if (this.readonly && dataChanged) {
         this.save();
       }
     }

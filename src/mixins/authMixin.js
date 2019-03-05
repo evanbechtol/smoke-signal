@@ -342,8 +342,8 @@ export const authMixin = {
             this.$store.commit("token", null);
           }
         } else {
-          /*this.$store.commit("user", null);
-          this.$store.commit("token", null);*/
+          this.$store.commit("user", null);
+          this.$store.commit("token", null);
         }
       }
     },
