@@ -103,6 +103,30 @@
         </v-select>
         <v-divider light class="py-1 mt-2"></v-divider>
         <v-list-tile
+          v-if="isAuthenticated && user"
+          active-class="dark-info"
+          @click="logout"
+        >
+          <v-list-tile-action>
+            <v-icon>logout</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Logout</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile v-else active-class="dark-info" to="/login">
+          <v-list-tile-action>
+            <v-icon>account_circle</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Login</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile
           v-for="item in items"
           :key="item.title"
           active-class="dark-info"
@@ -139,7 +163,6 @@ export default {
       mini: false,
       right: null,
       items: [
-        { title: "Login", icon: "account_circle", path: "/login" },
         {
           title: "Dashboard",
           icon: "dashboard",
