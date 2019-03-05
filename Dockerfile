@@ -1,5 +1,11 @@
 FROM node:lts-alpine
 
+ARG http_proxy
+ARG https_proxy
+
+ENV http_proxy=$http_proxy
+ENV https_proxy=$https_proxy
+
 # install simple http server for serving static content
 RUN npm install -g spa-http-server
 
