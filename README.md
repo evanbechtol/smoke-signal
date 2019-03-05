@@ -1,15 +1,4 @@
-# vue-app-template
-A starting point for a Vue.JS application containing:
-  - Routing
-  - Reusable components
-  - State management
-  - Basic authentication structure
-  - Automated build process
-  - Live locally-hosted development environment
-  - ESLint
-  - Progressive Web Application functionality
-  - Unit and E2E testing
-  - Dark and light themes
+# Smoke Signal
   
 ## Setup
   1. Install dependencies: `npm install`

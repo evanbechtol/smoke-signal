@@ -222,14 +222,27 @@
                 </v-flex>
 
                 <v-flex xs12 sm6 align-self-center grow>
-                  <v-layout fill-height column align-center justify-center>
+                  <v-img
+                    contain
+                    v-if="files.length > 0"
+                    max-height="530"
+                    :src="
+                      `http://localhost:3000/uploads/${
+                        this.selectedCord.files
+                      }?appToken=${appToken}`
+                    "
+                  ></v-img>
+                  <v-layout
+                    v-else
+                    fill-height
+                    column
+                    align-center
+                    justify-center
+                  >
                     <v-flex grow>
-                      <div>
-                        <v-img height="240" v-if="selectedCord.img"></v-img>
-                        <v-img v-else height="240">
-                          <v-icon size="240">image</v-icon>
-                        </v-img>
-                      </div>
+                      <v-img height="240">
+                        <v-icon size="240">image</v-icon>
+                      </v-img>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -511,6 +524,11 @@ export default {
   ],
   components: {},
   computed: {
+    files: function() {
+      return this.selectedCord.files && this.selectedCord.files.length > 0
+        ? this.selectedCord.files
+        : "";
+    },
     showRescueButton() {
       const user = this.user;
       return this.selectedCord &&

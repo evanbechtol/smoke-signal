@@ -80,16 +80,7 @@
               </v-flex>
 
               <v-flex xs12 sm6 align-self-center grow>
-                <v-layout fill-height column align-center justify-center>
-                  <v-flex grow>
-                    <div>
-                      <v-img height="240" v-if="cord.img"></v-img>
-                      <v-img v-else height="240">
-                        <v-icon size="240">image</v-icon>
-                      </v-img>
-                    </div>
-                  </v-flex>
-                </v-layout>
+                <upload-file v-on:fileAttached="setFile"></upload-file>
               </v-flex>
 
               <v-flex xs12>
@@ -172,6 +163,7 @@ import { alertMixin } from "../mixins/alertMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
+import UploadFile from "./Upload.vue";
 
 export default {
   name: "PullCordDialog",
@@ -183,12 +175,15 @@ export default {
     authMixin,
     socketMixin
   ],
-  components: {},
+  components: { UploadFile },
   computed: {},
   data: function() {
     return {
       cord: {},
       dialog: this.initialDialog,
+      formData: function() {
+        return new FormData();
+      },
       formValid: false,
       rules: {
         required: value => !!value || "Required.",
@@ -220,10 +215,19 @@ export default {
             message: "A cord has just been pulled!",
             data: response.data.data
           });
+
+          this.uploadFileByCordId(response.data.data._id, this.formData)
+            .then(() => {})
+            .catch(err => {
+              throw err;
+            });
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
+    },
+    setFile(data) {
+      this.formData = data;
     },
     getDateTime() {
       return new Date().toISOString();

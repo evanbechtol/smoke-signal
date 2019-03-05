@@ -88,6 +88,39 @@ export const cordMixin = {
       return makeRequest(options);
     },
     /**
+     * @description Attempts to retrieve files for the cord matching the Object ID provided
+     * @param id {string} Object ID for the cord to retrieve files for
+     * @returns {Promise} Returns promise for request being generated
+     */
+    getFilesByCordId(id) {
+      const route = `cords/files/${id}`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return makeRequest(options);
+    },
+    /**
+     * @description Attempts to upload files for the cord matching the Object ID provided
+     * @param id {string} Object ID for the cord to upload files for
+     * @param body {*} File data to be uploaded
+     * @returns {Promise} Returns promise for request being generated
+     */
+    uploadFileByCordId(id, body) {
+      const route = `cords/upload/${id}`;
+      const options = {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${this.$store.getters.appToken}`,
+          "Content-Type": "multipart/form-data"
+        },
+        url: `${baseUrl}/${route}`,
+        data: body
+      };
+      return makeRequest(options);
+    },
+    /**
      * @description Attempts to retrieve all cords with the status provided
      * @param status {string} Case-sensitive Status to search for
      * @returns {Promise} Returns promise for request being generated
