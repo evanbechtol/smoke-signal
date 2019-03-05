@@ -39,7 +39,6 @@
               v-model="username"
               :rules="usernameRules"
               label="Username"
-              validate-on-blur
               required
             >
             </v-text-field>

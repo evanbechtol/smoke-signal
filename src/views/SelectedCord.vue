@@ -386,7 +386,7 @@
                     </v-timeline>
                   </div>
                 </v-flex>
-                <v-flex grow>
+                <v-flex grow v-if="selectedCord.status === 'Open'">
                   <v-layout column fill-height>
                     <v-flex xs12>
                       <v-textarea
