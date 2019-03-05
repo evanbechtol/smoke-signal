@@ -306,12 +306,7 @@
                         v-for="(item, index) in selectedCord.tags"
                         :key="`tag-${index}`"
                       >
-                        <v-chip
-                          dark
-                          color="#a56ebe"
-                          label
-                          small
-                        >
+                        <v-chip dark color="#a56ebe" label small>
                           <span class="pr-2">
                             {{ item }}
                           </span>

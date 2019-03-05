@@ -130,7 +130,7 @@ export default {
     resolved: {
       type: Boolean,
       default: false
-    },
+    }
   },
   methods: {
     getInitials(item) {

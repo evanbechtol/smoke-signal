@@ -315,7 +315,6 @@ export default {
       });
 
     const query = {
-      
       rescuers: { _id: this.user._id, username: this.user.username }
     };
     this.getCords(100, 0, JSON.stringify(query))
