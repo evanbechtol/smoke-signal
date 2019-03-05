@@ -222,33 +222,40 @@
                 </v-flex>
 
                 <v-flex xs12 sm6 align-self-center grow>
-                  <v-img
-                    contain
-                    v-if="readonly && files.length > 0"
-                    max-height="530"
-                    :src="
-                      `http://localhost:3000/uploads/${
-                        this.selectedCord.files
-                      }?appToken=${appToken}`
-                    "
-                  ></v-img>
-                  <v-layout
-                    v-else
-                    fill-height
-                    column
-                    align-center
-                    justify-center
+                  <transition
+                    name="auth-animation"
+                    mode="out-in"
+                    enter-active-class="animated faster fadeIn"
+                    leave-active-class="animated faster fadeOut"
                   >
-                    <v-flex xs12 sm6 align-self-center grow>
-                      <v-img v-if="readonly" height="240">
-                        <v-icon size="240">image</v-icon>
-                      </v-img>
-                      <upload-file
-                        v-else
-                        v-on:fileAttached="setFile"
-                      ></upload-file>
-                    </v-flex>
-                  </v-layout>
+                    <v-img
+                      contain
+                      v-if="readonly && files.length > 0"
+                      max-height="530"
+                      :src="
+                        `http://localhost:3000/uploads/${
+                          this.selectedCord.files
+                        }?appToken=${appToken}`
+                      "
+                    ></v-img>
+                    <v-layout
+                      v-else
+                      fill-height
+                      column
+                      align-center
+                      justify-center
+                    >
+                      <v-flex xs12 sm6 align-self-center grow>
+                        <v-img v-if="readonly" height="240">
+                          <v-icon size="240">image</v-icon>
+                        </v-img>
+                        <upload-file
+                          v-else
+                          v-on:fileAttached="setFile"
+                        ></upload-file>
+                      </v-flex>
+                    </v-layout>
+                  </transition>
                 </v-flex>
 
                 <v-flex xs12>
