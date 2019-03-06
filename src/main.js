@@ -21,6 +21,8 @@ Vue.use(VTooltip);
 Vue.use(VueClipboards);
 Vue.use(Vuetify, { theme });
 //Vue.use(VueAxios, axios);
+Vue.prototype.$apiBase = process.env.VUE_APP_API_BASE;
+Vue.prototype.$appUrl = process.env.VUE_APP_URL;
 
 const options = { path: process.env.VUE_APP_SOCKET_PATH };
 

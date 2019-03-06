@@ -216,11 +216,13 @@ export default {
             data: response.data.data
           });
 
-          this.uploadFileByCordId(response.data.data._id, this.formData)
-            .then(() => {})
-            .catch(err => {
-              throw err;
-            });
+          if (this.formData.get("cordFile") !== null) {
+            this.uploadFileByCordId(response.data.data._id, this.formData)
+              .then(() => {})
+              .catch(err => {
+                throw err;
+              });
+          }
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);

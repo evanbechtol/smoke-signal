@@ -233,7 +233,7 @@
                       v-if="readonly && files.length > 0"
                       max-height="700"
                       :src="
-                        `${process.env.VUE_APP_API_BASE}/uploads/${
+                        `${$apiBase}/uploads/${
                           this.selectedCord.files
                         }?appToken=${appToken}`
                       "
@@ -661,14 +661,16 @@ export default {
       this.formData = data;
     },
     updateFile() {
-      this.uploadFileByCordId(this.selectedCord._id, this.formData)
-        .then(() => {
-          this.setAlert("Cord updated successfully!", "#288964", 5000);
-          this.refreshItem(this.selectedCord._id);
-        })
-        .catch(err => {
-          throw err;
-        });
+      if (this.formData.get("cordFile") !== null) {
+        this.uploadFileByCordId(this.selectedCord._id, this.formData)
+          .then(() => {
+            this.setAlert("Cord updated successfully!", "#288964", 5000);
+            this.refreshItem(this.selectedCord._id);
+          })
+          .catch(err => {
+            throw err;
+          });
+      }
     },
     unpullCord() {
       this.selectedCord.status = "Resolved";
