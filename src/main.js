@@ -23,7 +23,7 @@ Vue.use(Vuetify, { theme });
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: "http://localhost:3000",
+    connection: process.env.VUE_APP_API_BASE,
     vuex: {
       store,
       actionPrefix: "SOCKET_",
