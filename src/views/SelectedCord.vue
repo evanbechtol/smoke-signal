@@ -570,9 +570,7 @@ export default {
       descriptionDirty: false,
       addingToDiscussion: false,
       confirmCloseDialog: false,
-      formData: function() {
-        return new FormData();
-      },
+      formData: new FormData(),
       discussion: "",
       loading: false,
       readonly: true
@@ -661,7 +659,7 @@ export default {
       this.formData = data;
     },
     updateFile() {
-      if (this.formData.get("cordFile") !== null) {
+      if (this.formData && this.formData.get("cordFile") !== null) {
         this.uploadFileByCordId(this.selectedCord._id, this.formData)
           .then(() => {
             this.setAlert("Cord updated successfully!", "#288964", 5000);

@@ -181,9 +181,7 @@ export default {
     return {
       cord: {},
       dialog: this.initialDialog,
-      formData: function() {
-        return new FormData();
-      },
+      formData: new FormData(),
       formValid: false,
       rules: {
         required: value => !!value || "Required.",
@@ -216,7 +214,7 @@ export default {
             data: response.data.data
           });
 
-          if (this.formData.get("cordFile") !== null) {
+          if (this.formData && this.formData.get("cordFile") !== null) {
             this.uploadFileByCordId(response.data.data._id, this.formData)
               .then(() => {})
               .catch(err => {
@@ -225,7 +223,7 @@ export default {
           }
         })
         .catch(err => {
-          this.setAlert(err.response.data.error, "#DC2D37", 0);
+          this.setAlert(err, "#DC2D37", 0);
         });
     },
     setFile(data) {
