@@ -21,19 +21,25 @@ Vue.use(VTooltip);
 Vue.use(VueClipboards);
 Vue.use(Vuetify, { theme });
 //Vue.use(VueAxios, axios);
-Vue.use(
-  new VueSocketIO({
-    debug: true,
-    connection: SocketIO(process.env.VUE_APP_API_BASE, {
-      path: process.env.VUE_APP_SOCKET_PATH
-    }),
-    vuex: {
-      store,
-      actionPrefix: "SOCKET_",
-      mutationPrefix: "SOCKET_"
-    }
-  })
-);
+
+const options = { path: process.env.VUE_APP_SOCKET_PATH };
+
+const connection =
+  process.env.NODE_ENV === "production"
+    ? SocketIO(process.env.VUE_APP_API_BASE, options)
+    : process.env.VUE_APP_API_BASE;
+
+const settings = {
+  debug: true,
+  connection,
+  vuex: {
+    store,
+    actionPrefix: "SOCKET_",
+    mutationPrefix: "SOCKET_"
+  }
+};
+
+Vue.use(new VueSocketIO(settings));
 
 Vue.config.productionTip = false;
 
