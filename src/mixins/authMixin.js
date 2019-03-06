@@ -151,7 +151,7 @@ export const authMixin = {
                 params.append("support_team_phone", "469-417-9422");
                 params.append(
                   "url",
-                  `http://138.85.180.144:8080/resetPassword?id=`
+                  `${process.env.VUE_APP_URL}/resetPassword?id=`
                 );
 
                 const generateNewPwOptions = {

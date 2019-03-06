@@ -7,6 +7,7 @@ import VTooltip from "v-tooltip";
 import VueClipboards from "vue-clipboards";
 import VueSocketIO from "vue-socket.io";
 import Vuetify from "vuetify";
+import SocketIO from "socket.io-client";
 import "vuetify/dist/vuetify.min.css";
 import "./registerServiceWorker";
 import "./css/materialIcons.css";
@@ -23,7 +24,9 @@ Vue.use(Vuetify, { theme });
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: process.env.VUE_APP_API_BASE,
+    connection: SocketIO(process.env.VUE_APP_API_BASE, {
+      path: process.env.VUE_APP_SOCKET_PATH
+    }),
     vuex: {
       store,
       actionPrefix: "SOCKET_",

@@ -233,7 +233,7 @@
                       v-if="readonly && files.length > 0"
                       max-height="700"
                       :src="
-                        `http://localhost:3000/uploads/${
+                        `${process.env.VUE_APP_API_BASE}/uploads/${
                           this.selectedCord.files
                         }?appToken=${appToken}`
                       "
