@@ -231,7 +231,7 @@
                     <v-img
                       contain
                       v-if="readonly && files.length > 0"
-                      max-height="530"
+                      max-height="700"
                       :src="
                         `http://localhost:3000/uploads/${
                           this.selectedCord.files
