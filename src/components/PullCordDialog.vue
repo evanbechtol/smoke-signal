@@ -5,7 +5,7 @@
         primary-title
         class="bg hildaLight space-small dark-l0 ma-0"
       >
-        Pull My Cord
+        Rescue Me
         <v-spacer></v-spacer>
         <v-btn color="primary" flat dark @click="cancel">
           <v-icon color="#f2f2f2">mdi-close</v-icon>

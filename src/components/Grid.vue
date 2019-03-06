@@ -13,10 +13,10 @@
                 v-on="data.on"
                 @click="pullingCord = !pullingCord"
               >
-                <v-icon class="mr-3">flag</v-icon>Pull My Cord
+                <v-icon class="mr-3">flag</v-icon>Rescue Me
               </v-btn>
             </template>
-            <span>{{ "Pull My Cord" }}</span>
+            <span>Rescue Me</span>
           </v-tooltip>
         </v-card-title>
 

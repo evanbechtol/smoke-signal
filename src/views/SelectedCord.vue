@@ -139,7 +139,7 @@
                               <v-avatar>
                                 <v-icon alt="add">add</v-icon>
                               </v-avatar>
-                              I'll Rescue You!
+                              I'll Be A Hero!
                             </v-chip>
                           </v-item>
                         </v-item-group>
@@ -163,7 +163,7 @@
                     <v-flex xs12 sm4>
                       <v-text-field
                         box
-                        label="Cord Pulled By"
+                        label="Needs Rescuing"
                         type="text"
                         v-model="selectedCord.puller.username"
                         readonly
