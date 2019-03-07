@@ -33,7 +33,7 @@ const connection =
 
 const settings = {
   debug: true,
-  connection,
+  connection: SocketIO(`${process.env.VUE_APP_API_BASE}`, options),
   vuex: {
     store,
     actionPrefix: "SOCKET_",

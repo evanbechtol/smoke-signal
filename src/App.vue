@@ -99,7 +99,7 @@ export default {
     const color = this.isDark ? "#181818" : "#e0e0e0";
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
-
+    
     if (token) {
       this.$store.commit("token", token);
       this.setExpiry();
