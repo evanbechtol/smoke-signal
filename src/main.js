@@ -28,7 +28,7 @@ const options = { path: process.env.VUE_APP_SOCKET_PATH };
 
 const settings = {
   debug: true,
-  connection: SocketIO(`${process.env.VUE_APP_API_BASE}`, options),
+  connection: SocketIO(`${process.env.VUE_APP_URL}`, options), // Change to ${process.env.VUE_APP_API_BASE for '/smoke-signal-service' NSP
   vuex: {
     store,
     actionPrefix: "SOCKET_",
