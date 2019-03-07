@@ -26,11 +26,6 @@ Vue.prototype.$appUrl = process.env.VUE_APP_URL;
 
 const options = { path: process.env.VUE_APP_SOCKET_PATH };
 
-const connection =
-  process.env.NODE_ENV === "production"
-    ? SocketIO(process.env.VUE_APP_API_BASE, options)
-    : process.env.VUE_APP_API_BASE;
-
 const settings = {
   debug: true,
   connection: SocketIO(`${process.env.VUE_APP_API_BASE}`, options),
