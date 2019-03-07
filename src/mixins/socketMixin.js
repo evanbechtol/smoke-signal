@@ -2,7 +2,6 @@ export const socketMixin = {
   sockets: {
     connect: function() {
       this.$store.commit("SOCKET_CONNECT");
-      this.requestAck();
     },
     disconnect: function() {
       this.$store.commit("SOCKET_DISCONNECT");
@@ -27,15 +26,9 @@ export const socketMixin = {
       this.$store.commit("alertMessage", data);
       this.$store.commit("alertColor", "#DC2D37");
       this.$store.commit("alertTimeout", 0);
-    },
-    SOCKET_FIN: function(data) {
-      console.log(`SOCKET_FIN received: ${data}`);
     }
   },
   methods: {
-    requestAck: function() {
-      this.$socket.emit("SOCKET_ACK");
-    },
     joinSelectedCordRoom: function(_id) {
       this.$socket.emit("JOIN_ITEM_ROOM", _id);
     },
