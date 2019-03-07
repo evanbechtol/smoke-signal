@@ -1,8 +1,9 @@
 import "../jwt-decode";
 import axios from "axios";
 
-const base = process.env.VUE_APP_EAUTH || "http://129.192.179.179";
-const appCode = process.env.VUE_APP_EAUTH_APP_CODE || "7MLijGzp-2XS0pmevA";
+const base = process.env.VUE_APP_EAUTH;
+const appCode = process.env.VUE_APP_EAUTH_APP_CODE;
+const appUrl = process.env.VUE_APP_URL;
 
 export const authMixin = {
   data: () => ({
@@ -71,7 +72,6 @@ export const authMixin = {
       }
     }
   },
-  mounted() {},
   methods: {
     /**
      * @description Authenticate the application, and store the returned JWT if provided
@@ -91,33 +91,9 @@ export const authMixin = {
           }
         })
         .catch(err => {
-          //Todo: Need to figure out a better way to handle this
+          this.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
           return err;
         });
-    },
-    /**
-     * @description Attempts to validate the app token
-     */
-    validateApp() {
-      const route = "e_auth/validate/apps";
-      // eslint-disable-next-line
-      return new Promise((resolve, reject) => {
-        axios
-          .get(`${base}/${route}?token=${this.appToken}`)
-          .then(response => {
-            if (response && response.data) {
-              this.$store.commit("appToken", response.data.token || null);
-              resolve();
-            }
-          })
-          .catch(err => {
-            //Todo: Need to figure out a better way to handle this
-
-            if (err && err.response && err.response.status === 403) {
-              this.authenticateApp();
-            }
-          });
-      });
     },
     eAuthForgotPassword(body = null) {
       return new Promise((resolve, reject) => {
@@ -149,10 +125,8 @@ export const authMixin = {
                   "evan.bechtol@ericsson.com"
                 );
                 params.append("support_team_phone", "469-417-9422");
-                params.append(
-                  "url",
-                  `${$appUrl}/resetPassword?id=`
-                );
+                // eslint-disable-next-line
+                params.append("url", `${appUrl}/resetPassword?id=`);
 
                 const generateNewPwOptions = {
                   method: "POST",
@@ -252,47 +226,22 @@ export const authMixin = {
           axios(options)
             .then(response => {
               if (response && response.data && response.data.user) {
-                this.$store.commit("user", response.data.user);
-                this.$store.commit("isAuthenticated", true);
-                this.setAlert(
-                  `Thanks for registering, ${
-                    response.data.user.firstname
-                  }! You will receive an email to validate your address.`,
-                  "#288964",
-                  0
-                );
-                resolve();
+                return resolve(response);
               }
             })
             .catch(err => {
-              this.setAlert(
-                `Error registering user: status code ${err.response.message}`,
-                "#DC2D37",
-                0
-              );
-              return err;
+              return reject(err);
             });
         }
       });
     },
-    login(body) {
-      return new Promise((resolve, reject) => {
-        if (!(body && body.email && body.password)) {
-          reject("Request body not provided during login");
-        }
-      });
+    getUnixTime() {
+      return (new Date().getTime() / 1000) | 0;
     },
     logout() {
+      this.$router.push({ path: "/login", name: "login" });
       this.$store.commit("user", null);
       this.$store.commit("token", null);
-      this.$router.push({ path: "/login", name: "login" });
-    },
-    register(body) {
-      return new Promise((resolve, reject) => {
-        if (!(body && body.email && body.password)) {
-          reject("Request body not provided during login");
-        }
-      });
     },
     setColor(minutes) {
       return minutes <= 1
@@ -354,8 +303,40 @@ export const authMixin = {
         ? "warning"
         : "info";
     },
-    getUnixTime() {
-      return (new Date().getTime() / 1000) | 0;
+    validateApp() {
+      const route = "e_auth/validate/apps";
+      // eslint-disable-next-line
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${base}/${route}?token=${this.appToken}`)
+          .then(response => {
+            if (response && response.data) {
+              this.$store.commit("appToken", response.data.token || null);
+              resolve();
+            }
+          })
+          .catch(err => {
+            if (err && err.response && err.response.status === 403) {
+              this.authenticateApp();
+            }
+          });
+      });
+    },
+    validateUser() {
+      const route = "e_auth/validate";
+      // eslint-disable-next-line
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${base}/${route}?token=${this.token}`)
+          .then(response => {
+            if (response && response.data) {
+              return resolve(response);
+            }
+          })
+          .catch(err => {
+            return reject(err);
+          });
+      });
     }
   },
   props: {

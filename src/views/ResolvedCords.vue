@@ -136,8 +136,10 @@ export default {
       { text: "Hero", align: "left", value: "hero" }
     ]
   }),
-  beforeDestroy() {},
   created() {
+    if (!this.appToken) {
+      this.authenticateApp();
+    }
     this.getCordGridItems();
   },
   mounted() {
@@ -151,6 +153,12 @@ export default {
       this.getCordsByStatus("Resolved")
         .then(response => {
           this.gridItems = response.data.data;
+          this.loading = false;
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
           this.loading = false;
         })
         .catch(err => {

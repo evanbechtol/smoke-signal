@@ -92,15 +92,15 @@
 <script>
 import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
+import { authMixin } from "../mixins/authMixin";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
 import { socketMixin } from "../mixins/socketMixin";
 
 export default {
   name: "Grid",
-  mixins: [themeMixin, cordMixin, socketMixin],
+  mixins: [themeMixin, cordMixin, socketMixin, authMixin],
   components: { MenuBtn, PullCordDialog },
-  computed: {},
   data: () => ({
     gridLoading: false,
     pullingCord: false,
@@ -145,6 +145,12 @@ export default {
           this.$store.commit("selectedCord", cord);
           this.$router.push({ path: `/cord/${cord._id}`, props: cord });
           this.joinSelectedCordRoom(cord._id);
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+          this.loading = false;
         })
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);

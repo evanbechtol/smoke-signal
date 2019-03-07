@@ -577,6 +577,9 @@ export default {
     };
   },
   created() {
+    if (!this.appToken) {
+      this.authenticateApp();
+    }
     if (!this.selectedCord) {
       this.loading = true;
       this.getCordById(this.id)
@@ -584,6 +587,11 @@ export default {
           const cord = response.data.data;
           this.$store.commit("selectedCord", cord);
           this.joinSelectedCordRoom(cord._id);
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
           this.loading = false;
         })
         .catch(err => {
@@ -637,6 +645,12 @@ export default {
         .then(() => {
           this.setAlert("Cord updated successfully!", "#288964", 5000);
           this.refreshItem(this.selectedCord._id);
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+          this.loading = false;
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
@@ -650,6 +664,12 @@ export default {
             return convertStringToDate(elem);
           });
           this.refreshItem(this.selectedCord._id);
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+          this.loading = false;
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
@@ -664,6 +684,12 @@ export default {
           .then(() => {
             this.setAlert("Cord updated successfully!", "#288964", 5000);
             this.refreshItem(this.selectedCord._id);
+            return this.validateUser();
+          })
+          .then(validationResponse => {
+            this.$store.commit("token", validationResponse.data.token || null);
+            this.setExpiry();
+            this.loading = false;
           })
           .catch(err => {
             throw err;

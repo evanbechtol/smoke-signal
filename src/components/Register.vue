@@ -241,12 +241,10 @@ export default {
           required: () => "Password can not be empty",
           max: "The password field may not be greater than 100 characters",
           min: "The password field may not be lesser than 6 characters"
-          // custom messages
         },
         password_confirmation: {
           required: () => "Password confirmation can not be empty",
           confirmed: "The password confirmation does not match"
-          // custom messages
         }
       }
     },
@@ -313,19 +311,30 @@ export default {
             email: this.user.email,
             password: this.user.password
           };
-          // this.register(obj)
           this.eAuthRegister(obj)
             .then(() => {
               return this.eAuthLogin(obj);
-              // return this.login(obj);
             })
-            .then(() => {
+            .then(response => {
               this.step++;
               this.backDisabled = true;
+              this.$store.commit("user", response.data.user);
+              this.$store.commit("isAuthenticated", true);
+              this.setAlert(
+                `Thanks for registering, ${
+                  response.data.user.firstname
+                }! You will receive an email to validate your address.`,
+                "#288964",
+                0
+              );
               this.$router.push(this.$route.params.nextUrl || "/");
             })
             .catch(err => {
-              return err;
+              this.setAlert(
+                `Error registering user: status code ${err.response.message}`,
+                "#DC2D37",
+                0
+              );
             });
         } else {
           this.step++;

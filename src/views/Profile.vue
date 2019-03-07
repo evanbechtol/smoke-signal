@@ -299,6 +299,21 @@ export default {
     }
   }),
   created() {
+    this.validateUser()
+      .then(validationResponse => {
+        this.$store.commit("token", validationResponse.data.token || null);
+        this.setExpiry();
+      })
+      .catch(err => {
+        this.setAlert(
+          err.error ||
+            err.message ||
+            err.response.data.error ||
+            "Unknown error occurred",
+          "#DC2D37",
+          0
+        );
+      });
     this.getUserStats(this.userString)
       .then(response => {
         this.userStats = response.data.data;
@@ -325,7 +340,6 @@ export default {
         this.setAlert(err.response.data.error, "#DC2D37", 0);
       });
   },
-  mounted() {},
   methods: {
     goToSelectedCord(cord) {
       this.$store.commit("selectedCord", cord);

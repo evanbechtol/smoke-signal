@@ -176,7 +176,6 @@ export default {
     socketMixin
   ],
   components: { UploadFile },
-  computed: {},
   data: function() {
     return {
       cord: {},
@@ -193,7 +192,6 @@ export default {
       search: ""
     };
   },
-  created() {},
   methods: {
     cancel() {
       this.$refs.form.reset();

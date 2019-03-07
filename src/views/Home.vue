@@ -23,16 +23,6 @@
                   <v-card-text class="text-xs-center">
                     <v-tooltip bottom offset-y>
                       <template #activator="data">
-                        <!-- <v-btn
-                          v-on="data.on"
-                          dark
-                          large
-                          fab
-                          style="font-size: 2em;"
-                          color="error"
-                        >
-                          {{ criticalCords.length }}
-                        </v-btn>-->
                         <circle-card
                           color="error"
                           :value="criticalCords.length"
@@ -54,16 +44,6 @@
                   <v-card-text class="text-xs-center">
                     <v-tooltip bottom offset-y>
                       <template #activator="data">
-                        <!--<v-btn
-                          v-on="data.on"
-                          dark
-                          large
-                          fab
-                          style="font-size: 2em;"
-                          color="orangeWarning"
-                        >
-                          {{ moderateCords.length }}
-                        </v-btn>-->
                         <circle-card
                           color="orangeWarning"
                           :value="moderateCords.length"
@@ -85,16 +65,6 @@
                   <v-card-text class="text-xs-center">
                     <v-tooltip bottom offset-y>
                       <template #activator="data">
-                        <!--<v-btn
-                          v-on="data.on"
-                          dark
-                          large
-                          fab
-                          style="font-size: 2em;"
-                          color="success"
-                        >
-                          {{ newCords.length }}
-                        </v-btn>-->
                         <circle-card
                           color="success"
                           :value="newCords.length"
@@ -110,91 +80,6 @@
 
           <!-- For large screens -->
           <v-flex xs12 v-if="!isSmall">
-            <!--<v-card
-              class="animated fast slideInRight"
-              :dark="isDark"
-              :color="`accent ${darken}`"
-              height="200px"
-            >
-              <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
-                <v-layout row wrap fill-height justify-start align-center>
-                  <v-flex xs12 sm4>
-                    <v-select
-                      dense
-                      solo-inverted
-                      flat
-                      dark
-                      v-model="selectItemType"
-                      :items="selectItems"
-                      item-text="label"
-                      item-value="value"
-                      :hint="`Number of cords: ${filteredGridItems.length}`"
-                      persistent-hint
-                    >
-                    </v-select>
-                  </v-flex>
-                  <v-spacer></v-spacer>
-                  <v-flex shrink>
-                    <v-tooltip right class="ml-3">
-                      <template #activator="data">
-                        <v-btn
-                          depressed
-                          color="error"
-                          class="mb-4"
-                          v-on="data.on"
-                          @click="pullingCord = !pullingCord"
-                        >
-                          <v-icon class="mr-3">flag</v-icon>Pull Cord
-                        </v-btn>
-                      </template>
-                      <span>{{ "Pull My Cord" }}</span>
-                    </v-tooltip>
-                  </v-flex>
-                </v-layout>
-              </v-card-title>
-              <v-card-text
-                class="ma-0 pa-0"
-                style="max-height: 486px; overflow-y: scroll;"
-              >
-                <v-list three-line class="py-0">
-                  <template v-for="(item, index) in filteredGridItems">
-                    <v-list-tile
-                      :key="`tile-${index}`"
-                      class="tileHover py-2"
-                      @click="goToSelectedCord(item)"
-                    >
-                      <v-list-tile-content>
-                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                        <div class="ml-3">
-                          <v-list-tile-sub-title>
-                            <strong>Application:</strong>
-                            {{ item.app }}
-                          </v-list-tile-sub-title>
-                          <v-list-tile-sub-title>
-                            <strong>Category:</strong>
-                            {{ item.category }}
-                          </v-list-tile-sub-title>
-                          <v-list-tile-sub-title>
-                            <strong>Opened on:</strong>
-                            {{
-                              new Date(item.openedOn).toLocaleDateString("en-US")
-                            }}
-                          </v-list-tile-sub-title>
-                        </div>
-                      </v-list-tile-content>
-                      <v-list-tile-action>
-                        <v-icon>navigate_next</v-icon>
-                      </v-list-tile-action>
-                    </v-list-tile>
-                    <v-divider
-                      v-if="index !== filteredGridItems.length - 1"
-                      :key="`divider-${index}`"
-                    ></v-divider>
-                  </template>
-                </v-list>
-              </v-card-text>
-            </v-card>-->
-
             <grid
               :headers="headers"
               :items="filteredGridItems"
@@ -384,6 +269,8 @@ export default {
       this.$router.push({ path: "/login", name: "login" });
     } else if (this.appToken) {
       this.getCordGridItems();
+    } else if (!this.appToken) {
+      this.authenticateApp();
     }
   },
   mounted() {
@@ -430,6 +317,11 @@ export default {
       this.getCordsByStatus("Open")
         .then(response => {
           this.gridItems = response.data.data;
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
           this.loading = false;
         })
         .catch(err => {
