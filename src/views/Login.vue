@@ -107,30 +107,23 @@
 
           <v-dialog v-model="resetDialog" width="500">
             <v-card tile flat color="accent">
-              <v-card-title
-                primary-title
-                class="hildaLight space-small ma-0 darkCard"
-                >Password Reset
-                <v-spacer></v-spacer>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" flat dark @click="closeResetDialog">
-                    <v-icon color="#f2f2f2">mdi-close</v-icon>
-                  </v-btn>
-                </v-card-actions>
+              <v-card-title primary-title class="hildaLight space-small ma-0"
+                >Forgot Password?
               </v-card-title>
 
-              <v-card-title class="space-small darkCard ma-0">
-                <small>Use this form to reset your password</small>
+              <v-card-title class="space-small ma-0">
+                <small>
+                  Provide the email associated to your account, and we'll send
+                  you instructions to reset your password
+                </small>
               </v-card-title>
-              <v-divider></v-divider>
 
               <v-card-text>
                 <v-form v-model="form" ref="resetForm">
                   <v-text-field
                     label="Email"
                     name="email"
-                    prepend-icon="email"
+                    append-icon="mail_outline"
                     type="email"
                     color="info darken-1"
                     :rules="emailRules"
@@ -140,8 +133,13 @@
                   >
                   </v-text-field>
                 </v-form>
-                <v-layout row fill-height align-center justify-center>
-                  <v-flex xs12 mx-3 mt-3>
+                <v-layout row wrap fill-height align-center justify-end>
+                  <v-flex xs12 sm3>
+                    <v-btn color="primary" outline dark @click="closeResetDialog">
+                      Cancel
+                    </v-btn>
+                  </v-flex>
+                  <v-flex xs12 sm3>
                     <v-btn
                       :disabled="!this.form"
                       block
@@ -151,7 +149,6 @@
                       @click="submitResetForm"
                     >
                       Submit
-                      <v-icon dark>navigate_next</v-icon>
                     </v-btn>
                   </v-flex>
                 </v-layout>
@@ -218,7 +215,6 @@ export default {
             return this.eAuthLogin(obj);
           })
           .then(() => {
-            this.setAlert("Login Successful", "#288964", 5000);
             this.$router.push(this.$route.params.nextUrl || "/");
           })
           .catch(err => {
@@ -235,9 +231,6 @@ export default {
         .catch(err => {
           return err;
         });
-    },
-    clear() {
-      this.$refs.form.reset();
     },
     toggleRegistration() {
       this.loggingIn = !this.loggingIn;
