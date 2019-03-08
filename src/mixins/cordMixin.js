@@ -1,17 +1,11 @@
 import axios from "axios";
+import { mapState } from "vuex";
 
 const baseUrl = process.env.VUE_APP_API_BASE;
 
 export const cordMixin = {
   computed: {
-    selectedCord: {
-      get: function() {
-        return this.$store.getters.selectedCord;
-      },
-      set: function(payload) {
-        this.$store.commit("selectedCord", payload);
-      }
-    }
+    ...mapState(["gridItems", "selectedCord"])
   },
   methods: {
     computeDuration(date) {

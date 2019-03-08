@@ -1,69 +1,17 @@
+import { mapState } from "vuex";
+
 export const alertMixin = {
   computed: {
-    alert: {
-      get: function() {
-        return this.$store.getters.alert;
-      },
-      set: function() {
-        this.$store.commit("alert");
-      }
-    },
-    cordPullNotification: {
-      get: function() {
-        return this.$store.getters.cordPullNotification;
-      },
-      set: function() {
-        this.$store.commit("cordPullNotification");
-      }
-    },
-    cordPullMessage: {
-      get: function() {
-        return this.$store.getters.cordPullMessage;
-      },
-      set: function() {
-        this.$store.commit("cordPullMessage");
-      }
-    },
-    alertColor: {
-      get: function() {
-        return this.$store.getters.alertColor;
-      },
-      set: function() {
-        this.$store.commit("alertColor");
-      }
-    },
-    alertMessage: {
-      get: function() {
-        return this.$store.getters.alertMessage;
-      },
-      set: function() {
-        this.$store.commit("alertMessage");
-      }
-    },
-    alertSeverity: {
-      get: function() {
-        return this.$store.getters.alertSeverity;
-      },
-      set: function() {
-        this.$store.commit("alertSeverity");
-      }
-    },
-    alertTimeout: {
-      get: function() {
-        return this.$store.getters.alertTimeout;
-      },
-      set: function() {
-        this.$store.commit("alertTimeout");
-      }
-    },
-    notificationLink: {
-      get: function() {
-        return this.$store.getters.notificationLink;
-      },
-      set: function() {
-        this.$store.commit("notificationLink");
-      }
-    }
+    ...mapState([
+      "alert",
+      "cordPullNotification",
+      "cordPullMessage",
+      "alertColor",
+      "alertMessage",
+      "alertSeverity",
+      "alertTimeout",
+      "notificationLink"
+    ])
   },
   methods: {
     /**

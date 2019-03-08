@@ -10,96 +10,72 @@
         fill-height
       >
         <div v-if="appToken" style="width: 100%;">
-          <v-flex xs12 class="hidden-xs-only">
-            <v-layout row wrap justify-space-between align-center fill-height>
-              <v-flex xs12 sm4>
-                <v-card tile flat :dark="isDark" class="mx-1 my-2">
-                  <v-card-title
-                    class="hildaLight space-small dark text-xs-center mx-0"
-                    style="background-color: var(--e-dark-status-red)"
-                  >
-                    <v-icon class="mr-3">error</v-icon> Critical Cords
-                  </v-card-title>
-                  <v-card-text class="text-xs-center">
-                    <v-tooltip bottom offset-y>
-                      <template #activator="data">
-                        <circle-card
-                          color="error"
-                          :value="criticalCords.length"
-                        ></circle-card>
-                      </template>
-                      <span>Toggle Viewing Critical Cords</span>
-                    </v-tooltip>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
-              <v-flex xs12 sm4>
-                <v-card tile flat :dark="isDark" class="mx-1 my-2">
-                  <v-card-title
-                    class="hildaLight space-small dark text-xs-center mx-0"
-                    style="background-color: var(--e-dark-status-orange)"
-                  >
-                    <v-icon class="mr-3">warning</v-icon> Moderate Cords
-                  </v-card-title>
-                  <v-card-text class="text-xs-center">
-                    <v-tooltip bottom offset-y>
-                      <template #activator="data">
-                        <circle-card
-                          color="orangeWarning"
-                          :value="moderateCords.length"
-                        ></circle-card>
-                      </template>
-                      <span>Toggle Viewing Moderate Cords</span>
-                    </v-tooltip>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
-              <v-flex xs12 sm4>
-                <v-card tile flat :dark="isDark" class="mx-1 my-2">
-                  <v-card-title
-                    class="hildaLight space-small dark text-xs-center mx-0"
-                    style="background-color: var(--e-dark-status-green)"
-                  >
-                    <v-icon class="mr-3">info</v-icon> New Cords
-                  </v-card-title>
-                  <v-card-text class="text-xs-center">
-                    <v-tooltip bottom offset-y>
-                      <template #activator="data">
-                        <circle-card
-                          color="success"
-                          :value="newCords.length"
-                        ></circle-card>
-                      </template>
-                      <span>Toggle Viewing New Cords</span>
-                    </v-tooltip>
-                  </v-card-text>
-                </v-card>
-              </v-flex>
-            </v-layout>
-          </v-flex>
-
           <!-- For large screens -->
           <v-flex xs12 v-if="!isSmall">
-            <grid
-              :headers="headers"
-              :items="filteredGridItems"
-              :custom-sort="gridCustomSort"
-              :loading="loading"
-              v-on:refreshCordGrid="getCordGridItems"
-            >
-              <template v-slot:title>
-                <v-select
-                  dense
-                  solo-inverted
-                  flat
-                  class="mt-3"
-                  v-model="selectItemType"
-                  :items="selectItems"
-                  item-text="label"
-                  item-value="value"
-                ></v-select>
-              </template>
-            </grid>
+            <v-card elevation="0" :color="`accent ${darken}`">
+              <v-flex xs12 class="hidden-xs-only">
+                <v-layout
+                  row
+                  wrap
+                  justify-space-between
+                  align-center
+                  fill-height
+                >
+                  <v-flex xs12>
+                    <v-chip color="#dddddd">
+                      <v-avatar>
+                        <v-icon class="mx-3" color="error">error</v-icon>
+                      </v-avatar>
+                      Critical Cords ({{ criticalCords.length }})
+                    </v-chip>
+
+                    <v-chip color="#dddddd">
+                      <v-avatar>
+                        <v-icon class="mx-3" color="warning">warning</v-icon>
+                      </v-avatar>
+                      Moderate Cords ({{ moderateCords.length }})
+                    </v-chip>
+
+                    <v-chip color="#dddddd">
+                      <v-avatar>
+                        <v-icon class="mx-3" color="info">info</v-icon>
+                      </v-avatar>
+                      New Cords ({{ newCords.length }})
+                    </v-chip>
+
+                    <v-chip color="#dddddd">
+                      <v-avatar>
+                        <v-icon class="mx-3" color="purple"
+                          >account_circle</v-icon
+                        >
+                      </v-avatar>
+                      My Cords ({{ myCords.length }})
+                    </v-chip>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+
+              <grid
+                :headers="headers"
+                :items="filteredGridItems"
+                :custom-sort="gridCustomSort"
+                :loading="loading"
+                v-on:refreshCordGrid="getCordGridItems"
+              >
+                <template v-slot:title>
+                  <v-select
+                    dense
+                    solo-inverted
+                    flat
+                    class="mt-3"
+                    v-model="selectItemType"
+                    :items="selectItems"
+                    item-text="label"
+                    item-value="value"
+                  ></v-select>
+                </template>
+              </grid>
+            </v-card>
           </v-flex>
 
           <!-- For small screens -->
@@ -207,6 +183,7 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import CircleCard from "../components/CircleCard";
 import PullCordDialog from "../components/PullCordDialog";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "home",
@@ -219,6 +196,7 @@ export default {
     PullCordDialog
   },
   computed: {
+    ...mapGetters(["criticalCords", "moderateCords", "myCords", "newCords"]),
     filteredGridItems: function() {
       return this.gridItemType === "all"
         ? this.gridItems
@@ -240,10 +218,6 @@ export default {
     }
   },
   data: () => ({
-    criticalCords: [],
-    moderateCords: [],
-    myCords: [],
-    newCords: [],
     pullingCord: false,
     gridItemType: "all",
     selectItemType: "all",
@@ -351,7 +325,7 @@ export default {
       this.gridItemType = value;
     },
     gridItems: function() {
-      if (this.user) {
+      /*if (this.user) {
         const _this = this;
         this.criticalCords = this.gridItems.filter(function(elem) {
           return _this.computeDuration(elem.openedOn).includes("Days");
@@ -376,7 +350,7 @@ export default {
             return elem.puller.username === _this.user.username;
           });
         }
-      }
+      }*/
     }
   }
 };

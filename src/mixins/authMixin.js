@@ -1,5 +1,6 @@
 import "../jwt-decode";
 import axios from "axios";
+import { mapState } from "vuex";
 
 const base = process.env.VUE_APP_EAUTH;
 const appCode = process.env.VUE_APP_EAUTH_APP_CODE;
@@ -20,57 +21,14 @@ export const authMixin = {
     }
   }),
   computed: {
-    appToken: {
-      get: function() {
-        return this.$store.getters.appToken;
-      },
-      set: function() {
-        this.$store.commit("appToken");
-      }
-    },
-    darken: function() {
-      return this.isDark === true ? "darken-1" : "";
-    },
-    expiryDetails: {
-      get: function() {
-        return this.$store.getters.expiryDetails;
-      },
-      set: function() {
-        this.$store.commit("expiryDetails");
-      }
-    },
-    isAuthenticated: {
-      get: function() {
-        return this.$store.getters.isAuthenticated;
-      },
-      set: function() {
-        this.$store.commit("isAuthenticated");
-      }
-    },
-    isExpiryIntervalSet: {
-      get: function() {
-        return this.$store.getters.isExpiryIntervalSet;
-      },
-      set: function() {
-        this.$store.commit("isExpiryIntervalSet");
-      }
-    },
-    user: {
-      get: function() {
-        return this.$store.getters.user;
-      },
-      set: function() {
-        this.$store.commit("user");
-      }
-    },
-    token: {
-      get: function() {
-        return this.$store.getters.token;
-      },
-      set: function() {
-        this.$store.commit("token");
-      }
-    }
+    ...mapState([
+      "appToken",
+      "expiryDetails",
+      "isAuthenticated",
+      "isExpiryIntervalSet",
+      "user",
+      "token"
+    ])
   },
   methods: {
     /**

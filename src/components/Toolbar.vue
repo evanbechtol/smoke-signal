@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
   <div>
     <v-toolbar v-bind:color="color" dark app>
       <v-toolbar-side-icon
@@ -11,7 +11,13 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat @click.stop="rightDrawer = !rightDrawer" style="margin: 8px;" class="mr-2 px-5">
+      <v-btn
+        v-if="user && user.username"
+        flat
+        @click.stop="rightDrawer = !rightDrawer"
+        style="margin: 8px;"
+        class="mr-2 px-5"
+      >
         <v-icon class="mr-3">perm_identity</v-icon>
         {{ user.username }}
       </v-btn>
@@ -47,6 +53,7 @@
 
     <!-- RIGHT DRAWER -->
     <v-navigation-drawer
+      v-if="user"
       right
       v-model="rightDrawer"
       class="nav"

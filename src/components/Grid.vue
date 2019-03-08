@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card :color="`accent ${darken}`" elevation="0" :dark="isDark" class="bg">
-      <v-toolbar card height="40px" dark class="my-4 pt-2 bg" flat>
+    <v-card :color="`accent ${darken}`" elevation="0" :dark="isDark">
+      <v-toolbar card height="40px" class="my-4 pt-2" flat>
         <v-card-title primary-title class="hildaLight space-small pl-0 ml-0">
           <slot name="title"></slot>
           <v-tooltip right class="ml-3">

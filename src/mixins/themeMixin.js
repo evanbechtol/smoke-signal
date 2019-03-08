@@ -1,3 +1,5 @@
+import { mapState, mapGetters } from "vuex";
+
 export const themeMixin = {
   data: function() {
     return {
@@ -5,27 +7,10 @@ export const themeMixin = {
     };
   },
   computed: {
+    ...mapState(["isDark", "theme"]),
+    ...mapGetters(["darken"]),
     isSmall: function() {
       return this.$vuetify.breakpoint.name === "xs";
-    },
-    isDark: {
-      get: function() {
-        return this.$store.getters.isDark;
-      },
-      set: function() {
-        this.$store.commit("isDark");
-      }
-    },
-    theme: {
-      get: function() {
-        return this.$store.getters.theme;
-      },
-      set: function() {
-        this.$store.commit("theme");
-      }
-    },
-    darken: function() {
-      return this.isDark === true ? "darken-1" : "";
     }
   },
   methods: {

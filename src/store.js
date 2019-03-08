@@ -43,28 +43,40 @@ export default new Vuex.Store({
     user: null
   },
   getters: {
-    alert: state => state.alert,
-    alertClass: state => state.alertClass,
-    alertColor: state => state.alertColor,
-    alertMessage: state => state.alertMessage,
-    alertSeverity: state => state.alertSeverity,
-    alertTimeout: state => state.alertTimeout,
     appToken: state => state.appToken,
-    badgeCard: state => state.badgeCard,
-    cordPullNotification: state => state.cordPullNotification,
-    cordPullMessage: state => state.cordPullMessage,
-    expiryDetails: state => state.expiryDetails,
     gridItems: state => state.gridItems,
-    isConnected: state => state.isConnected,
-    isDark: state => state.isDark,
-    isAuthenticated: state => state.isAuthenticated,
-    isExpiryIntervalSet: state => state.isExpiryIntervalSet,
-    notificationLink: state => state.notificationLink,
-    selectedCord: state => state.selectedCord,
     socketMessage: state => state.socketMessage,
-    theme: state => state.theme,
-    token: state => state.token,
-    user: state => state.user
+    criticalCords: state => {
+      return state.gridItems.filter(function(elem) {
+        return computeDuration(elem.openedOn).includes("Days");
+      });
+    },
+    darken: state => {
+      return state.isDark === true ? "darken-1" : "";
+    },
+    moderateCords: state => {
+      return state.gridItems.filter(function(elem) {
+        return (
+          !computeDuration(elem.openedOn).includes("Days") &&
+          computeDuration(elem.openedOn).includes("Hrs")
+        );
+      });
+    },
+    myCords: state => {
+      return state.gridItems.filter(function(elem) {
+        return state.user && state.username
+          ? elem.puller.username === state.user.username
+          : false;
+      });
+    },
+    newCords: state => {
+      return state.gridItems.filter(function(elem) {
+        return (
+          !computeDuration(elem.openedOn).includes("Days") &&
+          !computeDuration(elem.openedOn).includes("Hrs")
+        );
+      });
+    }
   },
   mutations: {
     alert: function(state, payload) {
@@ -168,3 +180,26 @@ export default new Vuex.Store({
   },
   actions: {}
 });
+
+function computeDuration(date) {
+  const now = new Date();
+  const openedOn = new Date(date);
+  return msToTime(parseInt(now - openedOn));
+}
+
+function msToTime(duration) {
+  const seconds = (duration / 1000).toFixed(1);
+  const minutes = (duration / (1000 * 60)).toFixed(1);
+  const hours = (duration / (1000 * 60 * 60)).toFixed(1);
+  const days = (duration / (1000 * 60 * 60 * 24)).toFixed(1);
+
+  if (seconds < 60) {
+    return seconds + " Sec";
+  } else if (minutes < 60) {
+    return minutes + " Min";
+  } else if (hours < 24) {
+    return hours + " Hrs";
+  } else {
+    return days + " Days";
+  }
+}
