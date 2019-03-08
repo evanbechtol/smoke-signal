@@ -11,8 +11,9 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer" style="margin: 8px;">
-        <v-icon>perm_identity</v-icon>
+      <v-btn flat @click.stop="rightDrawer = !rightDrawer" style="margin: 8px;" class="mr-2 px-5">
+        <v-icon class="mr-3">perm_identity</v-icon>
+        {{ user.username }}
       </v-btn>
     </v-toolbar>
 
@@ -55,7 +56,7 @@
       dark
       temporary
     >
-      <v-layout column fill-height align-space-arouund justify-center>
+      <v-layout column fill-height align-space-around justify-center>
         <v-flex xs12 mt-5 shrink>
           <v-layout column align-space-around justify-center mt-4>
             <v-flex xs12 text-xs-center>
