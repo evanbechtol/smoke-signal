@@ -1,11 +1,6 @@
 <template>
   <v-dialog v-model="dialog" persistent :fullscreen="isSmall">
-    <v-card
-      :color="`accent ${darken}`"
-      :dark="isDark"
-      tile
-      class="space-small mr-1"
-    >
+    <v-card color="accent" tile class="space-small mr-1">
       <v-layout row align-center justify-space-around>
         <v-flex xs12 mt-4>
           <v-stepper
@@ -181,7 +176,7 @@
 
       <v-card-actions>
         <v-btn outline color="primary darken-1" name="cancel" @click="cancel()">
-          {{ this.step < 4 ? "Cancel" : "Close" }}
+          {{ cancelLabel }}
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn
@@ -222,6 +217,9 @@ export default {
   },
   mixins: [authMixin, assetMixin, alertMixin, themeMixin],
   computed: {
+    cancelLabel() {
+      return this.step < 4 ? "Cancel" : "Close";
+    },
     email() {
       return this.user.email;
     },
