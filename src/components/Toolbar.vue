@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
     <v-toolbar v-bind:color="color" dark app>
       <v-toolbar-side-icon
@@ -11,33 +11,12 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items class="hidden-sm-and-down">
-        <router-link
-          v-if="!(isAuthenticated && user && user.email)"
-          class="link"
-          to="/login"
-          name="login"
-        >
-          <v-tooltip bottom class="menuIcon">
-            <v-btn slot="activator" icon name="help"
-              ><v-icon>account_circle</v-icon></v-btn
-            >
-            <span>Login</span>
-          </v-tooltip>
-        </router-link>
-
-        <router-link v-else class="link" to="/" name="logout">
-          <v-tooltip left offset-x class="menuIcon">
-            <template #activator="data">
-              <v-btn v-on="data.on" icon @click="logout()">
-                <v-icon>logout</v-icon>
-              </v-btn>
-            </template>
-            <span>Logout</span>
-          </v-tooltip>
-        </router-link>
-      </v-toolbar-items>
+      <v-btn icon @click.stop="rightDrawer = !rightDrawer" style="margin: 8px;">
+        <v-icon>perm_identity</v-icon>
+      </v-btn>
     </v-toolbar>
+
+    <!-- LEFT DRAWER -->
     <v-navigation-drawer
       v-model="drawer"
       class="nav"
@@ -47,100 +26,113 @@
       dark
       temporary
     >
-      <v-list class="pa-0">
-        <v-list-tile v-if="mini" @click.stop="mini = !mini">
-          <v-list-tile-action>
-            <v-icon>chevron_right</v-icon>
-          </v-list-tile-action>
-        </v-list-tile>
-
-        <v-list-group v-if="isAuthenticated && user">
-          <v-list-tile slot="activator" avatar tag="div">
-            <v-list-tile-avatar>
-              <v-icon large>fingerprint</v-icon>
-            </v-list-tile-avatar>
-
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{ user.username || user.email }}
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-
-          <v-list-tile to="/profile">
-            <v-list-tile-title>
-              <v-icon class="mx-4">face</v-icon>My Profile
-            </v-list-tile-title>
-          </v-list-tile>
-        </v-list-group>
-      </v-list>
-
-      <jwt-expiry
-        v-if="isAuthenticated && token"
-        :expiry-details="expiryDetails"
-      ></jwt-expiry>
-
-      <v-list class="pt-0" dense>
-        <v-select
-          id="select"
-          flat
-          full-width
-          solo-inverted
-          color="info"
-          dark
-          :items="themes"
-          item-text="label"
-          item-value="value"
-          :value="theme"
-          @change="toggleTheme"
-          label="Theme Selection"
-          hint="Theme Selection"
-          persistent-hint
-        >
-          <template v-slot:prepend-inner>
-            <v-icon class="mr-3">compare</v-icon>
-          </template>
-        </v-select>
-        <v-divider light class="py-1 mt-2"></v-divider>
-        <v-list-tile
-          v-if="isAuthenticated && user"
-          active-class="dark-info"
-          @click="logout"
-        >
-          <v-list-tile-action>
-            <v-icon>logout</v-icon>
-          </v-list-tile-action>
-
-          <v-list-tile-content>
-            <v-list-tile-title>Logout</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile v-else active-class="dark-info" to="/login">
-          <v-list-tile-action>
-            <v-icon>account_circle</v-icon>
-          </v-list-tile-action>
-
-          <v-list-tile-content>
-            <v-list-tile-title>Login</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
+      <v-list class="pt-0">
+        <v-list-tile-title class="ml-3 my-4">
+          <p class="hildaLight">Menu</p>
+        </v-list-tile-title>
+        <v-divider></v-divider>
         <v-list-tile
           v-for="item in items"
           :key="item.title"
           active-class="dark-info"
           :to="{ path: item.path }"
         >
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-
-          <v-list-tile-content>
+          <v-list-tile-content class="ml-1">
             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
+    </v-navigation-drawer>
+
+    <!-- RIGHT DRAWER -->
+    <v-navigation-drawer
+      right
+      v-model="rightDrawer"
+      class="nav"
+      :style="{ backgroundColor: '#0c0c0c' }"
+      :mini-variant="mini"
+      app
+      dark
+      temporary
+    >
+      <v-layout column fill-height align-space-arouund justify-center>
+        <v-flex xs12 mt-5 shrink>
+          <v-layout column align-space-around justify-center mt-4>
+            <v-flex xs12 text-xs-center>
+              <v-icon size="100">perm_identity</v-icon>
+            </v-flex>
+            <v-flex xs12 class="hildaLight white--text" text-xs-center>
+              {{ user.username }}
+            </v-flex>
+            <v-flex xs12>
+              <jwt-expiry
+                v-if="isAuthenticated && token"
+                :expiry-details="expiryDetails"
+              ></jwt-expiry>
+            </v-flex>
+          </v-layout>
+          <v-divider></v-divider>
+
+          <v-flex xs12 ml-3 mt-3>
+            <p class="hildaLight white--text">My Settings</p>
+          </v-flex>
+
+          <v-flex xs12>
+            <v-layout row align-center justify-start>
+              <v-flex xs6 class="white--text" ml-3>Switch Theme</v-flex>
+              <v-flex xs6>
+                <v-switch
+                  v-model="themeSwitch"
+                  :label="switchLabel"
+                  :dark="isDark"
+                  :color="isDark ? 'accent darken-1' : 'info'"
+                ></v-switch>
+              </v-flex>
+            </v-layout>
+            <v-divider light></v-divider>
+          </v-flex>
+
+          <v-flex xs12 ml-3 mt-3>
+            <p class="hildaLight white--text mb-4">User Details</p>
+            <v-layout column align-start justify-start>
+              <v-flex xs12 mb-0 shrink>
+                <p class="subheading">
+                  Signum
+                </p>
+              </v-flex>
+              <v-flex xs12 mt-0 class="userDetail">
+                <p class="white--text">{{ user.username }}</p>
+              </v-flex>
+
+              <v-flex xs12 mb-0 shrink>
+                <p class="subheading">
+                  Name
+                </p>
+              </v-flex>
+              <v-flex xs12 mt-0 class="userDetail">
+                <p class="white--text">
+                  {{ user.firstname }} {{ user.lastname }}
+                </p>
+              </v-flex>
+
+              <v-flex xs12 mb-0 shrink>
+                <p class="subheading">
+                  Email
+                </p>
+              </v-flex>
+              <v-flex xs12 mt-0 class="userDetail">
+                <p class="white--text">{{ user.email }}</p>
+              </v-flex>
+            </v-layout>
+          </v-flex>
+
+          <v-flex xs12 align-self-center mt-5>
+            <v-btn block outline @click="logout">
+              Sign Out
+            </v-btn>
+          </v-flex>
+        </v-flex>
+      </v-layout>
     </v-navigation-drawer>
   </div>
 </template>
@@ -157,8 +149,15 @@ export default {
   props: {
     color: String
   },
+  computed: {
+    switchLabel: function() {
+      return this.isDark ? "Dark" : "Light";
+    }
+  },
   data() {
     return {
+      themeSwitch: true,
+      rightDrawer: false,
       drawer: null,
       mini: false,
       right: null,
@@ -182,6 +181,7 @@ export default {
     };
   },
   created() {
+    this.themeSwitch = this.theme === "light";
     if (!this.isExpiryIntervalSet) {
       const _this = this;
       setInterval(function() {
@@ -193,6 +193,11 @@ export default {
   methods: {
     toggleTheme(value) {
       this.$store.commit("theme", value.toLowerCase());
+    }
+  },
+  watch: {
+    themeSwitch: function(value) {
+      this.toggleTheme(value ? "light" : "dark");
     }
   }
 };
@@ -219,5 +224,10 @@ export default {
 .menuIcon {
   position: relative;
   top: 8px;
+}
+
+.userDetail {
+  position: relative;
+  top: -10px;
 }
 </style>

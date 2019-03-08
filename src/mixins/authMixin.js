@@ -278,7 +278,7 @@ export const authMixin = {
           this.$store.commit("isAuthenticated", true);
           this.$store.commit("user", decoded.user || {});
         } else if (this.isAuthenticated) {
-          if (minutes > 0 && minutes <= 10) {
+          if (minutes > 0 && minutes <= 5) {
             this.$store.commit("alert", true);
             this.$store.commit("alertColor", this.expiryDetails.color);
             this.$store.commit("alertMessage", this.expiryDetails.message);
