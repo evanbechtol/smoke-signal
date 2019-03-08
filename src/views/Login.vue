@@ -1,7 +1,10 @@
 <template>
   <div class="dark-l1 login page">
-    <v-layout row justify-start ml-1>
-      <v-flex xs12 sm1 class="mt-4">
+    <v-layout
+      row
+      :class="isSmall ? 'justify-center ml-0 mt-5' : 'justify-start ml-5'"
+    >
+      <v-flex xs12 sm1 class="mt-5 pt-5">
         <v-img
           :src="getImagePath('econ_rgb.svg')"
           height="160px"
@@ -9,157 +12,155 @@
         ></v-img>
       </v-flex>
     </v-layout>
-    <v-layout
-      column
-      align-center
-      justify-center
-      fill-height
-      style="height: 80vh;"
-      text-xs-center
-      class="dark"
-    >
-      <v-flex xs12 style="margin-top: 16vh;">
-        <transition
-          name="auth-animation"
-          mode="out-in"
-          enter-active-class="animated faster fadeInDown"
-          leave-active-class="animated faster fadeOutUp"
+    <v-container>
+      <v-layout
+        column
+        justify-center
+        style="height: 74vh;"
+        text-xs-center
+        class="dark"
+        align-space-around
+      >
+        <v-flex
+          xs12
+          sm8
+          md6
+          :class="isSmall ? 'mt-5' : 'mt-0'"
+          :style="isSmall ? 'width: 100%;' : 'width: 30%'"
+          align-self-center
         >
-          <v-form
-            v-if="loggingIn"
-            ref="form"
-            v-model="valid"
-            class="animated faster fadeInDown"
+          <transition
+            name="auth-animation"
+            mode="out-in"
+            enter-active-class="animated faster fadeInDown"
+            leave-active-class="animated faster fadeOutUp"
           >
-            <v-text-field
-              dark
-              box
-              name="username"
-              color="info darken-1"
-              v-model="username"
-              :rules="usernameRules"
-              label="Username"
-              required
+            <v-form
+              v-if="loggingIn"
+              ref="form"
+              v-model="valid"
+              class="animated faster fadeInDown"
             >
-            </v-text-field>
-            <v-text-field
-              dark
-              box
-              name="password"
-              color="info darken-1"
-              v-model="password"
-              :rules="passwordRules"
-              type="password"
-              label="Password"
-              required
-            >
-            </v-text-field>
-            <v-checkbox
-              v-model="checkbox"
-              label="Remember me"
-              dark
-              color="#0084F0"
-            >
-            </v-checkbox>
-            <v-layout row wrap fill-height justify-start align-center>
-              <v-flex xs4>
-                <v-btn
-                  :disabled="!valid"
-                  name="login"
-                  :color="`info ${darken}`"
-                  dark
-                  @click="submit"
-                >
-                  <v-icon dark class="pr-2">exit_to_app</v-icon>
-                  login
-                </v-btn>
-              </v-flex>
-              <v-flex xs4>
-                <v-btn @click="clear" name="clear form">reset form</v-btn>
-              </v-flex>
-              <v-flex xs4>
-                <v-btn
-                  @click="toggleRegistration()"
-                  :color="`success darken-1`"
-                  name="register"
-                >
-                  <v-icon dark class="pr-2">how_to_reg</v-icon>
-                  Sign Up
-                </v-btn>
-              </v-flex>
-              <v-flex xs12>
-                <v-btn
-                  flat
-                  name="Forgot Password"
-                  @click="resetDialog = true"
-                  :color="`info darken-1`"
-                >
-                  <v-icon dark class="pr-2">update</v-icon>
-                  Forgot Password
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-form>
-
-          <register v-else v-on:cancelRegistration="toggleRegistration()">
-          </register>
-        </transition>
-
-        <v-dialog v-model="resetDialog" width="500">
-          <v-card tile flat color="accent">
-            <v-card-title
-              primary-title
-              class="hildaLight space-small ma-0 darkCard"
-              >Password Reset
-              <v-spacer></v-spacer>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" flat dark @click="closeResetDialog">
-                  <v-icon color="#f2f2f2">mdi-close</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card-title>
-
-            <v-card-title class="space-small darkCard ma-0">
-              <small>Use this form to reset your password</small>
-            </v-card-title>
-            <v-divider></v-divider>
-
-            <v-card-text>
-              <v-form v-model="form" ref="resetForm">
-                <v-text-field
-                  label="Email"
-                  name="email"
-                  prepend-icon="email"
-                  type="email"
-                  color="info darken-1"
-                  :rules="emailRules"
-                  v-model="email"
-                  required
-                  placeholder="example@ericsson.com"
-                >
-                </v-text-field>
-              </v-form>
-              <v-layout row fill-height align-center justify-center>
-                <v-flex xs12 mx-3 mt-3>
+              <v-text-field
+                dark
+                outline
+                name="username"
+                color="info darken-1"
+                v-model="username"
+                :rules="usernameRules"
+                label="Username"
+                required
+              >
+              </v-text-field>
+              <v-text-field
+                dark
+                outline
+                name="password"
+                color="info darken-1"
+                v-model="password"
+                :rules="passwordRules"
+                type="password"
+                label="Password"
+                required
+              >
+              </v-text-field>
+              <v-layout column fill-height justify-start align-space-around>
+                <v-flex xs12 sm6>
                   <v-btn
-                    :disabled="!this.form"
+                    :disabled="!valid"
+                    name="login"
                     block
-                    color="info"
-                    depressed
-                    name="Submit Reset Form"
-                    @click="submitResetForm"
+                    :color="`info ${darken}`"
+                    dark
+                    @click="submit"
                   >
-                    Submit
-                    <v-icon dark>navigate_next</v-icon>
+                    Sign In
+                  </v-btn>
+                </v-flex>
+                <v-flex xs12 mt-4>
+                  <v-btn
+                    flat
+                    name="Forgot Password"
+                    @click="resetDialog = true"
+                    dark
+                  >
+                    Forgot Password?
+                  </v-btn>
+                </v-flex>
+                <v-flex xs12>
+                  <v-btn
+                    flat
+                    @click="toggleRegistration()"
+                    dark
+                    :color="`info darken-1`"
+                    name="register"
+                  >
+                    Sign Up
                   </v-btn>
                 </v-flex>
               </v-layout>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </v-flex>
-    </v-layout>
+            </v-form>
+
+            <register v-else v-on:cancelRegistration="toggleRegistration()">
+            </register>
+          </transition>
+
+          <v-dialog v-model="resetDialog" width="500">
+            <v-card tile flat color="accent">
+              <v-card-title
+                primary-title
+                class="hildaLight space-small ma-0 darkCard"
+                >Password Reset
+                <v-spacer></v-spacer>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" flat dark @click="closeResetDialog">
+                    <v-icon color="#f2f2f2">mdi-close</v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </v-card-title>
+
+              <v-card-title class="space-small darkCard ma-0">
+                <small>Use this form to reset your password</small>
+              </v-card-title>
+              <v-divider></v-divider>
+
+              <v-card-text>
+                <v-form v-model="form" ref="resetForm">
+                  <v-text-field
+                    label="Email"
+                    name="email"
+                    prepend-icon="email"
+                    type="email"
+                    color="info darken-1"
+                    :rules="emailRules"
+                    v-model="email"
+                    required
+                    placeholder="example@ericsson.com"
+                  >
+                  </v-text-field>
+                </v-form>
+                <v-layout row fill-height align-center justify-center>
+                  <v-flex xs12 mx-3 mt-3>
+                    <v-btn
+                      :disabled="!this.form"
+                      block
+                      color="info"
+                      depressed
+                      name="Submit Reset Form"
+                      @click="submitResetForm"
+                    >
+                      Submit
+                      <v-icon dark>navigate_next</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
