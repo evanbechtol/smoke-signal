@@ -29,81 +29,71 @@
           :style="isSmall ? 'width: 100%;' : 'width: 30%'"
           align-self-center
         >
-          <transition
-            name="auth-animation"
-            mode="out-in"
-            enter-active-class="animated faster fadeInDown"
-            leave-active-class="animated faster fadeOutUp"
+          <v-form
+            v-if="loggingIn"
+            ref="form"
+            v-model="valid"
+            class="animated faster fadeInDown"
           >
-            <v-form
-              v-if="loggingIn"
-              ref="form"
-              v-model="valid"
-              class="animated faster fadeInDown"
+            <v-text-field
+              dark
+              outline
+              name="username"
+              color="info darken-1"
+              v-model="username"
+              :rules="usernameRules"
+              label="Username"
+              required
             >
-              <v-text-field
-                dark
-                outline
-                name="username"
-                color="info darken-1"
-                v-model="username"
-                :rules="usernameRules"
-                label="Username"
-                required
-              >
-              </v-text-field>
-              <v-text-field
-                dark
-                outline
-                name="password"
-                color="info darken-1"
-                v-model="password"
-                :rules="passwordRules"
-                type="password"
-                label="Password"
-                required
-              >
-              </v-text-field>
-              <v-layout column fill-height justify-start align-space-around>
-                <v-flex xs12 sm6>
-                  <v-btn
-                    :disabled="!valid"
-                    name="login"
-                    block
-                    :color="`info ${darken}`"
-                    dark
-                    @click="submit"
-                  >
-                    Sign In
-                  </v-btn>
-                </v-flex>
-                <v-flex xs12 mt-4>
-                  <v-btn
-                    flat
-                    name="Forgot Password"
-                    @click="resetDialog = true"
-                    dark
-                  >
-                    Forgot Password?
-                  </v-btn>
-                </v-flex>
-                <v-flex xs12>
-                  <v-btn
-                    flat
-                    @click="toggleRegistration()"
-                    dark
-                    :color="`info darken-1`"
-                    name="register"
-                  >
-                    Sign Up
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-form>
-
-            <register v-else v-on:cancelRegistration="toggleRegistration()">
-            </register>
-          </transition>
+            </v-text-field>
+            <v-text-field
+              dark
+              outline
+              name="password"
+              color="info darken-1"
+              v-model="password"
+              :rules="passwordRules"
+              type="password"
+              label="Password"
+              required
+            >
+            </v-text-field>
+            <v-layout column fill-height justify-start align-space-around>
+              <v-flex xs12 sm6>
+                <v-btn
+                  :disabled="!valid"
+                  name="login"
+                  block
+                  :color="`info ${darken}`"
+                  dark
+                  @click="submit"
+                >
+                  Sign In
+                </v-btn>
+              </v-flex>
+              <v-flex xs12 mt-4>
+                <v-btn
+                  flat
+                  name="Forgot Password"
+                  @click="resetDialog = true"
+                  dark
+                >
+                  Forgot Password?
+                </v-btn>
+              </v-flex>
+              <v-flex xs12>
+                <v-btn
+                  flat
+                  @click="toggleRegistration()"
+                  dark
+                  :color="`info darken-1`"
+                  name="register"
+                >
+                  Sign Up
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-form>
 
           <v-dialog v-model="resetDialog" width="500">
             <v-card tile flat color="accent">
@@ -135,7 +125,12 @@
                 </v-form>
                 <v-layout row wrap fill-height align-center justify-end>
                   <v-flex xs12 sm3>
-                    <v-btn color="primary" outline dark @click="closeResetDialog">
+                    <v-btn
+                      color="primary"
+                      outline
+                      dark
+                      @click="closeResetDialog"
+                    >
                       Cancel
                     </v-btn>
                   </v-flex>
@@ -155,6 +150,14 @@
               </v-card-text>
             </v-card>
           </v-dialog>
+        </v-flex>
+
+        <v-flex xs12 v-if="!loggingIn" class="animated faster fadeIn">
+          <register
+            v-on:cancelRegistration="toggleRegistration()"
+            :dialog="!loggingIn"
+          >
+          </register>
         </v-flex>
       </v-layout>
     </v-container>

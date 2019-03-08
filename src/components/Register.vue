@@ -1,50 +1,54 @@
 <template>
-  <v-flex
-    xs12
-    :class="{
-      large: $vuetify.breakpoint.smAndUp,
-      fill: $vuetify.breakpoint.xsOnly
-    }"
-  >
+  <v-dialog v-model="dialog" persistent :fullscreen="isSmall">
     <v-card
       :color="`accent ${darken}`"
       :dark="isDark"
       tile
       class="space-small mr-1"
-      max-width="500"
     >
-      <v-flex offset-xs11>
-        <v-tooltip bottom class="menuIcon">
-          <v-btn
-            icon
-            flat
-            small
-            depressed
-            id="cancelBtn"
-            slot="activator"
-            color="error darken-1"
-            class="mt-2 mr-3"
-            @click="cancel()"
-            name="cancel"
+      <v-layout row align-center justify-space-around>
+        <v-flex xs12 mt-4>
+          <v-stepper
+            :value="step"
+            class="elevation-0"
+            style="background-color: var(--e-light-layer-2)"
           >
-            <v-icon>close</v-icon>
-          </v-btn>
-          <span>Cancel Registration</span>
-        </v-tooltip>
-      </v-flex>
-      <v-card-title class="title font-weight-regular justify-space-between">
-        <v-progress-linear
-          :value="registerCompletion"
-          color="info darken-1"
-        ></v-progress-linear>
-        <span>{{ currentTitle }}</span>
-        <v-avatar
-          color="primary lighten-2"
-          class="subheading white--text"
-          size="24"
-          v-text="step"
-        ></v-avatar>
-      </v-card-title>
+            <v-stepper-header>
+              <v-stepper-step
+                step="1"
+                :complete="step > 1"
+                :color="computeColor(1)"
+              >
+                Personal Information
+              </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step
+                step="2"
+                :complete="step > 2"
+                :color="computeColor(2)"
+              >
+                Signum and Email
+              </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step
+                step="3"
+                :complete="step > 3"
+                :color="computeColor(3)"
+              >
+                Create a password
+              </v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step
+                step="4"
+                :complete="step === 4"
+                :color="computeColor(4)"
+              >
+                Account Created
+              </v-stepper-step>
+            </v-stepper-header>
+          </v-stepper>
+        </v-flex>
+      </v-layout>
 
       <v-window v-model="step">
         <v-window-item :value="1">
@@ -55,7 +59,7 @@
                 name="first name"
                 color="info darken-1"
                 :rules="nameRules"
-                v-model="user.firstName"
+                v-model="registerUser.firstName"
                 required
                 placeholder="John/Jane"
               >
@@ -65,7 +69,7 @@
                 name="last name"
                 color="info darken-1"
                 :rules="nameRules"
-                v-model="user.lastName"
+                v-model="registerUser.lastName"
                 required
                 placeholder="Doe"
               >
@@ -88,7 +92,7 @@
                 type="email"
                 color="info darken-1"
                 :rules="emailRules"
-                v-model="user.email"
+                v-model="registerUser.email"
                 validate-on-blur
                 required
                 placeholder="example@ericsson.com"
@@ -100,7 +104,7 @@
                 prepend-icon="fingerprint"
                 color="info darken-1"
                 :rules="usernameRules"
-                v-model="user.username"
+                v-model="registerUser.username"
                 required
                 placeholder="eevabec"
               >
@@ -126,7 +130,7 @@
                 counter
                 color="info darken-1"
                 v-validate="'required|min:6|max:100'"
-                v-model="user.password"
+                v-model="registerUser.password"
                 :error-messages="errors.collect('password')"
                 hint="It should be a minimum of 6 characters"
                 prepend-icon="lock"
@@ -144,7 +148,7 @@
                 counter
                 color="info darken-1"
                 v-validate="'required|confirmed:password'"
-                v-model="user.confirmPassword"
+                v-model="registerUser.confirmPassword"
                 validate-on-blur
                 :error-messages="errors.collect('confirmPassword')"
                 prepend-icon="lock"
@@ -162,9 +166,13 @@
           <div class="pa-3 text-xs-center">
             <v-icon size="120px" class="mb-3">sentiment_satisfied_alt</v-icon>
             <h3 class="title font-weight-light mb-2">
-              Account creation successful
+              Registration successful!
             </h3>
-            <span class="caption grey--text">Thanks for signing up!</span>
+            <span class="caption grey--text">
+              Thanks for registering, {{ registerUser.firstName }}! You should
+              receive a verification email shortly. Follow the instructions to
+              begin using the application!
+            </span>
           </div>
         </v-window-item>
       </v-window>
@@ -172,6 +180,10 @@
       <v-divider></v-divider>
 
       <v-card-actions>
+        <v-btn outline color="primary darken-1" name="cancel" @click="cancel()">
+          {{ this.step < 4 ? "Cancel" : "Close" }}
+        </v-btn>
+        <v-spacer></v-spacer>
         <v-btn
           :disabled="backDisabled || step === 1"
           depressed
@@ -179,23 +191,22 @@
           name="back"
           @click="step--"
         >
-          <v-icon dark>navigate_before</v-icon>
+          <v-icon dark class="mr-2">navigate_before</v-icon>
           Back
         </v-btn>
-        <v-spacer></v-spacer>
         <v-btn
-          :disabled="!this.form[`step${this.step}`].valid"
+          :disabled="this.step === 4 || !this.form[`step${this.step}`].valid"
           color="info darken-1"
           depressed
           name="next"
           @click="validateAndNext()"
         >
           Next
-          <v-icon dark>navigate_next</v-icon>
+          <v-icon dark class="ml-2">navigate_next</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
-  </v-flex>
+  </v-dialog>
 </template>
 
 <script>
@@ -211,26 +222,11 @@ export default {
   },
   mixins: [authMixin, assetMixin, alertMixin, themeMixin],
   computed: {
-    currentTitle() {
-      switch (this.step) {
-        case 1:
-          return "Personal Information";
-        case 2:
-          return "Signum and Email";
-        case 3:
-          return "Create a password";
-        default:
-          return "Account created";
-      }
-    },
     email() {
       return this.user.email;
     },
     username() {
       return this.user.username;
-    },
-    registerCompletion() {
-      return this.updateProgressBar();
     }
   },
   data: () => ({
@@ -257,11 +253,14 @@ export default {
       },
       step3: {
         valid: false
+      },
+      step4: {
+        valid: true
       }
     },
     step: 1,
     numSteps: 4,
-    user: {
+    registerUser: {
       firstName: "",
       lastName: "",
       email: "",
@@ -287,6 +286,12 @@ export default {
       v => (v && v.length > 4) || "Password must be at least 4 characters"
     ]
   }),
+  props: {
+    dialog: {
+      type: Boolean,
+      default: false
+    }
+  },
   mounted() {
     this.$validator.localize("en", this.dictionary);
     this.$nextTick(function() {
@@ -298,6 +303,13 @@ export default {
     cancel() {
       this.$emit("cancelRegistration");
     },
+    computeColor: function(step) {
+      return this.step === step
+        ? "info"
+        : this.step > step
+        ? "success"
+        : "#4e4e4e";
+    },
     updateProgressBar: function() {
       return Math.ceil((this.step / this.numSteps) * 100);
     },
@@ -305,33 +317,20 @@ export default {
       if (this.form[`step${this.step}`].valid === true) {
         if (this.step === this.numSteps - 1) {
           const obj = {
-            firstName: this.user.firstName,
-            lastName: this.user.lastName,
-            username: this.user.username,
-            email: this.user.email,
-            password: this.user.password
+            firstName: this.registerUser.firstName,
+            lastName: this.registerUser.lastName,
+            username: this.registerUser.username,
+            email: this.registerUser.email,
+            password: this.registerUser.password
           };
           this.eAuthRegister(obj)
             .then(() => {
-              return this.eAuthLogin(obj);
-            })
-            .then(response => {
               this.step++;
               this.backDisabled = true;
-              this.$store.commit("user", response.data.user);
-              this.$store.commit("isAuthenticated", true);
-              this.setAlert(
-                `Thanks for registering, ${
-                  response.data.user.firstname
-                }! You will receive an email to validate your address.`,
-                "#288964",
-                0
-              );
-              this.$router.push(this.$route.params.nextUrl || "/");
             })
             .catch(err => {
               this.setAlert(
-                `Error registering user: status code ${err.response.message}`,
+                `Error registering user: ${err.message}`,
                 "#DC2D37",
                 0
               );
