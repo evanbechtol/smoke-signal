@@ -180,7 +180,8 @@ export default {
           icon: "assignment_turned_in",
           path: "/resolved"
         },
-        { title: "Admin", icon: "settings", path: "/admin" }
+        { title: "Admin", icon: "settings", path: "/admin" },
+        { title: "My Profile", icon: "settings", path: "/profile" }
       ],
       themes: [
         { label: "Dark", value: "dark" },
