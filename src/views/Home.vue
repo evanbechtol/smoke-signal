@@ -16,7 +16,12 @@
             <v-card elevation="0" :color="`accent ${darken}`">
               <v-layout row align-center justify-center fill-height>
                 <v-flex grow ml-4 pt-4>
-                  <p class="hildaLight" :class="isDark ? 'white--text' : 'dark--text'">Cords List</p>
+                  <p
+                    class="hildaLight"
+                    :class="isDark ? 'white--text' : 'dark--text'"
+                  >
+                    Cords List
+                  </p>
                 </v-flex>
                 <v-spacer></v-spacer>
                 <v-flex shrink align-self-center mt-3>
@@ -407,5 +412,4 @@ function compareString(a, b) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

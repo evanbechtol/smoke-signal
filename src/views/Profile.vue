@@ -55,8 +55,9 @@
           :color="`accent ${darken}`"
           height="85vh"
         >
-          <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
-            <v-layout row wrap fill-height justify-start align-center>
+          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
+            History
+            <!--<v-layout row wrap fill-height justify-start align-center>
               <v-flex xs12 sm4>
                 <v-select
                   dense
@@ -72,13 +73,70 @@
                 >
                 </v-select>
               </v-flex>
-            </v-layout>
+            </v-layout>-->
           </v-card-title>
-          <v-card-text
-            class="ma-0 pa-0"
-            style="max-height: 486px; overflow-y: scroll;"
-          >
-            <v-list three-line class="py-0">
+          <v-card-text class="ma-0 pa-0" style="overflow-y: scroll;">
+            <v-tabs
+              v-model="activeTab"
+              :color="`accent ${darken}`"
+              :dark="isDark"
+              slider-color="info"
+              @change="updateSelectItemType"
+            >
+              <v-tab v-for="(item, index) in cords" :key="index">
+                {{ item.label }}
+              </v-tab>
+              <v-tab-item
+                v-for="(item, index) in cords"
+                :key="`tab-item-${index}`"
+              >
+                <v-card flat style="max-height: 72vh;">
+                  <v-card-text>
+                    <v-list three-line class="py-0">
+                      <template v-for="(item, index) in filteredCords">
+                        <v-list-tile
+                          :key="`tile-${index}`"
+                          class="tileHover py-2"
+                          @click="goToSelectedCord(item)"
+                        >
+                          <v-list-tile-content>
+                            <v-list-tile-title>
+                              {{ item.title }}
+                            </v-list-tile-title>
+                            <div class="ml-3">
+                              <v-list-tile-sub-title>
+                                <strong>Application:</strong>
+                                {{ item.app }}
+                              </v-list-tile-sub-title>
+                              <v-list-tile-sub-title>
+                                <strong>Category:</strong>
+                                {{ item.category }}
+                              </v-list-tile-sub-title>
+                              <v-list-tile-sub-title>
+                                <strong>Opened on:</strong>
+                                {{
+                                  new Date(item.openedOn).toLocaleDateString(
+                                    "en-US"
+                                  )
+                                }}
+                              </v-list-tile-sub-title>
+                            </div>
+                          </v-list-tile-content>
+                          <v-list-tile-action>
+                            <v-icon>navigate_next</v-icon>
+                          </v-list-tile-action>
+                        </v-list-tile>
+                        <v-divider
+                          v-if="index !== filteredCords.length - 1"
+                          :key="`divider-${index}`"
+                        ></v-divider>
+                      </template>
+                    </v-list>
+                  </v-card-text>
+                </v-card>
+              </v-tab-item>
+            </v-tabs>
+            <!--<v-list three-line class="py-0">
               <template v-for="(item, index) in filteredCords">
                 <v-list-tile
                   :key="`tile-${index}`"
@@ -113,7 +171,7 @@
                   :key="`divider-${index}`"
                 ></v-divider>
               </template>
-            </v-list>
+            </v-list>-->
           </v-card-text>
         </v-card>
       </v-flex>
@@ -141,18 +199,30 @@ export default {
     },
     filteredCords: function() {
       return this.selectItemType === "myActiveCords"
-        ? this.activeCords
+        ? this.cords[0].value
         : this.selectItemType === "myResolvedCords"
-        ? this.resolvedCords
-        : this.rescueCords;
+        ? this.cords[1].value
+        : this.cords[2].value;
     }
   },
   data: () => ({
+    activeTab: null,
     initialized: false,
     userStatsInitialized: false,
-    activeCords: [],
-    rescueCords: [],
-    resolvedCords: [],
+    cords: [
+      {
+        label: "Active Cords",
+        value: []
+      },
+      {
+        label: "Rescues",
+        value: []
+      },
+      {
+        label: "Resolved Cords",
+        value: []
+      }
+    ],
     selectItemType: "myActiveCords",
     selectItems: [
       { label: "My Active Cords", value: "myActiveCords" },
@@ -211,7 +281,7 @@ export default {
         });
       this.getCordsByUser(this.userString, "Open")
         .then(response => {
-          this.activeCords = response.data.data;
+          this.cords[0].value = response.data.data;
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
@@ -222,12 +292,21 @@ export default {
       };
       this.getCords(100, 0, JSON.stringify(query))
         .then(response => {
-          this.rescueCords = response.data.data;
+          this.cords[2].value = response.data.data;
           this.initialized = true;
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
+    },
+    updateSelectItemType(value) {
+      this.activeTab = value;
+      this.selectItemType =
+        value === 0
+          ? "myActiveCords"
+          : value === 1
+          ? "myRescueCords"
+          : "myResolvedCords";
     }
   },
   watch: {
@@ -235,10 +314,10 @@ export default {
       this.initPage();
     },
     selectItemType: function(value) {
-      if (value === "myResolvedCords" && this.resolvedCords.length === 0) {
+      if (value === "myResolvedCords" && this.cords[1].length === 0) {
         this.getCordsByUser(this.userString, "Resolved")
           .then(response => {
-            this.resolvedCords = response.data.data;
+            this.cords[1].value = response.data.data;
           })
           .catch(err => {
             this.setAlert(err.response.data.error, "#DC2D37", 0);
