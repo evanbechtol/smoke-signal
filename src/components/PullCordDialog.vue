@@ -1,15 +1,8 @@
 <template>
   <v-dialog v-model="dialog" persistent :fullscreen="isSmall">
     <v-card :dark="isDark" :color="`accent ${darken}`">
-      <v-card-title
-        primary-title
-        class="bg hildaLight space-small dark-l0 ma-0"
-      >
+      <v-card-title class="hildaLight space-small ml-4">
         Rescue Me
-        <v-spacer></v-spacer>
-        <v-btn color="primary" flat dark @click="cancel">
-          <v-icon color="#f2f2f2">mdi-close</v-icon>
-        </v-btn>
       </v-card-title>
 
       <v-card-text>
@@ -27,7 +20,6 @@
                       color="info"
                       hint="What is the problem?"
                       required
-                      counter
                       max="100"
                       :rules="[rules.required, rules.maximum]"
                     >
@@ -42,24 +34,10 @@
                       color="info"
                       hint="What application is this related to?"
                       required
-                      counter
                       max="20"
                       :rules="[rules.required, rules.maximum]"
                     >
                     </v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm4>
-                    <!--<v-text-field
-                      box
-                      label="Duration"
-                      type="text"
-                      readonly
-                      :value="cord.openedOn"
-                      color="info"
-                      hint="This is auto-populated"
-                      required
-                    >
-                    </v-text-field>-->
                   </v-flex>
                   <v-flex xs12 sm4>
                     <v-text-field
@@ -70,7 +48,6 @@
                       color="info"
                       hint="Ex) Bug Fix, Troubleshooting, Deployment, Admin, etc."
                       required
-                      counter
                       max="20"
                       :rules="[rules.required, rules.maximum]"
                     >
@@ -79,7 +56,7 @@
                 </v-layout>
               </v-flex>
 
-              <v-flex xs12 sm6 align-self-center grow>
+              <v-flex xs12 sm6 align-self-start grow>
                 <upload-file v-on:fileAttached="setFile"></upload-file>
               </v-flex>
 
@@ -116,7 +93,7 @@
                     slot="selection"
                     slot-scope="{ item, parent, selected }"
                   >
-                    <v-chip color="info" :selected="selected" label small>
+                    <v-chip color="info" :selected="selected" label small dark>
                       <span class="pr-2">
                         {{ item }}
                       </span>
@@ -134,23 +111,17 @@
 
       <v-card-actions>
         <v-spacer v-if="!isSmall"></v-spacer>
-        <v-btn
-          color="error darken-1"
-          depressed
-          @click="cancel"
-          :block="isSmall"
-        >
-          <v-icon class="mr-2">close</v-icon>Cancel
+        <v-btn outline depressed @click="cancel" :block="isSmall"
+          >Cancel
         </v-btn>
         <v-btn
-          color="success darken-1"
+          color="info darken-1"
           :disabled="!formValid"
           depressed
           @click="save"
           :block="isSmall"
-        >
-          <v-icon class="mr-2">check</v-icon>Pull It!</v-btn
-        >
+          >Pull It!
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
