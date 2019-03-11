@@ -2,7 +2,8 @@
   <div style="height: 100vh;" class="home page mt-5">
     <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''">
       <v-layout
-        v-if="isAuthenticated && user"
+        v-if="isAuthenticated && user && gridItems"
+        mt-5
         row
         wrap
         justify-center
@@ -13,6 +14,63 @@
           <!-- For large screens -->
           <v-flex xs12 v-if="!isSmall">
             <v-card elevation="0" :color="`accent ${darken}`">
+              <v-layout row align-center justify-center fill-height>
+                <v-flex grow ml-4 pt-4>
+                  <p class="hildaLight white--text">Cords List</p>
+                </v-flex>
+                <v-spacer></v-spacer>
+                <v-flex shrink align-self-center mt-3>
+                  <v-text-field
+                    :dark="isDark"
+                    v-model="search"
+                    class="hidden-xs-only"
+                    style="max-width: 300px; border: 1px solid white; padding: 0 4px;"
+                    solo-inverted
+                    :background-color="`accent ${darken}`"
+                    flat
+                    color="info"
+                    append-icon="search"
+                    label="Search By Title"
+                    single-line
+                    hide-details
+                  >
+                  </v-text-field>
+                </v-flex>
+                <v-flex shrink align-self-center mt-1>
+                  <v-tooltip bottom offset-y>
+                    <template #activator="data">
+                      <v-btn
+                        v-on="data.on"
+                        :dark="isDark"
+                        class="ml-4 mt-3"
+                        @click="refreshMyGrid"
+                        icon
+                      >
+                        <v-icon>autorenew</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Refresh Grid</span>
+                  </v-tooltip>
+                </v-flex>
+
+                <v-flex shrink mt-3 mr-3>
+                  <v-tooltip bottom class="ml-3">
+                    <template #activator="data">
+                      <v-btn
+                        depressed
+                        v-if="!pullingCord"
+                        :color="`info ${darken}`"
+                        v-on="data.on"
+                        @click="pullingCord = !pullingCord"
+                      >
+                        Rescue Me
+                      </v-btn>
+                    </template>
+                    <span>Get help!</span>
+                  </v-tooltip>
+                </v-flex>
+              </v-layout>
+
               <v-flex xs12 class="hidden-xs-only">
                 <v-layout
                   row
@@ -21,29 +79,49 @@
                   align-center
                   fill-height
                 >
-                  <v-flex xs12>
-                    <v-chip color="#dddddd">
+                  <!-- CORD FILTER CHIPS -->
+                  <v-flex xs12 ml-3 pl-1>
+                    <v-chip
+                      :color="computeChipBg()"
+                      :dark="isDark"
+                      :selected="computeSelected('criticalCords')"
+                      @click="selectItemType = 'criticalCords'"
+                    >
                       <v-avatar>
                         <v-icon class="mx-3" color="error">error</v-icon>
                       </v-avatar>
                       Critical Cords ({{ criticalCords.length }})
                     </v-chip>
 
-                    <v-chip color="#dddddd">
+                    <v-chip
+                      :color="computeChipBg()"
+                      :dark="isDark"
+                      :selected="computeSelected('moderateCords')"
+                      @click="selectItemType = 'moderateCords'"
+                    >
                       <v-avatar>
                         <v-icon class="mx-3" color="warning">warning</v-icon>
                       </v-avatar>
                       Moderate Cords ({{ moderateCords.length }})
                     </v-chip>
 
-                    <v-chip color="#dddddd">
+                    <v-chip
+                      :color="computeChipBg()"
+                      :dark="isDark"
+                      :selected="computeSelected('newCords')"
+                      @click="selectItemType = 'newCords'"
+                    >
                       <v-avatar>
                         <v-icon class="mx-3" color="info">info</v-icon>
                       </v-avatar>
                       New Cords ({{ newCords.length }})
                     </v-chip>
-
-                    <v-chip color="#dddddd">
+                    <v-chip
+                      :color="computeChipBg()"
+                      :dark="isDark"
+                      :selected="computeSelected('myCords')"
+                      @click="selectItemType = 'myCords'"
+                    >
                       <v-avatar>
                         <v-icon class="mx-3" color="purple"
                           >account_circle</v-icon
@@ -60,20 +138,9 @@
                 :items="filteredGridItems"
                 :custom-sort="gridCustomSort"
                 :loading="loading"
+                :search="search"
                 v-on:refreshCordGrid="getCordGridItems"
               >
-                <template v-slot:title>
-                  <v-select
-                    dense
-                    solo-inverted
-                    flat
-                    class="mt-3"
-                    v-model="selectItemType"
-                    :items="selectItems"
-                    item-text="label"
-                    item-value="value"
-                  ></v-select>
-                </template>
               </grid>
             </v-card>
           </v-flex>
@@ -172,7 +239,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
@@ -183,7 +249,7 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import CircleCard from "../components/CircleCard";
 import PullCordDialog from "../components/PullCordDialog";
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "home",
@@ -196,6 +262,7 @@ export default {
     PullCordDialog
   },
   computed: {
+    ...mapState(["gridItems"]),
     ...mapGetters(["criticalCords", "moderateCords", "myCords", "newCords"]),
     filteredGridItems: function() {
       return this.gridItemType === "all"
@@ -207,19 +274,12 @@ export default {
         : this.gridItemType === "newCords"
         ? this.newCords
         : this.myCords;
-    },
-    gridItems: {
-      get: function() {
-        return this.$store.getters.gridItems;
-      },
-      set: function(payload) {
-        this.$store.commit("gridItems", payload);
-      }
     }
   },
   data: () => ({
     pullingCord: false,
     gridItemType: "all",
+    search: "",
     selectItemType: "all",
     selectItems: [
       { label: "All Cords", value: "all" },
@@ -253,6 +313,12 @@ export default {
     }
   },
   methods: {
+    computeChipBg() {
+      return this.isDark ? "#393939" : "#dddddd";
+    },
+    computeSelected(value) {
+      return this.selectItemType === value;
+    },
     gridCustomSort(items, index, isDesc) {
       items.sort((a, b) => {
         switch (index) {
@@ -290,7 +356,7 @@ export default {
       this.loading = true;
       this.getCordsByStatus("Open")
         .then(response => {
-          this.gridItems = response.data.data;
+          this.$store.commit("gridItems", response.data.data);
           return this.validateUser();
         })
         .then(validationResponse => {
@@ -310,6 +376,9 @@ export default {
           this.loading = false;
         });
     },
+    refreshMyGrid() {
+      this.refreshGridOne();
+    },
     updateGridItems(itemType) {
       this.gridItemType = this.selectedItemType =
         this.gridItemType === itemType ? "all" : itemType;
@@ -323,34 +392,6 @@ export default {
     },
     selectItemType: function(value) {
       this.gridItemType = value;
-    },
-    gridItems: function() {
-      /*if (this.user) {
-        const _this = this;
-        this.criticalCords = this.gridItems.filter(function(elem) {
-          return _this.computeDuration(elem.openedOn).includes("Days");
-        });
-
-        this.moderateCords = this.gridItems.filter(function(elem) {
-          return (
-            !_this.computeDuration(elem.openedOn).includes("Days") &&
-            _this.computeDuration(elem.openedOn).includes("Hrs")
-          );
-        });
-
-        this.newCords = this.gridItems.filter(function(elem) {
-          return (
-            !_this.computeDuration(elem.openedOn).includes("Days") &&
-            !_this.computeDuration(elem.openedOn).includes("Hrs")
-          );
-        });
-
-        if (this.user) {
-          this.myCords = this.gridItems.filter(function(elem) {
-            return elem.puller.username === _this.user.username;
-          });
-        }
-      }*/
     }
   }
 };
@@ -366,4 +407,5 @@ function compareString(a, b) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

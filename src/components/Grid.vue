@@ -1,92 +1,49 @@
 <template>
-  <div>
-    <v-card :color="`accent ${darken}`" elevation="0" :dark="isDark">
-      <v-toolbar card height="40px" class="my-4 pt-2" flat>
-        <v-card-title primary-title class="hildaLight space-small pl-0 ml-0">
-          <slot name="title"></slot>
-          <v-tooltip right class="ml-3">
-            <template #activator="data">
-              <v-btn
-                depressed
-                v-if="!pullingCord"
-                color="error"
-                v-on="data.on"
-                @click="pullingCord = !pullingCord"
-              >
-                <v-icon class="mr-3">flag</v-icon>Rescue Me
-              </v-btn>
-            </template>
-            <span>Rescue Me</span>
-          </v-tooltip>
-        </v-card-title>
-
-        <v-spacer></v-spacer>
-
-        <v-text-field
-          v-model="search"
-          class="hidden-xs-only"
-          style="max-width: 300px;"
-          color="primary"
-          append-icon="search"
-          label="Search By Title"
-          single-line
-          hide-details
+  <v-container fluid>
+    <v-layout row align-center justify-center>
+      <v-flex grow>
+        <v-data-table
+          class="cordTable"
+          :dark="isDark"
+          :headers="headers"
+          :items="items"
+          :custom-sort="customSort"
+          :search="search"
+          :loading="gridLoading"
         >
-        </v-text-field>
-        <v-tooltip bottom offset-y>
-          <template #activator="data">
-            <v-btn v-on="data.on" class="ml-4 mt-3" @click="refreshMyGrid" icon>
-              <v-icon>refresh</v-icon>
-            </v-btn>
+          <template slot="items" slot-scope="props">
+            <tr @click="openItem(props.item)" class="row">
+              <td>{{ props.item.title }}</td>
+              <td>{{ props.item.puller.username }}</td>
+              <td>{{ props.item.app }}</td>
+              <td>{{ props.item.category }}</td>
+              <td>
+                {{
+                  resolved
+                    ? new Date(props.item.openedOn).toLocaleDateString("en-US")
+                    : computeDuration(props.item.openedOn)
+                }}
+              </td>
+              <td>
+                <v-avatar
+                  v-for="(rescuer, index) in props.item.rescuers"
+                  size="30"
+                  :key="index"
+                  :color="COLORS[index % 3]"
+                  class="white--text mx-1"
+                >
+                  {{ getInitials(rescuer.username) }}
+                </v-avatar>
+              </td>
+            </tr>
           </template>
-          <span>Refresh Grid</span>
-        </v-tooltip>
-      </v-toolbar>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        :custom-sort="customSort"
-        :search="search"
-        :loading="gridLoading"
-      >
-        <template slot="items" slot-scope="props">
-          <tr @click="openItem(props.item)" class="row">
-            <td>{{ props.item.title }}</td>
-            <td>{{ props.item.puller.username }}</td>
-            <td>{{ props.item.app }}</td>
-            <td>{{ props.item.category }}</td>
-            <td>
-              {{
-                resolved
-                  ? new Date(props.item.openedOn).toLocaleDateString("en-US")
-                  : computeDuration(props.item.openedOn)
-              }}
-            </td>
-            <td>
-              <v-avatar
-                v-for="(rescuer, index) in props.item.rescuers"
-                size="30"
-                :key="index"
-                :color="COLORS[index % 3]"
-                class="white--text mx-1"
-              >
-                {{ getInitials(rescuer.username) }}
-              </v-avatar>
-            </td>
-          </tr>
-        </template>
-        <v-alert slot="no-results" :value="true" color="error" icon="warning">
-          Your search for "{{ search }}" found no results.
-        </v-alert>
-      </v-data-table>
-    </v-card>
-
-    <pull-cord-dialog
-      :initial-dialog="pullingCord"
-      v-on:closeDialog="pullingCord = false"
-      v-on:refreshCordGrid="refreshCordGrid"
-    ></pull-cord-dialog>
-  </div>
+          <v-alert slot="no-results" :value="true" color="error" icon="warning">
+            Your search for "{{ search }}" found no results.
+          </v-alert>
+        </v-data-table>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -104,8 +61,7 @@ export default {
   data: () => ({
     gridLoading: false,
     pullingCord: false,
-    selectedItem: null,
-    search: ""
+    selectedItem: null
   }),
   props: {
     customSort: {
@@ -130,6 +86,11 @@ export default {
     resolved: {
       type: Boolean,
       default: false
+    },
+    search: {
+      type: String,
+      required: true,
+      default: ""
     }
   },
   methods: {
@@ -155,12 +116,6 @@ export default {
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);
         });
-    },
-    refreshCordGrid() {
-      this.$emit("refreshCordGrid");
-    },
-    refreshMyGrid() {
-      this.refreshGridOne();
     }
   },
   watch: {
@@ -172,6 +127,10 @@ export default {
 </script>
 
 <style scoped>
+.v-table__overflow {
+  font-size: 10em;
+  background: transparent !important;
+}
 .row:hover {
   background: rgba(0, 132, 240, 0.8) !important;
   color: #f2f2f2;
