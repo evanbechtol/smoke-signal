@@ -8,57 +8,6 @@
     <v-layout row wrap align-start justify-center fill-height mt-5>
       <v-flex xs12 sm12 md5 mt-5 class="animated fast slideInLeft">
         <v-layout column justify-start align-space-around fill-height>
-          <v-flex xs12 sm6 grow>
-            <v-card :dark="isDark">
-              <v-card-title
-                class="hildaLight bg dark space-small big mx-0 mt-0"
-              >
-                User Details
-              </v-card-title>
-              <v-card-text>
-                <v-text-field
-                  :dark="isDark"
-                  name="username"
-                  label="Signum"
-                  color="info"
-                  readonly
-                  :value="user.username"
-                  prepend-inner-icon="lock"
-                  type="text"
-                >
-                </v-text-field>
-                <v-text-field
-                  :dark="isDark"
-                  name="name"
-                  label="Name"
-                  color="info"
-                  readonly
-                  :value="`${user.firstname} ${user.lastname}`"
-                  prepend-inner-icon="lock"
-                  type="text"
-                >
-                </v-text-field>
-                <v-text-field
-                  :dark="isDark"
-                  name="email"
-                  label="Email"
-                  color="info"
-                  readonly
-                  :value="user.email"
-                  prepend-inner-icon="lock"
-                  :append-icon="emailVerified ? 'verified_user' : 'warning'"
-                  persistent-hint
-                  :hint="
-                    emailVerified
-                      ? 'Email verified'
-                      : 'Email has not been verified'
-                  "
-                  type="email"
-                >
-                </v-text-field>
-              </v-card-text>
-            </v-card>
-          </v-flex>
           <v-flex xs12 sm6 grow mt-4>
             <v-card :dark="isDark">
               <v-card-title
