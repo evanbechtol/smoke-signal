@@ -1,125 +1,47 @@
 <template>
   <v-container
     fluid
-    style="height: 100vh;"
     class="light-l1 profile page"
     :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
     <v-layout row wrap align-start justify-center fill-height mt-5>
       <v-flex xs12 sm12 md5 mt-5 class="animated fast slideInLeft">
-        <v-layout column justify-start align-space-around fill-height>
-          <v-flex xs12 sm6 grow mt-4>
-            <v-card :dark="isDark">
-              <v-card-title
-                class="hildaLight bg dark space-small big mx-0 mt-0"
-              >
+        <v-layout row wrap justify-center align-space-around fill-height>
+          <v-flex xs12 grow>
+            <v-card :dark="isDark" height="85vh">
+              <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
                 Statistics
               </v-card-title>
-              <v-card-text>
-                <v-layout
-                  row
-                  wrap
-                  align-start
-                  justify-space-between
-                  fill-height
-                >
-                  <v-flex xs6 sm4>
-                    <div>
-                      <div class="ma-0 hildaLight text-xs-center">
-                        Cords Pulled
-                      </div>
-                      <v-card-text class="ma-0 text-xs-center">
-                        <div class="circle">
-                          <v-layout align-center justify-center fill-height>
-                            <v-flex text-xs-center pt-3>
-                              <p
-                                class="dark-text hildaLight"
-                                style="font-size: 1.6em;"
-                              >
-                                {{ userStats.cordsPulled }}
-                              </p>
-                            </v-flex>
-                          </v-layout>
+              <v-card-text v-if="userStatsInitialized && userStats.length > 0">
+                <v-layout row align-center justify-center fill-height>
+                  <v-flex
+                    xs6
+                    sm4
+                    text-xs-center
+                    v-for="(item, index) in userStats"
+                    :key="`stat-flex-${index}`"
+                  >
+                    <v-layout row align-center justify-start ml-2>
+                      <v-flex shrink>
+                        <p
+                          class="hildaLight"
+                          style="font-size: 3em;"
+                          :class="isDark ? 'white--text' : 'dark--text'"
+                        >
+                          {{ item.value }}
+                        </p>
+                      </v-flex>
+                      <v-flex shrink ml-4>
+                        <div
+                          class="ma-0 hildaLight text-xs-center subheading"
+                          :class="isDark ? 'white--text' : 'dark--text'"
+                        >
+                          {{ item.label }}
                         </div>
-                      </v-card-text>
-                    </div>
-                  </v-flex>
-                  <v-flex xs6 sm4>
-                    <div>
-                      <div class="ma-0 hildaLight text-xs-center">
-                        Users Rescued
-                      </div>
-                      <v-card-text class="ma-0 text-xs-center">
-                        <div class="circle">
-                          <v-layout align-center justify-center fill-height>
-                            <v-flex text-xs-center pt-3>
-                              <p
-                                class="dark-text hildaLight"
-                                style="font-size: 1.6em;"
-                              >
-                                {{ userStats.rescuesProvided }}
-                              </p>
-                            </v-flex>
-                          </v-layout>
-                        </div>
-                      </v-card-text>
-                    </div>
-                  </v-flex>
-                  <v-flex xs6 sm4>
-                    <div>
-                      <div class="ma-0 hildaLight text-xs-center">
-                        Most Active App
-                      </div>
-                      <v-card-text class="ma-0 text-xs-center">
-                        <div class="circle">
-                          <v-layout align-center justify-center fill-height>
-                            <v-flex text-xs-center pt-3>
-                              <p
-                                class="dark-text hildaLight"
-                                style="font-size: 1.6em;"
-                              >
-                                {{ activeApp || "" }}
-                              </p>
-                            </v-flex>
-                          </v-layout>
-                        </div>
-                      </v-card-text>
-                    </div>
+                      </v-flex>
+                    </v-layout>
                   </v-flex>
                 </v-layout>
-                <!-- <v-text-field
-                  :dark="isDark"
-                  name="cords pulled"
-                  label="Cords Pulled"
-                  color="info"
-                  readonly
-                  :value="userStats.cordsPulled"
-                  prepend-inner-icon="live_help"
-                  type="number"
-                >
-                </v-text-field>
-                <v-text-field
-                  :dark="isDark"
-                  name="number of rescues"
-                  label="Users Rescued"
-                  color="info"
-                  readonly
-                  :value="userStats.rescuesProvided"
-                  prepend-inner-icon="verified_user"
-                  type="text"
-                >
-                </v-text-field>
-                <v-text-field
-                  :dark="isDark"
-                  name="app most active on"
-                  label="Most Help Provided For"
-                  color="info"
-                  readonly
-                  :value="userStats.mostActiveApp._id"
-                  prepend-inner-icon="star"
-                  type="text"
-                >
-                </v-text-field>-->
               </v-card-text>
             </v-card>
           </v-flex>
@@ -131,7 +53,7 @@
           class="animated fast slideInRight"
           :dark="isDark"
           :color="`accent ${darken}`"
-          height="200px"
+          height="85vh"
         >
           <v-card-title class="hildaLight ma-0 pt-4 pl-3 pb-0 bg">
             <v-layout row wrap fill-height justify-start align-center>
@@ -211,17 +133,11 @@ export default {
   components: { CircleCard },
   mixins: [themeMixin, alertMixin, authMixin, cordMixin],
   computed: {
-    activeApp: function() {
-      return this.userStats.mostActiveApp._id;
-    },
     userString: function() {
       return JSON.stringify({
         _id: this.user._id,
         username: this.user.username
       });
-    },
-    emailVerified: function() {
-      return this.user.is_email_verified === true;
     },
     filteredCords: function() {
       return this.selectItemType === "myActiveCords"
@@ -232,6 +148,8 @@ export default {
     }
   },
   data: () => ({
+    initialized: false,
+    userStatsInitialized: false,
     activeCords: [],
     rescueCords: [],
     resolvedCords: [],
@@ -241,61 +159,81 @@ export default {
       { label: "My Resolved Cords", value: "myResolvedCords" },
       { label: "Rescues", value: "myRescueCords" }
     ],
-    userStats: {
-      cordsPulled: "",
-      rescuesProvided: "",
-      mostActiveApp: { _id: 0, count: 0 }
-    }
+    userStats: []
   }),
   created() {
-    this.validateUser()
-      .then(validationResponse => {
-        this.$store.commit("token", validationResponse.data.token || null);
-        this.setExpiry();
-      })
-      .catch(err => {
-        this.setAlert(
-          err.error ||
-            err.message ||
-            err.response.data.error ||
-            "Unknown error occurred",
-          "#DC2D37",
-          0
-        );
-      });
-    this.getUserStats(this.userString)
-      .then(response => {
-        this.userStats = response.data.data;
-      })
-      .catch(err => {
-        this.setAlert(err.response.data.error, "#DC2D37", 0);
-      });
-    this.getCordsByUser(this.userString, "Open")
-      .then(response => {
-        this.activeCords = response.data.data;
-      })
-      .catch(err => {
-        this.setAlert(err.response.data.error, "#DC2D37", 0);
-      });
-
-    const query = {
-      rescuers: { _id: this.user._id, username: this.user.username }
-    };
-    this.getCords(100, 0, JSON.stringify(query))
-      .then(response => {
-        this.rescueCords = response.data.data;
-      })
-      .catch(err => {
-        this.setAlert(err.response.data.error, "#DC2D37", 0);
-      });
+    if (this.appToken && !this.initialized) {
+      this.initPage();
+    }
   },
   methods: {
     goToSelectedCord(cord) {
       this.$store.commit("selectedCord", cord);
       this.$router.push({ path: `/cord/${cord._id}`, props: cord });
+    },
+    initPage() {
+      this.validateUser()
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+        })
+        .catch(err => {
+          this.setAlert(
+            err.error ||
+              err.message ||
+              err.response.data.error ||
+              "Unknown error occurred",
+            "#DC2D37",
+            0
+          );
+        });
+      this.getUserStats(this.userString)
+        .then(response => {
+          const data = response.data.data;
+          this.userStats.push(
+            {
+              label: "Cords Pulled",
+              value: data.cordsPulled
+            },
+            {
+              label: "Users Rescued",
+              value: data.rescuesProvided
+            },
+            {
+              label: "Most Active App",
+              value: data.mostActiveApp._id
+            }
+          );
+          this.userStatsInitialized = true;
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
+      this.getCordsByUser(this.userString, "Open")
+        .then(response => {
+          this.activeCords = response.data.data;
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
+
+      const query = {
+        rescuers: { _id: this.user._id, username: this.user.username }
+      };
+      this.getCords(100, 0, JSON.stringify(query))
+        .then(response => {
+          this.rescueCords = response.data.data;
+          this.initialized = true;
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
     }
   },
   watch: {
+    appToken: function() {
+      this.initPage();
+    },
     selectItemType: function(value) {
       if (value === "myResolvedCords" && this.resolvedCords.length === 0) {
         this.getCordsByUser(this.userString, "Resolved")
@@ -312,25 +250,11 @@ export default {
 </script>
 
 <style scoped>
+.vertDiv {
+  border-right: 1px dashed var(--e-gray);
+  height: 120px;
+}
 .tileHover:hover {
   background-color: var(--e-dark-brand-blue) !important;
-}
-.circle {
-  height: 100px;
-  width: 100px;
-  /*background-color: var(--e-dark-brand-blue);*/
-  background: var(--e-dark-status-red); /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to bottom,
-    var(--e-dark-status-orange),
-    var(--e-dark-status-red)
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to bottom,
-    var(--e-dark-status-orange),
-    var(--e-dark-status-red)
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  border-radius: 50px;
-  margin: 0 auto;
 }
 </style>

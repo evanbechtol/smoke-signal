@@ -16,7 +16,7 @@
             <v-card elevation="0" :color="`accent ${darken}`">
               <v-layout row align-center justify-center fill-height>
                 <v-flex grow ml-4 pt-4>
-                  <p class="hildaLight white--text">Cords List</p>
+                  <p class="hildaLight" :class="isDark ? 'white--text' : 'dark--text'">Cords List</p>
                 </v-flex>
                 <v-spacer></v-spacer>
                 <v-flex shrink align-self-center mt-3>
@@ -24,7 +24,7 @@
                     :dark="isDark"
                     v-model="search"
                     class="hidden-xs-only"
-                    style="max-width: 300px; border: 1px solid white; padding: 0 4px;"
+                    style="max-width: 300px; border: 1px solid var(--e-gray); padding: 0 4px;"
                     solo-inverted
                     :background-color="`accent ${darken}`"
                     flat
