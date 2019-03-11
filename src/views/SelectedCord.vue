@@ -1,5 +1,5 @@
 <template>
-  <v-container :class="isSmall ? 'pa-0' : 'mt-5'">
+  <v-container fluid :class="isSmall ? 'pa-0' : 'mt-4'">
     <v-layout
       row
       fill-height
@@ -14,10 +14,7 @@
           :class="isSmall ? 'mt-0' : 'mt-5'"
           :style="isSmall ? 'z-index: 99' : 'z-index: default'"
         >
-          <v-card-title
-            primary-title
-            class="bg hildaLight space-small dark-l0 ma-0"
-          >
+          <v-card-title primary-title class="hildaLight space-small ma-0">
             <div v-if="selectedCord && !loading">
               <v-tooltip bottom v-if="isSmall">
                 <template #activator="data">
@@ -405,31 +402,18 @@
                 </v-flex>
                 <v-flex grow v-if="selectedCord.status === 'Open'">
                   <v-layout column fill-height>
-                    <v-flex xs12>
-                      <v-textarea
+                    <v-flex xs12 sm4>
+                      <v-text-field
                         v-model="discussion"
                         outline
                         counter
                         color="info"
+                        :append-icon="
+                          discussion.length >= 10 ? 'send' : undefined
+                        "
+                        @click:append="updateDiscussion"
                         hint="Must be at least 10 characters"
-                      ></v-textarea>
-                    </v-flex>
-                    <v-flex xs12>
-                      <v-layout row wrap fill-height>
-                        <v-flex xs12 sm1>
-                          <v-btn
-                            @click="updateDiscussion"
-                            :disabled="discussion.length < 10"
-                            :outline="discussion.length < 10"
-                            color="info"
-                            class="mb-4"
-                            :block="isSmall"
-                          >
-                            <v-icon size="20" class="mr-2">create</v-icon>Submit
-                            Discussion
-                          </v-btn>
-                        </v-flex>
-                      </v-layout>
+                      ></v-text-field>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -470,43 +454,45 @@
       </v-flex>
     </v-layout>
 
-    <v-dialog v-model="confirmCloseDialog" persistent :fullscreen="isSmall">
+    <v-dialog
+      v-model="confirmCloseDialog"
+      persistent
+      :max-width="isSmall ? '100vh' : '500px'"
+      :fullscreen="isSmall"
+    >
       <v-card :dark="isDark" :color="`accent ${darken}`">
-        <v-card-title
-          primary-title
-          class="bg hildaLight space-small dark-l0 ma-0"
-        >
+        <v-card-title primary-title class="hildaLight space-small ma-0">
           Are you sure?
           <v-spacer></v-spacer>
         </v-card-title>
 
         <v-card-text>
-          Are you sure that you want to un-pull this cord? By clicking
-          <strong>"Proceed"</strong>, you agree that this blocker is now
-          resolved. If this issue is still blocking you from completing a task,
-          click <strong>"Go Back"</strong>
+          Are you sure that you want to un-pull this cord?<br /><br />
+          By clicking <strong>"Proceed"</strong>, you agree that this blocker is
+          now resolved. If this issue is still blocking you from completing a
+          task, click <strong>"Go Back"</strong>
         </v-card-text>
 
         <v-card-actions>
+          <v-spacer v-if="$vuetify.breakpoint.name !== 'xs'"></v-spacer>
+
           <v-btn
-            color="error darken-1"
+            outline
             depressed
             @click="confirmCloseDialog = false"
             :block="isSmall"
           >
-            <v-icon class="mr-2">arrow_back</v-icon>Go Back
+            Go Back
           </v-btn>
 
-          <v-spacer v-if="$vuetify.breakpoint.name !== 'xs'"></v-spacer>
-
           <v-btn
-            color="success darken-1"
+            color="info darken-1"
             depressed
             @click="unpullCord"
             :block="isSmall"
           >
-            Proceed<v-icon class="ml-2">check</v-icon></v-btn
-          >
+            Proceed
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -703,14 +689,16 @@ export default {
       this.confirmCloseDialog = false;
     },
     updateDiscussion() {
-      this.selectedCord.discussion.push({
-        time: new Date().toISOString(),
-        user: { _id: this.user._id, username: this.user.username },
-        data: this.discussion
-      });
+      if (this.discussion.length >= 10) {
+        this.selectedCord.discussion.push({
+          time: new Date().toISOString(),
+          user: { _id: this.user._id, username: this.user.username },
+          data: this.discussion
+        });
 
-      this.save();
-      this.discussion = "";
+        this.save();
+        this.discussion = "";
+      }
     }
   },
   props: ["id"],
