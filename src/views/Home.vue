@@ -247,14 +247,14 @@
 import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
+import { socketMixin } from "../mixins/socketMixin";
+import { authMixin } from "../mixins/authMixin";
+import { mapGetters, mapState } from "vuex";
 import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
-import { socketMixin } from "../mixins/socketMixin";
-import { authMixin } from "../mixins/authMixin";
 import CircleCard from "../components/CircleCard";
 import PullCordDialog from "../components/PullCordDialog";
-import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "home",
@@ -331,27 +331,27 @@ export default {
           case "app":
           case "category":
             if (!isDesc) {
-              return compareString(a[index], b[index]);
+              return this.$compareString(a[index], b[index]);
             } else {
-              return compareString(b[index], a[index]);
+              return this.$compareString(b[index], a[index]);
             }
           case "duration":
             if (!isDesc) {
-              return compareString(a.openedOn, b.openedOn);
+              return this.$compareString(a.openedOn, b.openedOn);
             } else {
-              return compareString(b.openedOn, a.openedOn);
+              return this.$compareString(b.openedOn, a.openedOn);
             }
           case "hero":
             if (!isDesc) {
-              return compareString(a.rescuers.length, b.rescuers.length);
+              return this.$compareString(a.rescuers.length, b.rescuers.length);
             } else {
-              return compareString(b.rescuers.length, a.rescuers.length);
+              return this.$compareString(b.rescuers.length, a.rescuers.length);
             }
           case "name":
             if (!isDesc) {
-              return compareString(a.puller.username, b.puller.username);
+              return this.$compareString(a.puller.username, b.puller.username);
             } else {
-              return compareString(b.puller.username, a.puller.username);
+              return this.$compareString(b.puller.username, a.puller.username);
             }
         }
       });
@@ -400,16 +400,6 @@ export default {
     }
   }
 };
-
-/**
- * @description Compare strings
- * @param a {string} First String to compare
- * @param b {string} Second String to compare
- * @returns {number} Returns -1 if a < b. Returns 1 if a > b. Returns 0 if strings are equivalent
- */
-function compareString(a, b) {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
 </script>
 
 <style scoped></style>

@@ -21,6 +21,7 @@ Vue.use(Vuetify, { theme });
 
 Vue.prototype.$apiBase = process.env.VUE_APP_API_BASE;
 Vue.prototype.$appUrl = process.env.VUE_APP_URL;
+Vue.prototype.$compareString = compareString;
 
 const options = { path: process.env.VUE_APP_SOCKET_PATH };
 
@@ -50,3 +51,14 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount("#app");
+
+
+/**
+ * @description Compare strings
+ * @param a {string} First String to compare
+ * @param b {string} Second String to compare
+ * @returns {number} Returns -1 if a < b. Returns 1 if a > b. Returns 0 if strings are equivalent
+ */
+function compareString(a, b) {
+  return a < b ? -1 : a > b ? 1 : 0;
+}

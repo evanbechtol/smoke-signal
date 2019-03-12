@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import { TokenService } from "../services/tokenService";
 import { UserService } from "../services/userService";
 import { ThemeService } from "../services/themeService";
-import { TimeService} from "../services/timeService";
+import { TimeService } from "../services/timeService";
 
 Vue.use(Vuex);
 

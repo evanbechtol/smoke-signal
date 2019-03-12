@@ -20,7 +20,9 @@
               <td>
                 {{
                   resolved
-                    ? new Date(props.item.openedOn).toLocaleDateString("en-US")
+                    ? new Date(props.item.resolvedOn).toLocaleDateString(
+                        "en-US"
+                      )
                     : computeDuration(props.item.openedOn)
                 }}
               </td>
@@ -53,7 +55,7 @@ import { authMixin } from "../mixins/authMixin";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
 import { socketMixin } from "../mixins/socketMixin";
-import { TimeService} from "../../services/timeService";
+import { TimeService } from "../../services/timeService";
 
 export default {
   name: "Grid",
