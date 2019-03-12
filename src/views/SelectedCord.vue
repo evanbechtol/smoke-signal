@@ -645,13 +645,19 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
-    save() {
+    save(refreshGrid = false) {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
           this.setAlert("Cord updated successfully!", "#288964", 5000);
           response.data.data.discussion.forEach(function(elem) {
             return convertStringToDate(elem);
           });
+
+          // Optionally refresh the grid for other users. This is only necessary
+          // when the cord status is changed
+          if (refreshGrid) {
+            this.refreshGrid();
+          }
           this.refreshItem(this.selectedCord._id);
           return this.validateUser();
         })
@@ -688,7 +694,7 @@ export default {
     unpullCord() {
       this.selectedCord.status = "Resolved";
       this.selectedCord.resolvedOn = new Date().toISOString();
-      this.save();
+      this.save(true);
       this.confirmCloseDialog = false;
     },
     updateDiscussion() {
