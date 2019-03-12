@@ -244,13 +244,10 @@ export const authMixin = {
           }
 
           if (minutes <= 0) {
-            this.$store.commit("isAuthenticated", false);
-            this.$store.commit("user", null);
-            this.$store.commit("token", null);
+            this.logout();
           }
         } else {
-          this.$store.commit("user", null);
-          this.$store.commit("token", null);
+          this.logout();
         }
       }
     },
