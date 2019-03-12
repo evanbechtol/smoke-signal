@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container
     fluid
     class="light-l1 profile page"
@@ -8,7 +8,7 @@
       <v-flex xs12 sm12 md5 mt-5 class="animated fast slideInLeft">
         <v-layout row wrap justify-center align-space-around fill-height>
           <v-flex xs12 grow>
-            <v-card :dark="isDark" height="85vh">
+            <v-card :dark="isDark" :color="`accent ${darken}`" height="85vh">
               <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
                 Statistics
               </v-card-title>
@@ -55,48 +55,38 @@
           :color="`accent ${darken}`"
           height="85vh"
         >
-          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
-            History
-            <!--<v-layout row wrap fill-height justify-start align-center>
-              <v-flex xs12 sm4>
-                <v-select
-                  dense
-                  solo-inverted
-                  flat
-                  dark
-                  v-model="selectItemType"
-                  :items="selectItems"
-                  item-text="label"
-                  item-value="value"
-                  :hint="`Number of cords: ${filteredCords.length}`"
-                  persistent-hint
+          <v-card-title class="hildaLight space-small big mx-0 mt-0 pa-0">
+            <v-toolbar :color="`accent ${darken}`" :dark="isDark" tabs flat>
+              <v-toolbar-title>History</v-toolbar-title>
+
+              <template v-slot:extension>
+                <v-tabs
+                  v-model="activeTab"
+                  :color="`accent ${darken}`"
+                  :dark="isDark"
+                  slider-color="info"
+                  @change="updateSelectItemType"
                 >
-                </v-select>
-              </v-flex>
-            </v-layout>-->
+                  <v-tab v-for="(item, index) in cords" :key="index">
+                    {{ item.label }}
+                  </v-tab>
+                </v-tabs>
+              </template>
+            </v-toolbar>
           </v-card-title>
           <v-card-text class="ma-0 pa-0" style="overflow-y: scroll;">
-            <v-tabs
-              v-model="activeTab"
-              :color="`accent ${darken}`"
-              :dark="isDark"
-              slider-color="info"
-              @change="updateSelectItemType"
-            >
-              <v-tab v-for="(item, index) in cords" :key="index">
-                {{ item.label }}
-              </v-tab>
+            <v-tabs-items v-model="activeTab">
               <v-tab-item
                 v-for="(item, index) in cords"
                 :key="`tab-item-${index}`"
               >
-                <v-card flat style="max-height: 72vh;">
-                  <v-card-text>
+                <v-card flat>
+                  <v-card-text class="pa-0 mt-0" style="max-height: 68.4vh;">
                     <v-list three-line class="py-0">
                       <template v-for="(item, index) in filteredCords">
                         <v-list-tile
+                          :style="{ backgroundColor: `accent ${darken}` }"
                           :key="`tile-${index}`"
-                          class="tileHover py-2"
                           @click="goToSelectedCord(item)"
                         >
                           <v-list-tile-content>
@@ -135,43 +125,7 @@
                   </v-card-text>
                 </v-card>
               </v-tab-item>
-            </v-tabs>
-            <!--<v-list three-line class="py-0">
-              <template v-for="(item, index) in filteredCords">
-                <v-list-tile
-                  :key="`tile-${index}`"
-                  class="tileHover py-2"
-                  @click="goToSelectedCord(item)"
-                >
-                  <v-list-tile-content>
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                    <div class="ml-3">
-                      <v-list-tile-sub-title>
-                        <strong>Application:</strong>
-                        {{ item.app }}
-                      </v-list-tile-sub-title>
-                      <v-list-tile-sub-title>
-                        <strong>Category:</strong>
-                        {{ item.category }}
-                      </v-list-tile-sub-title>
-                      <v-list-tile-sub-title>
-                        <strong>Opened on:</strong>
-                        {{
-                          new Date(item.openedOn).toLocaleDateString("en-US")
-                        }}
-                      </v-list-tile-sub-title>
-                    </div>
-                  </v-list-tile-content>
-                  <v-list-tile-action>
-                    <v-icon>navigate_next</v-icon>
-                  </v-list-tile-action>
-                </v-list-tile>
-                <v-divider
-                  v-if="index !== filteredCords.length - 1"
-                  :key="`divider-${index}`"
-                ></v-divider>
-              </template>
-            </v-list>-->
+            </v-tabs-items>
           </v-card-text>
         </v-card>
       </v-flex>
