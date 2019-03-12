@@ -1,5 +1,6 @@
 import axios from "axios";
 import { mapState } from "vuex";
+import { TimeService } from "../../services/timeService";
 
 const baseUrl = process.env.VUE_APP_API_BASE;
 
@@ -8,15 +9,10 @@ export const cordMixin = {
     ...mapState(["gridItems", "selectedCord"])
   },
   methods: {
-    computeDuration(date) {
-      const now = new Date();
-      const openedOn = new Date(date);
-      return msToTime(parseInt(now - openedOn));
-    },
     computeDurationBg(duration) {
-      return this.computeDuration(duration).includes("Days")
+      return TimeService.computeDuration(duration).includes("Days")
         ? "error"
-        : this.computeDuration(duration).includes("Hrs")
+        : TimeService.computeDuration(duration).includes("Hrs")
         ? "orangeWarning"
         : "success";
     },
@@ -228,22 +224,4 @@ function makeRequest(options = null) {
 
 function respondError(message) {
   return { success: false, error: message };
-}
-
-function msToTime(duration) {
-  const seconds = (duration / 1000).toFixed(1);
-  const minutes = (duration / (1000 * 60)).toFixed(1);
-  const hours = (duration / (1000 * 60 * 60)).toFixed(1);
-  const days = (duration / (1000 * 60 * 60 * 24)).toFixed(1);
-
-  if (seconds < 60) {
-    return seconds + " Sec";
-  } else if (minutes < 60) {
-    return minutes + " Min";
-  } else if (hours < 24) {
-    return hours + " Hrs";
-  } else {
-    return days + " Days";
-  }
-  //return `${days > 0 ? days + " Days " : ""} ${hours} Hours ${minutes} Minutes`;
 }

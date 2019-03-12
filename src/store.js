@@ -1,5 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { TokenService } from "../services/tokenService";
+import { UserService } from "../services/userService";
+import { ThemeService } from "../services/themeService";
+import { TimeService} from "../services/timeService";
 
 Vue.use(Vuex);
 
@@ -48,7 +52,7 @@ export default new Vuex.Store({
     socketMessage: state => state.socketMessage,
     criticalCords: state => {
       return state.gridItems.filter(function(elem) {
-        return computeDuration(elem.openedOn).includes("Days");
+        return TimeService.computeDuration(elem.openedOn).includes("Days");
       });
     },
     darken: state => {
@@ -57,8 +61,8 @@ export default new Vuex.Store({
     moderateCords: state => {
       return state.gridItems.filter(function(elem) {
         return (
-          !computeDuration(elem.openedOn).includes("Days") &&
-          computeDuration(elem.openedOn).includes("Hrs")
+          !TimeService.computeDuration(elem.openedOn).includes("Days") &&
+          TimeService.computeDuration(elem.openedOn).includes("Hrs")
         );
       });
     },
@@ -72,8 +76,8 @@ export default new Vuex.Store({
     newCords: state => {
       return state.gridItems.filter(function(elem) {
         return (
-          !computeDuration(elem.openedOn).includes("Days") &&
-          !computeDuration(elem.openedOn).includes("Hrs")
+          !TimeService.computeDuration(elem.openedOn).includes("Days") &&
+          !TimeService.computeDuration(elem.openedOn).includes("Hrs")
         );
       });
     }
@@ -116,7 +120,7 @@ export default new Vuex.Store({
       state.gridItems = payload;
     },
     isDark: function(state, payload) {
-      localStorage.setItem("vueAppTemplate-isDark", JSON.stringify(payload));
+      ThemeService.setIsDark(payload);
       state.isDark = payload;
     },
     isConnected: function(state, payload) {
@@ -147,59 +151,28 @@ export default new Vuex.Store({
       state.socketMessage = payload;
     },
     theme: function(state, payload) {
-      // This can be modified to retrieve from API instead of localstorage
-      localStorage.setItem(
-        "vueAppTemplate-theme",
-        typeof payload !== "string" ? JSON.stringify(payload) : payload
-      );
+      ThemeService.setTheme(payload);
       state.theme = payload;
       state.isDark = state.theme === "dark";
     },
     token: function(state, payload = null) {
       if (payload) {
-        let parsedPayload =
-          typeof payload === "string" ? payload : JSON.stringify(payload);
-        localStorage.setItem("token", parsedPayload);
+        TokenService.setToken(payload);
       } else {
-        localStorage.removeItem("token");
+        TokenService.deleteToken();
       }
 
       state.token = payload;
     },
     user: function(state, payload) {
       if (payload) {
-        let parsedPayload =
-          typeof payload === "string" ? payload : JSON.stringify(payload);
-        localStorage.setItem("user", parsedPayload);
+        UserService.setUser(payload);
       } else {
-        localStorage.removeItem("user");
+        UserService.deleteUser();
       }
 
-      state.user = typeof payload === "string" ? JSON.parse(payload) : payload;
+      state.user = payload;
     }
   },
   actions: {}
 });
-
-function computeDuration(date) {
-  const now = new Date();
-  const openedOn = new Date(date);
-  return msToTime(parseInt(now - openedOn));
-}
-
-function msToTime(duration) {
-  const seconds = (duration / 1000).toFixed(1);
-  const minutes = (duration / (1000 * 60)).toFixed(1);
-  const hours = (duration / (1000 * 60 * 60)).toFixed(1);
-  const days = (duration / (1000 * 60 * 60 * 24)).toFixed(1);
-
-  if (seconds < 60) {
-    return seconds + " Sec";
-  } else if (minutes < 60) {
-    return minutes + " Min";
-  } else if (hours < 24) {
-    return hours + " Hrs";
-  } else {
-    return days + " Days";
-  }
-}

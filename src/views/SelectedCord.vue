@@ -507,6 +507,7 @@ import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import UploadFile from "../components/Upload.vue";
+import { TimeService } from "../../services/timeService";
 
 export default {
   name: "SelectedCord",
@@ -587,6 +588,8 @@ export default {
     }
   },
   methods: {
+    computeDuration: TimeService.computeDuration,
+    msToTime: TimeService.msToTime,
     appChanged() {
       this.appDirty = true;
     },

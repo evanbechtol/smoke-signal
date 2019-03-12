@@ -89,6 +89,9 @@ import Footer from "./components/Footer";
 import { alertMixin } from "./mixins/alertMixin";
 import { authMixin } from "./mixins/authMixin";
 import { socketMixin } from "./mixins/socketMixin";
+import { TokenService } from "../services/tokenService";
+import { ThemeService} from "../services/themeService";
+import { UserService } from "../services/userService";
 import BadgeCard from "./components/BadgeCard";
 
 export default {
@@ -96,19 +99,8 @@ export default {
   mixins: [themeMixin, alertMixin, authMixin, socketMixin],
   components: { BadgeCard, Footer, Toolbar },
   created() {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-
-    if (token) {
-      this.$store.commit("token", token);
-      this.setExpiry();
-    }
-
-    if (user) {
-      this.$store.commit("user", user);
-    }
-
-    const theme = localStorage.getItem("vueAppTemplate-theme");
+    this.init();
+    const theme = ThemeService.getTheme();
 
     if (theme !== null) {
       this.$store.commit("theme", theme);
@@ -130,20 +122,23 @@ export default {
     goToCord: function() {
       this.$store.commit("cordPullNotification", false);
       this.$router.push({ path: this.notificationLink });
+    },
+    init() {
+      const token = TokenService.getToken();
+      const user = UserService.getUser();
+
+      if (token) {
+        this.$store.commit("token", token);
+        this.setExpiry();
+      }
+
+      if (user) {
+        this.$store.commit("user", JSON.parse(user));
+      }
     }
   },
   mounted() {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-
-    if (token) {
-      this.$store.commit("token", token);
-      this.setExpiry();
-    }
-
-    if (user) {
-      this.$store.commit("user", user);
-    }
+    this.init();
   },
   watch: {}
 };

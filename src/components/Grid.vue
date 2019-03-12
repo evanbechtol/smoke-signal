@@ -53,6 +53,7 @@ import { authMixin } from "../mixins/authMixin";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
 import { socketMixin } from "../mixins/socketMixin";
+import { TimeService} from "../../services/timeService";
 
 export default {
   name: "Grid",
@@ -94,6 +95,8 @@ export default {
     }
   },
   methods: {
+    computeDuration: TimeService.computeDuration,
+    msToTime: TimeService.msToTime,
     getInitials(item) {
       return item && typeof item === "string"
         ? item.slice(0, 2).toLocaleUpperCase()
