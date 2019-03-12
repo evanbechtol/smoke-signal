@@ -89,9 +89,9 @@ import Footer from "./components/Footer";
 import { alertMixin } from "./mixins/alertMixin";
 import { authMixin } from "./mixins/authMixin";
 import { socketMixin } from "./mixins/socketMixin";
-import { TokenService } from "../services/tokenService";
-import { ThemeService} from "../services/themeService";
-import { UserService } from "../services/userService";
+import { TokenService } from "./services/tokenService";
+import { ThemeService} from "./services/themeService";
+import { UserService } from "./services/userService";
 import BadgeCard from "./components/BadgeCard";
 
 export default {

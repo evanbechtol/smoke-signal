@@ -1,6 +1,6 @@
 import axios from "axios";
 import { mapState } from "vuex";
-import { TimeService } from "../../services/timeService";
+import { TimeService } from "../services/timeService";
 
 const baseUrl = process.env.VUE_APP_API_BASE;
 

@@ -507,7 +507,7 @@ import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import UploadFile from "../components/Upload.vue";
-import { TimeService } from "../../services/timeService";
+import { TimeService } from "../services/timeService";
 
 export default {
   name: "SelectedCord",

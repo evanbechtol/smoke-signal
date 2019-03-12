@@ -55,7 +55,7 @@ import { authMixin } from "../mixins/authMixin";
 import PullCordDialog from "./PullCordDialog.vue";
 import MenuBtn from "./MenuBtn";
 import { socketMixin } from "../mixins/socketMixin";
-import { TimeService } from "../../services/timeService";
+import { TimeService } from "../services/timeService";
 
 export default {
   name: "Grid",
