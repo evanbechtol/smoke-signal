@@ -117,8 +117,8 @@ export default {
     },
     resetPassword: function() {
       const route = `e_auth/users/forgot/${this.resetId}`;
-      const base = "http://129.192.179.179";
-      const appCode = "oKD4PhztZASnapOUcw";
+      const base = process.env.VUE_APP_URL;
+      const appCode = process.env.VUE_APP_EAUTH_APP_CODE;
       const options = {
         method: "PATCH",
         headers: {
