@@ -2,8 +2,15 @@ import { mapState } from "vuex";
 
 export const alertMixin = {
   computed: {
+    alert: {
+      get() {
+        return this.$store.state.alert;
+      },
+      set(value) {
+        this.$store.commit("alert", value);
+      }
+    },
     ...mapState([
-      "alert",
       "cordPullNotification",
       "cordPullMessage",
       "alertColor",
