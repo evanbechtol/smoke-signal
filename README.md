@@ -96,6 +96,16 @@ Services are intended to provide a specific and reusable protocol for interactio
 | tokenService | Manage how Tokens are being stored and retrieved from storage       |
 | userService  | Manage how User is being stored and retrieved from storage          |  
 
+### Working with [VueX Store](https://vuex.vuejs.org/)
+The application is stateful, and provides easy access to commonly used variables via the Store (`store.js`).
+The store is intended to contain variables which may be used in multiple parts of the application, in order to reduce the need
+to pass variables down the DOM-chain, or bubble events up the DOM-chain to modify those variables.
+
+**The store should not be used for everything!** It is only intended to contain variables which are commonly used and
+required by multiple views/components.
+
+For a full guide on how the store works; how data is retrieved/updated, please see [this guide](https://vuex.vuejs.org/guide/)
+
 ### Environment Variables
 Environment variables can be set and created by modifying the `.env`, `.env.development`, or `.env.production` files.
 There is a detailed guide and explanation of how environment variables work in Vue.js [here](https://cli.vuejs.org/guide/mode-and-env.html#modes)!
