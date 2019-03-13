@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent :fullscreen="isSmall">
+  <v-dialog v-model="dialog" persistent :fullscreen="isSmall" :max-width="isSmall ? '100%' : '800px'">
     <v-card color="accent" tile class="space-small mr-1">
       <v-layout row align-center justify-space-around>
         <v-flex xs12 mt-4>
@@ -56,7 +56,6 @@
                 :rules="nameRules"
                 v-model="registerUser.firstName"
                 required
-                placeholder="John/Jane"
               >
               </v-text-field>
               <v-text-field
@@ -66,7 +65,6 @@
                 :rules="nameRules"
                 v-model="registerUser.lastName"
                 required
-                placeholder="Doe"
               >
               </v-text-field>
             </v-form>
@@ -101,7 +99,6 @@
                 :rules="usernameRules"
                 v-model="registerUser.username"
                 required
-                placeholder="eevabec"
               >
               </v-text-field>
             </v-form>
@@ -327,8 +324,23 @@ export default {
               this.backDisabled = true;
             })
             .catch(err => {
+              const errorMessage = err.response.data.message;
+              let alertMessage = "";
+
+              if (errorMessage) {
+                if (errorMessage.includes("E11000")) {
+                  alertMessage = "That username already exists, please login";
+                } else {
+                  alertMessage = errorMessage;
+                }
+              } else {
+                alertMessage = `Registration failed, server responded with: ${
+                  err.response.statustext
+                }`;
+              }
+
               this.setAlert(
-                `Error registering user: ${err.message}`,
+                `Error registering user: ${alertMessage}`,
                 "#DC2D37",
                 0
               );

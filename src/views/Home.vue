@@ -30,7 +30,7 @@
                     v-model="search"
                     class="hidden-xs-only"
                     style="max-width: 300px; border: 1px solid var(--e-gray); padding: 0 4px;"
-                    solo-inverted
+                    solo
                     :background-color="`accent ${darken}`"
                     flat
                     color="info"
