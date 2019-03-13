@@ -1,21 +1,19 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { TokenService } from "../services/tokenService";
-import { UserService } from "../services/userService";
 import { TimeService } from "../services/timeService";
-import themeModule from "./modules/themeModule";
 import alertModule from "./modules/alertModule";
+import themeModule from "./modules/themeModule";
+import authModule from "./modules/authModule";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     alertModule,
+    authModule,
     themeModule
   },
   state: {
-    app: "",
-    appToken: null,
     badgeCard: false,
     cordPullMessage: {
       data: {
@@ -28,23 +26,13 @@ export default new Vuex.Store({
       }
     },
     cordPullNotification: false,
-    expiryDetails: {
-      iat: "",
-      exp: "",
-      tokenLife: ""
-    },
     gridItems: [],
-    isAuthenticated: false,
     isConnected: false,
-    isExpiryIntervalSet: false,
     notificationLink: "",
     selectedCord: null,
-    socketMessage: "",
-    token: null,
-    user: null
+    socketMessage: ""
   },
   getters: {
-    appToken: state => state.appToken,
     gridItems: state => state.gridItems,
     socketMessage: state => state.socketMessage,
     criticalCords: state => {
@@ -77,9 +65,6 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    appToken: function(state, payload) {
-      state.appToken = payload;
-    },
     badgeCard: function(state, payload) {
       state.badgeCard = payload;
     },
@@ -89,20 +74,11 @@ export default new Vuex.Store({
     cordPullMessage: function(state, payload) {
       state.cordPullMessage = payload;
     },
-    expiryDetails: function(state, payload) {
-      state.expiryDetails = payload;
-    },
     gridItems: function(state, payload) {
       state.gridItems = payload;
     },
     isConnected: function(state, payload) {
       state.isConnected = payload;
-    },
-    isAuthenticated: function(state, payload) {
-      state.isAuthenticated = payload;
-    },
-    isExpiryIntervalSet: function(state, payload) {
-      state.isExpiryIntervalSet = payload;
     },
     notificationLink: function(state, payload) {
       state.notificationLink = payload;
@@ -121,24 +97,6 @@ export default new Vuex.Store({
     },
     socketMessage: function(state, payload) {
       state.socketMessage = payload;
-    },
-    token: function(state, payload = null) {
-      if (payload) {
-        TokenService.setToken(payload);
-      } else {
-        TokenService.deleteToken();
-      }
-
-      state.token = payload;
-    },
-    user: function(state, payload) {
-      if (payload) {
-        UserService.setUser(payload);
-      } else {
-        UserService.deleteUser();
-      }
-
-      state.user = payload;
     }
   },
   actions: {}

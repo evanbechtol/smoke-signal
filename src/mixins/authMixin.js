@@ -21,14 +21,14 @@ export const authMixin = {
     }
   }),
   computed: {
-    ...mapState([
-      "appToken",
-      "expiryDetails",
-      "isAuthenticated",
-      "isExpiryIntervalSet",
-      "user",
-      "token"
-    ])
+    ...mapState({
+      appToken: state => state.authModule.appToken,
+      expiryDetails: state => state.authModule.expiryDetails,
+      isAuthenticated: state => state.authModule.isAuthenticated,
+      isExpiryIntervalSet: state => state.authModule.isExpiryIntervalSet,
+      user: state => state.authModule.user,
+      token: state => state.authModule.token
+    })
   },
   methods: {
     /**
