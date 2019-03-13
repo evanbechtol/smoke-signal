@@ -7,8 +7,13 @@ export const themeMixin = {
     };
   },
   computed: {
-    ...mapState(["isDark", "theme"]),
-    ...mapGetters(["darken"]),
+    ...mapState({
+      theme: state => state.themeModule.theme,
+      isDark: state => state.themeModule.isDark
+    }),
+    ...mapGetters({
+      darken: "darken"
+    }),
     isSmall: function() {
       return this.$vuetify.breakpoint.name === "xs";
     }

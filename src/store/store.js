@@ -1,13 +1,16 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { TokenService } from "./services/tokenService";
-import { UserService } from "./services/userService";
-import { ThemeService } from "./services/themeService";
-import { TimeService } from "./services/timeService";
+import { TokenService } from "../services/tokenService";
+import { UserService } from "../services/userService";
+import { TimeService } from "../services/timeService";
+import themeModule from "./modules/themeModule";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  modules: {
+    themeModule
+  },
   state: {
     alert: false,
     alertClass: "",
@@ -37,12 +40,10 @@ export default new Vuex.Store({
     gridItems: [],
     isAuthenticated: false,
     isConnected: false,
-    isDark: false,
     isExpiryIntervalSet: false,
     notificationLink: "",
     selectedCord: null,
     socketMessage: "",
-    theme: "light",
     token: null,
     user: null
   },
@@ -54,9 +55,6 @@ export default new Vuex.Store({
       return state.gridItems.filter(function(elem) {
         return TimeService.computeDuration(elem.openedOn).includes("Days");
       });
-    },
-    darken: state => {
-      return state.isDark === true ? "darken-1" : "";
     },
     moderateCords: state => {
       return state.gridItems.filter(function(elem) {
@@ -119,10 +117,6 @@ export default new Vuex.Store({
     gridItems: function(state, payload) {
       state.gridItems = payload;
     },
-    isDark: function(state, payload) {
-      ThemeService.setIsDark(payload);
-      state.isDark = payload;
-    },
     isConnected: function(state, payload) {
       state.isConnected = payload;
     },
@@ -149,11 +143,6 @@ export default new Vuex.Store({
     },
     socketMessage: function(state, payload) {
       state.socketMessage = payload;
-    },
-    theme: function(state, payload) {
-      ThemeService.setTheme(payload);
-      state.theme = payload;
-      state.isDark = state.theme === "dark";
     },
     token: function(state, payload = null) {
       if (payload) {

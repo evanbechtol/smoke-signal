@@ -250,7 +250,7 @@ import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import { mapGetters, mapState } from "vuex";
-import MenuBtn from "../components/MenuBtn";
+// import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
 import CircleCard from "../components/CircleCard";
@@ -262,7 +262,7 @@ export default {
   components: {
     CircleCard,
     JwtExpiry,
-    MenuBtn,
+    // MenuBtn,
     Grid,
     PullCordDialog
   },

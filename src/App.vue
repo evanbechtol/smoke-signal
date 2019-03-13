@@ -85,19 +85,19 @@
 <script>
 import { themeMixin } from "./mixins/themeMixin.js";
 import Toolbar from "./components/Toolbar";
-import Footer from "./components/Footer";
+//import Footer from "./components/Footer";
 import { alertMixin } from "./mixins/alertMixin";
 import { authMixin } from "./mixins/authMixin";
 import { socketMixin } from "./mixins/socketMixin";
 import { TokenService } from "./services/tokenService";
-import { ThemeService} from "./services/themeService";
+import { ThemeService } from "./services/themeService";
 import { UserService } from "./services/userService";
-import BadgeCard from "./components/BadgeCard";
+//import BadgeCard from "./components/BadgeCard";
 
 export default {
   name: "app",
   mixins: [themeMixin, alertMixin, authMixin, socketMixin],
-  components: { BadgeCard, Footer, Toolbar },
+  components: { /*BadgeCard, Footer,*/ Toolbar },
   created() {
     this.init();
     const theme = ThemeService.getTheme();
