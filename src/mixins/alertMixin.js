@@ -7,7 +7,7 @@ export const alertMixin = {
         return this.$store.state.alertModule.alert;
       },
       set(value) {
-        this.$store.commit("alertModule/alert", value);
+        this.$store.commit("alert", value);
       }
     },
     ...mapState([
