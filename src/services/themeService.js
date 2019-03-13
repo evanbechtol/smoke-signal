@@ -2,7 +2,7 @@ const THEME_KEY = "eri-theme";
 const IS_DARK_KEY = "eri-theme-is-dark";
 
 /**
- * Manage how Access Theme is being stored and retrieved from storage.
+ * Manage how Theme is being stored and retrieved from storage.
  *
  * Current implementation stores to localStorage. Local Storage should always be
  * accessed through this instance.

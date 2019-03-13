@@ -2,7 +2,7 @@ const TOKEN_KEY = "token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 
 /**
- * Manage how Access Tokens are being stored and retrieved from storage.
+ * Manage how Tokens are being stored and retrieved from storage.
  *
  * Current implementation stores to localStorage. Local Storage should always be
  * accessed through this instance.
