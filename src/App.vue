@@ -85,18 +85,18 @@
 <script>
 import { themeMixin } from "./mixins/themeMixin.js";
 import Toolbar from "./components/Toolbar";
-//import Footer from "./components/Footer";
 import { alertMixin } from "./mixins/alertMixin";
 import { authMixin } from "./mixins/authMixin";
 import { socketMixin } from "./mixins/socketMixin";
 import { TokenService } from "./services/tokenService";
 import { ThemeService } from "./services/themeService";
 import { UserService } from "./services/userService";
+import { cordMixin } from "./mixins/cordMixin";
 //import BadgeCard from "./components/BadgeCard";
 
 export default {
   name: "app",
-  mixins: [themeMixin, alertMixin, authMixin, socketMixin],
+  mixins: [alertMixin, authMixin, cordMixin, themeMixin, socketMixin],
   components: { /*BadgeCard, Footer,*/ Toolbar },
   created() {
     this.init();

@@ -1,12 +1,25 @@
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import { TimeService } from "../services/timeService";
 
 const baseUrl = process.env.VUE_APP_API_BASE;
 
 export const cordMixin = {
   computed: {
-    ...mapState(["gridItems", "selectedCord"])
+    ...mapState({
+      cordPullMessage: state => state.cordModule.cordPullMessage,
+      cordPullNotification: state => state.cordModule.cordPullNotification,
+      gridItems: state => state.cordModule.gridItems,
+      notificationLink: state => state.cordModule.notificationLink,
+      selectedCord: state => state.cordModule.selectedCord
+    }),
+    ...mapGetters([
+      "criticalCords",
+      "gridItems",
+      "moderateCords",
+      "myCords",
+      "newCords"
+    ])
   },
   methods: {
     computeDurationBg(duration) {

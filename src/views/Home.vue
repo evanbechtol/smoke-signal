@@ -2,7 +2,7 @@
   <div style="height: 100vh;" class="home page mt-5">
     <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''">
       <v-layout
-        v-if="isAuthenticated && user && gridItems"
+        v-if="isAuthenticated && user"
         mt-5
         row
         wrap
@@ -249,8 +249,6 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
-import { mapGetters, mapState } from "vuex";
-// import MenuBtn from "../components/MenuBtn";
 import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
 import CircleCard from "../components/CircleCard";
@@ -262,13 +260,10 @@ export default {
   components: {
     CircleCard,
     JwtExpiry,
-    // MenuBtn,
     Grid,
     PullCordDialog
   },
   computed: {
-    ...mapState(["gridItems"]),
-    ...mapGetters(["criticalCords", "moderateCords", "myCords", "newCords"]),
     filteredGridItems: function() {
       return this.gridItemType === "all"
         ? this.gridItems
