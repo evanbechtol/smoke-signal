@@ -4,21 +4,23 @@ export const alertMixin = {
   computed: {
     alert: {
       get() {
-        return this.$store.state.alert;
+        return this.$store.state.alertModule.alert;
       },
       set(value) {
-        this.$store.commit("alert", value);
+        this.$store.commit("alertModule/alert", value);
       }
     },
     ...mapState([
       "cordPullNotification",
       "cordPullMessage",
-      "alertColor",
-      "alertMessage",
-      "alertSeverity",
-      "alertTimeout",
       "notificationLink"
-    ])
+    ]),
+    ...mapState({
+      alertColor: state => state.alertModule.alertColor,
+      alertMessage: state => state.alertModule.alertMessage,
+      alertSeverity: state => state.alertModule.alertSeverity,
+      alertTimeout: state => state.alertModule.alertTimeout
+    })
   },
   methods: {
     /**
