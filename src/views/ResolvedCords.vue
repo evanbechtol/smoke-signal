@@ -201,25 +201,17 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
-import { mapState } from "vuex";
-import MenuBtn from "../components/MenuBtn";
-import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
 import PullCordDialog from "../components/PullCordDialog";
-import CircleCard from "../components/CircleCard";
 
 export default {
   name: "resolvedCords",
   mixins: [themeMixin, cordMixin, alertMixin, socketMixin, authMixin],
   components: {
     PullCordDialog,
-    CircleCard,
-    JwtExpiry,
-    MenuBtn,
     Grid
   },
   computed: {
-    ...mapState(["gridItems", "myCords"]),
     filteredGridItems: function() {
       return this.gridItemType === "all" ? this.gridItems : this.myCords;
     }
