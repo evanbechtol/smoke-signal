@@ -249,7 +249,6 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
-import JwtExpiry from "../components/JWTExpiry";
 import Grid from "../components/Grid";
 import CircleCard from "../components/CircleCard";
 import PullCordDialog from "../components/PullCordDialog";
@@ -259,7 +258,6 @@ export default {
   mixins: [themeMixin, cordMixin, alertMixin, socketMixin, authMixin],
   components: {
     CircleCard,
-    JwtExpiry,
     Grid,
     PullCordDialog
   },

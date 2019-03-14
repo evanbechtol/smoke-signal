@@ -52,7 +52,6 @@ new Vue({
   render: h => h(App)
 }).$mount("#app");
 
-
 /**
  * @description Compare strings
  * @param a {string} First String to compare
