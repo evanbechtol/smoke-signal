@@ -4,7 +4,9 @@ const TimeService = {
     const openedOn = new Date(date);
     return this.msToTime(parseInt(now - openedOn));
   },
-
+  getUnixTime() {
+    return (new Date().getTime() / 1000) | 0;
+  },
   msToTime(duration) {
     const seconds = (duration / 1000).toFixed(1);
     const minutes = (duration / (1000 * 60)).toFixed(1);

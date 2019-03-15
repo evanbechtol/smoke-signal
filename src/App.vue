@@ -119,7 +119,10 @@ export default {
     };
   },
   methods: {
-    goToCord: function() {
+    closeCordPullNotification() {
+      this.$store.commit("cordPullNotification", false);
+    },
+    goToCord() {
       this.$store.commit("cordPullNotification", false);
       this.$router.push({ path: this.notificationLink });
     },

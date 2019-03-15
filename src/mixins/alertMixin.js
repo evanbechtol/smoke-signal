@@ -1,4 +1,5 @@
 import { mapState } from "vuex";
+import { AlertService } from "../services/alertService";
 
 export const alertMixin = {
   computed: {
@@ -10,11 +11,6 @@ export const alertMixin = {
         this.$store.commit("alert", value);
       }
     },
-    ...mapState([
-      "cordPullNotification",
-      "cordPullMessage",
-      "notificationLink"
-    ]),
     ...mapState({
       alertColor: state => state.alertModule.alertColor,
       alertMessage: state => state.alertModule.alertMessage,
@@ -23,33 +19,14 @@ export const alertMixin = {
     })
   },
   methods: {
-    /**
-     * @description Trigger snackbar (alert) to appear for user, with the message, color, and timeout duration provided
-     * @param message {string} Message to appear on the alert
-     * @param color {string} HEX code for color of alert to be
-     * @param timeout {number} Number of milliseconds to display alert for
-     */
     setAlert(message, color, timeout) {
-      this.$store.commit("alert", true);
-      this.$store.commit("alertMessage", message);
-      this.$store.commit("alertColor", color);
-      this.$store.commit("alertTimeout", timeout);
+      AlertService.setAlert(message, color, timeout);
     },
     toggleAlert(value) {
-      this.$store.commit("alert", value);
+      AlertService.toggleAlert(value);
     },
     getAlertIcon() {
-      return ICONS[this.alertSeverity] || ICONS["error"];
-    },
-    closeCordPullNotification() {
-      this.$store.commit("cordPullNotification", false);
+      AlertService.getAlertIcon(this.alertSeverity);
     }
   }
-};
-
-const ICONS = {
-  info: "mdi-information",
-  warning: "mdi-alert",
-  error: "mdi-alert-circle",
-  success: "mdi-check-circle"
 };
