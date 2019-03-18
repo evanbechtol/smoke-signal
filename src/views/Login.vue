@@ -201,7 +201,7 @@ export default {
     }
   }),
   methods: {
-    closeResetDialog: function() {
+    closeResetDialog() {
       this.resetDialog = false;
       this.email = "";
       this.$refs.resetForm.reset();

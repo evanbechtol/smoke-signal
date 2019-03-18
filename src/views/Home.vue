@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh;" class="home page mt-5">
+  <v-container fluid fill-height class="home page">
     <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''">
       <v-layout
         v-if="isAuthenticated && user"
@@ -240,7 +240,7 @@
       v-on:closeDialog="pullingCord = false"
       v-on:refreshCordGrid="getCordGridItems"
     ></pull-cord-dialog>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -249,6 +249,7 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
+import { TimeService } from "../services/timeService";
 import Grid from "../components/Grid";
 import CircleCard from "../components/CircleCard";
 import PullCordDialog from "../components/PullCordDialog";
@@ -311,6 +312,7 @@ export default {
     }
   },
   methods: {
+    computeDuration: TimeService.computeDuration,
     computeChipBg() {
       return this.isDark ? "#393939" : "#dddddd";
     },
@@ -377,6 +379,7 @@ export default {
     refreshMyGrid() {
       this.refreshGridOne();
     },
+    msToTime: TimeService.msToTime,
     updateGridItems(itemType) {
       this.gridItemType = this.selectedItemType =
         this.gridItemType === itemType ? "all" : itemType;

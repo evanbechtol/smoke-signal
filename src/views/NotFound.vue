@@ -41,7 +41,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    toggleVideo: function() {
+    toggleVideo() {
       const video = document.getElementById("myVideo");
       const btn = document.getElementById("myBtn");
 
