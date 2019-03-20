@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 100vh;" class="home page mt-5">
-    <v-container fluid :class="isSmall ? 'pa-0 ma-0' : ''">
+  <div class="resolvedCords page mt-5">
+    <v-container fluid fill-height :class="isSmall ? 'pa-0 ma-0' : ''">
       <v-layout
         v-if="isAuthenticated && user && gridItems"
         mt-5
