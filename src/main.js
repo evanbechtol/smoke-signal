@@ -28,16 +28,15 @@ Vue.prototype.$compareString = compareString;
 
 const options = { path: process.env.VUE_APP_SOCKET_PATH };
 
+// Change to process.env.VUE_APP_API_BASE for '/smoke-signal-service' NSP on production
+const uri =
+  process.env.NODE_ENV === "production"
+    ? process.env.VUE_APP_URL
+    : process.env.VUE_APP_API_BASE;
+
 const settings = {
   debug: false,
-  connection: SocketIO(
-    `${
-      process.env.NODE_ENV === "production"
-        ? process.env.VUE_APP_URL
-        : process.env.VUE_APP_API_BASE
-    }`,
-    options
-  ), // Change to process.env.VUE_APP_API_BASE for '/smoke-signal-service' NSP on production
+  connection: SocketIO(uri, options),
   vuex: {
     store,
     actionPrefix: "SOCKET_",
