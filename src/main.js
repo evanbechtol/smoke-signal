@@ -5,6 +5,8 @@ import store from "./store/store.js";
 import VeeValidate from "vee-validate";
 import VTooltip from "v-tooltip";
 import Vuetify from "vuetify";
+import VueSocketIO from "vue-socket.io";
+import SocketIO from "socket.io-client";
 import "vuetify/dist/vuetify.min.css";
 import "./registerServiceWorker";
 import "./css/materialIcons.css";
@@ -13,6 +15,7 @@ import "./css/eColors.css";
 import "./css/animate.css";
 import theme from "./themes";
 import { ApiService } from "./services/apiService";
+
 import "./jwt-decode";
 
 Vue.use(VeeValidate);
@@ -22,6 +25,27 @@ Vue.use(Vuetify, { theme });
 Vue.prototype.$apiBase = process.env.VUE_APP_API_BASE;
 Vue.prototype.$appUrl = process.env.VUE_APP_URL;
 Vue.prototype.$compareString = compareString;
+
+const options = { path: process.env.VUE_APP_SOCKET_PATH };
+
+const settings = {
+  debug: false,
+  connection: SocketIO(
+    `${
+      process.env.NODE_ENV === "production"
+        ? process.env.VUE_APP_URL
+        : process.env.VUE_APP_API_BASE
+    }`,
+    options
+  ), // Change to process.env.VUE_APP_API_BASE for '/smoke-signal-service' NSP on production
+  vuex: {
+    store,
+    actionPrefix: "SOCKET_",
+    mutationPrefix: "SOCKET_"
+  }
+};
+
+Vue.use(new VueSocketIO(settings));
 
 Vue.config.productionTip = false;
 
