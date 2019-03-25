@@ -109,6 +109,17 @@ let router = new Router({
       component: () =>
         import(/* webpackChunkName: "notFound" */ "./views/NotFound.vue")
     },
+    {
+      path: "/about",
+      name: "about",
+      meta: {
+        guest: false,
+        requiresAuth: true,
+        isAdmin: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/About.vue")
+    },
     { path: "*", redirect: "/404" }
   ]
 });
