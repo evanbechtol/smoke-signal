@@ -53,7 +53,7 @@
 
     <!-- RIGHT DRAWER -->
     <v-navigation-drawer
-      v-show="user"
+      v-if="user"
       right
       v-model="rightDrawer"
       class="nav"
