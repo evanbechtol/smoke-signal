@@ -268,9 +268,6 @@ export default {
   watch: {
     appToken: function() {
       this.getCordGridItems("Resolved");
-    },
-    selectItemType: function(value) {
-      this.gridItemType = value;
     }
   }
 };

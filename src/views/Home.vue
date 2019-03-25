@@ -318,9 +318,6 @@ export default {
       if (value) {
         this.getCordGridItems("Open");
       }
-    },
-    selectItemType: function(value) {
-      this.gridItemType = value;
     }
   }
 };

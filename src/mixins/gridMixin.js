@@ -101,5 +101,10 @@ export const gridMixin = {
     selectedChip: function(value) {
       return this.selectItemType === value;
     }
+  },
+  watch: {
+    selectItemType: function(value) {
+      this.gridItemType = value;
+    }
   }
 };
