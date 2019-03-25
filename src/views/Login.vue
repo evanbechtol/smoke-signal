@@ -89,8 +89,8 @@
               </v-layout>
             </v-form>
 
-            <v-dialog v-model="resetDialog" width="500">
-              <v-card tile flat color="accent">
+            <v-dialog v-model="resetDialog" :fullscreen="isSmall" width="500">
+              <v-card tile flat color="accent" light>
                 <v-card-title primary-title class="hildaLight space-small ma-0">
                   Forgot Password?
                 </v-card-title>
@@ -117,9 +117,10 @@
                     >
                     </v-text-field>
                   </v-form>
-                  <v-layout row wrap fill-height align-center justify-end>
-                    <v-flex xs12 sm3>
+                  <v-layout row fill-height align-center justify-end>
+                    <v-flex xs6 sm3 mr-1>
                       <v-btn
+                        block
                         color="primary"
                         outline
                         dark
@@ -128,10 +129,10 @@
                         Cancel
                       </v-btn>
                     </v-flex>
-                    <v-flex xs12 sm3>
+                    <v-flex xs6 sm3 ml-1>
                       <v-btn
-                        :disabled="!this.form"
                         block
+                        :disabled="!this.form"
                         color="info"
                         depressed
                         name="Submit Reset Form"
@@ -258,6 +259,10 @@ export default {
 </script>
 
 <style scoped>
+.forgotPwBtn {
+  position: relative;
+  left: 20px;
+}
 .darkCard {
   background: var(--e-light-layer-0);
   color: var(--e-dark-text);
