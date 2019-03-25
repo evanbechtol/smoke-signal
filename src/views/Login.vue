@@ -1,5 +1,6 @@
 <template>
   <div class="dark-l1 login page">
+    <!-- E/// Logo --->
     <v-layout
       row
       :class="isSmall ? 'justify-center ml-0 mt-5' : 'justify-start ml-5'"
@@ -12,6 +13,8 @@
         ></v-img>
       </v-flex>
     </v-layout>
+
+    <!-- Authentication Form -->
     <v-container>
       <v-layout
         column
@@ -200,6 +203,18 @@ export default {
       default: false
     }
   }),
+  created() {
+    const _this = this;
+    window.addEventListener("keydown", e => {
+      if (_this.$route.name === "login" && e.key === "Enter") {
+        _this.submit();
+      }
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    window.removeEventListener("keydown", () => {});
+    next();
+  },
   methods: {
     closeResetDialog() {
       this.resetDialog = false;
@@ -207,7 +222,7 @@ export default {
       this.$refs.resetForm.reset();
     },
     submit() {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form && this.$refs.form.validate()) {
         const obj = {
           username: this.username,
           email: this.username,

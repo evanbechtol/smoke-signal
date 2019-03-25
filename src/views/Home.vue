@@ -307,8 +307,7 @@ export default {
     refreshMyGrid() {
       this.refreshGridOne();
     },
-    msToTime: TimeService.msToTime,
-    
+    msToTime: TimeService.msToTime
   },
   watch: {
     appToken: function(value) {
