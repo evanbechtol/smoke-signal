@@ -19,16 +19,17 @@
     "apexcharts": "^2.2.1",
     "axios": "^0.18.0",
     "register-service-worker": "^1.0.0",
+    "socket.io-client": "latest",
     "v-tooltip": "^2.0.0-rc.33",
     "vee-validate": "^2.1.0-beta.8",
     "vue": "^2.6.2",
     "vue-apexcharts": "^1.2.6",
     "vue-clipboards": "^1.2.4",
+    "vue-notification-bell": "^0.8.11",
     "vue-router": "^3.0.1",
     "vue-socket.io": "^3.0.5",
     "vuetify": "^1.4.1",
-    "vuex": "^3.0.1",
-    "socket.io-client": "latest"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

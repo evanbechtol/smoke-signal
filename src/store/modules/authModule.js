@@ -48,6 +48,7 @@ export default {
   },
   actions: {},
   getters: {
+    // eslint-disable-next-line
     appToken: (state, getters) => {
       return state.appToken;
     }

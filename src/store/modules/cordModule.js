@@ -37,14 +37,17 @@ export default {
   },
   actions: {},
   getters: {
+    // eslint-disable-next-line
     gridItems: (state, getters) => {
       return state.gridItems;
     },
+    // eslint-disable-next-line
     criticalCords: (state, getters) => {
       return state.gridItems.filter(function(elem) {
         return TimeService.computeDuration(elem.openedOn).includes("Days");
       });
     },
+    // eslint-disable-next-line
     moderateCords: (state, getters) => {
       return state.gridItems.filter(function(elem) {
         return (
@@ -53,6 +56,7 @@ export default {
         );
       });
     },
+    // eslint-disable-next-line
     myCords: (state, getters) => {
       return state.gridItems.filter(function(elem) {
         return state.user && state.username

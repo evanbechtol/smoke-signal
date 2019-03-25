@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" persistent :fullscreen="isSmall" :max-width="isSmall ? '100%' : '800px'">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    :fullscreen="isSmall"
+    :max-width="isSmall ? '100%' : '800px'"
+  >
     <v-card color="accent" tile class="space-small mr-1">
       <v-layout row align-center justify-space-around>
         <v-flex xs12 mt-4>
