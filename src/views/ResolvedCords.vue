@@ -260,10 +260,7 @@ export default {
   },
   methods: {
     computeDuration: TimeService.computeDuration,
-    msToTime: TimeService.msToTime,
-    updateGridItems(itemType) {
-      this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
-    }
+    msToTime: TimeService.msToTime
   },
   watch: {
     appToken: function() {

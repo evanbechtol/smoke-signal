@@ -308,10 +308,7 @@ export default {
       this.refreshGridOne();
     },
     msToTime: TimeService.msToTime,
-    updateGridItems(itemType) {
-      this.gridItemType = this.selectedItemType =
-        this.gridItemType === itemType ? "all" : itemType;
-    }
+    
   },
   watch: {
     appToken: function(value) {

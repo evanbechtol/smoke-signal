@@ -100,6 +100,9 @@ export const gridMixin = {
     },
     selectedChip: function(value) {
       return this.selectItemType === value;
+    },
+    updateGridItems(itemType) {
+      this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
     }
   },
   watch: {
