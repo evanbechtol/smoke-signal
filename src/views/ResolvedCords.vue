@@ -203,6 +203,7 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import Grid from "../components/Grid";
 import PullCordDialog from "../components/PullCordDialog";
+import { TimeService } from "../services/timeService";
 
 export default {
   name: "resolvedCords",
@@ -250,6 +251,7 @@ export default {
     }
   },
   methods: {
+    computeDuration: TimeService.computeDuration,
     computeChipBg() {
       return this.isDark ? "#393939" : "#dddddd";
     },
@@ -314,6 +316,7 @@ export default {
           this.loading = false;
         });
     },
+    msToTime: TimeService.msToTime,
     updateGridItems(itemType) {
       this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
     }
