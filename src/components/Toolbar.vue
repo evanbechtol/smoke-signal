@@ -292,18 +292,20 @@ export default {
     toggleTheme(value) {
       this.$store.commit("theme", value.toLowerCase());
     },
-    getNotifyList() { console.log('===========',this.user);
-	  const query = {
-        notify_receiver: { _id: this.user._id, username: this.user.username }, read_timestamp: null
-      };	
-        this.getNotifications(5, 0, JSON.stringify(query))
-        .then(response => {
-           this.notifications = response.data.data.notificationList;
-		   this.notificationCount = response.data.data.notificationCount;		   
-        })
-        .catch(err => {
-          this.setAlert(err, "#DC2D37", 0);
-        });
+    getNotifyList() {
+	 if(this.user!=null){
+		  const query = {
+			notify_receiver: { _id: this.user._id, username: this.user.username }, read_timestamp: null
+		  };	
+			this.getNotifications(5, 0, JSON.stringify(query))
+			.then(response => {
+			   this.notifications = response.data.data.notificationList;
+			   this.notificationCount = response.data.data.notificationCount;		   
+			})
+			.catch(err => {
+			  this.setAlert(err, "#DC2D37", 0);
+			});
+		}
     },
 	openItem(item) {
       this.getCordById(item.cord._id)
@@ -346,9 +348,9 @@ export default {
       this.toggleTheme(value ? "light" : "dark");
     },
 	appToken: function(value) {
-      if (value) {
-         console.log('default methos',value);
-		this.getNotifyList();
+      if (value!=null) {
+		  const _this = this; 
+		  window.setTimeout(_this.getNotifyList, 1000);		
       }
     }
   },
