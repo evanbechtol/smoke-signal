@@ -72,9 +72,9 @@
                   <v-flex xs12 ml-3 pl-1>
                     <v-chip
                       v-if="myCords"
-                      :color="computeChipBg()"
+                      :color="chipBg"
                       :dark="isDark"
-                      :selected="computeSelected('myCords')"
+                      :selected="selectedChip('myCords')"
                       @click="selectItemType = 'myCords'"
                     >
                       <v-avatar>
@@ -92,10 +92,10 @@
                 resolved
                 :headers="headers"
                 :items="filteredGridItems"
-                :custom-sort="gridCustomSort"
+                :custom-sort="gridResolvedCustomSort"
                 :loading="loading"
                 :search="search"
-                v-on:refreshCordGrid="getCordGridItems"
+                v-on:refreshCordGrid="getCordGridItems('Resolved')"
               >
               </grid>
             </v-card>
@@ -189,7 +189,7 @@
     <pull-cord-dialog
       :initial-dialog="pullingCord"
       v-on:closeDialog="pullingCord = false"
-      v-on:refreshCordGrid="getCordGridItems"
+      v-on:refreshCordGrid="getCordGridItems('Resolved')"
     ></pull-cord-dialog>
   </div>
 </template>
@@ -201,13 +201,21 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
+import { gridMixin } from "../mixins/gridMixin";
+import { TimeService } from "../services/timeService";
 import Grid from "../components/Grid";
 import PullCordDialog from "../components/PullCordDialog";
-import { TimeService } from "../services/timeService";
 
 export default {
   name: "resolvedCords",
-  mixins: [themeMixin, cordMixin, alertMixin, socketMixin, authMixin],
+  mixins: [
+    alertMixin,
+    authMixin,
+    cordMixin,
+    gridMixin,
+    socketMixin,
+    themeMixin
+  ],
   components: {
     PullCordDialog,
     Grid
@@ -240,7 +248,7 @@ export default {
     if (!this.user) {
       this.$router.push({ path: "/login", name: "login" });
     } else if (this.appToken) {
-      this.getCordGridItems();
+      this.getCordGridItems("Resolved");
     } else if (!this.appToken) {
       this.authenticateApp();
     }
@@ -252,70 +260,6 @@ export default {
   },
   methods: {
     computeDuration: TimeService.computeDuration,
-    computeChipBg() {
-      return this.isDark ? "#393939" : "#dddddd";
-    },
-    computeSelected(value) {
-      return this.selectItemType === value;
-    },
-    gridCustomSort(items, index, isDesc) {
-      items.sort((a, b) => {
-        switch (index) {
-          case "title":
-          case "app":
-          case "category":
-            if (!isDesc) {
-              return this.$compareString(a[index], b[index]);
-            } else {
-              return this.$compareString(b[index], a[index]);
-            }
-          case "resolvedOn":
-            if (!isDesc) {
-              return this.$compareString(a.resolvedOn, b.resolvedOn);
-            } else {
-              return this.$compareString(b.resolvedOn, a.resolvedOn);
-            }
-          case "hero":
-            if (!isDesc) {
-              return this.$compareString(a.rescuers.length, b.rescuers.length);
-            } else {
-              return this.$compareString(b.rescuers.length, a.rescuers.length);
-            }
-          case "name":
-            if (!isDesc) {
-              return this.$compareString(a.puller.username, b.puller.username);
-            } else {
-              return this.$compareString(b.puller.username, a.puller.username);
-            }
-        }
-      });
-      return items;
-    },
-    getCordGridItems() {
-      this.loading = true;
-      this.getCordsByStatus("Resolved")
-        .then(response => {
-          this.$store.commit("gridItems", response.data.data);
-          this.loading = false;
-          return this.validateUser();
-        })
-        .then(validationResponse => {
-          this.$store.commit("token", validationResponse.data.token || null);
-          this.setExpiry();
-          this.loading = false;
-        })
-        .catch(err => {
-          this.setAlert(
-            err.error ||
-              err.message ||
-              err.response.data.error ||
-              "Unknown error occurred",
-            "#DC2D37",
-            0
-          );
-          this.loading = false;
-        });
-    },
     msToTime: TimeService.msToTime,
     updateGridItems(itemType) {
       this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
@@ -323,7 +267,7 @@ export default {
   },
   watch: {
     appToken: function() {
-      this.getCordGridItems();
+      this.getCordGridItems("Resolved");
     },
     selectItemType: function(value) {
       this.gridItemType = value;

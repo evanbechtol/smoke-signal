@@ -80,9 +80,9 @@
                 <!-- CORD FILTER CHIPS -->
                 <v-flex xs12 ml-3 pl-1>
                   <v-chip
-                    :color="computeChipBg()"
+                    :color="chipBg"
                     :dark="isDark"
-                    :selected="computeSelected('criticalCords')"
+                    :selected="selectedChip('criticalCords')"
                     @click="selectItemType = 'criticalCords'"
                   >
                     <v-avatar>
@@ -92,9 +92,9 @@
                   </v-chip>
 
                   <v-chip
-                    :color="computeChipBg()"
+                    :color="chipBg"
                     :dark="isDark"
-                    :selected="computeSelected('moderateCords')"
+                    :selected="selectedChip('moderateCords')"
                     @click="selectItemType = 'moderateCords'"
                   >
                     <v-avatar>
@@ -104,9 +104,9 @@
                   </v-chip>
 
                   <v-chip
-                    :color="computeChipBg()"
+                    :color="chipBg"
                     :dark="isDark"
-                    :selected="computeSelected('newCords')"
+                    :selected="selectedChip('newCords')"
                     @click="selectItemType = 'newCords'"
                   >
                     <v-avatar>
@@ -115,9 +115,9 @@
                     New Cords ({{ newCords.length }})
                   </v-chip>
                   <v-chip
-                    :color="computeChipBg()"
+                    :color="chipBg"
                     :dark="isDark"
-                    :selected="computeSelected('myCords')"
+                    :selected="selectedChip('myCords')"
                     @click="selectItemType = 'myCords'"
                   >
                     <v-avatar>
@@ -137,7 +137,7 @@
               :custom-sort="gridCustomSort"
               :loading="loading"
               :search="search"
-              v-on:refreshCordGrid="getCordGridItems"
+              v-on:refreshCordGrid="getCordGridItems('Open')"
             >
             </grid>
           </v-card>
@@ -221,7 +221,7 @@
     <pull-cord-dialog
       :initial-dialog="pullingCord"
       v-on:closeDialog="pullingCord = false"
-      v-on:refreshCordGrid="getCordGridItems"
+      v-on:refreshCordGrid="getCordGridItems('Open')"
     ></pull-cord-dialog>
   </v-container>
 </template>
@@ -232,6 +232,7 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
+import { gridMixin } from "../mixins/gridMixin";
 import { TimeService } from "../services/timeService";
 import Grid from "../components/Grid";
 import CircleCard from "../components/CircleCard";
@@ -239,7 +240,14 @@ import PullCordDialog from "../components/PullCordDialog";
 
 export default {
   name: "home",
-  mixins: [themeMixin, cordMixin, alertMixin, socketMixin, authMixin],
+  mixins: [
+    alertMixin,
+    authMixin,
+    cordMixin,
+    gridMixin,
+    socketMixin,
+    themeMixin
+  ],
   components: {
     CircleCard,
     Grid,
@@ -284,7 +292,7 @@ export default {
     if (!this.user) {
       this.$router.push({ path: "/login", name: "login" });
     } else if (this.appToken) {
-      this.getCordGridItems();
+      this.getCordGridItems("Open");
     } else if (!this.appToken) {
       this.authenticateApp();
     }
@@ -296,69 +304,6 @@ export default {
   },
   methods: {
     computeDuration: TimeService.computeDuration,
-    computeChipBg() {
-      return this.isDark ? "#393939" : "#dddddd";
-    },
-    computeSelected(value) {
-      return this.selectItemType === value;
-    },
-    gridCustomSort(items, index, isDesc) {
-      items.sort((a, b) => {
-        switch (index) {
-          case "title":
-          case "app":
-          case "category":
-            if (!isDesc) {
-              return this.$compareString(a[index], b[index]);
-            } else {
-              return this.$compareString(b[index], a[index]);
-            }
-          case "duration":
-            if (!isDesc) {
-              return this.$compareString(a.openedOn, b.openedOn);
-            } else {
-              return this.$compareString(b.openedOn, a.openedOn);
-            }
-          case "hero":
-            if (!isDesc) {
-              return this.$compareString(a.rescuers.length, b.rescuers.length);
-            } else {
-              return this.$compareString(b.rescuers.length, a.rescuers.length);
-            }
-          case "name":
-            if (!isDesc) {
-              return this.$compareString(a.puller.username, b.puller.username);
-            } else {
-              return this.$compareString(b.puller.username, a.puller.username);
-            }
-        }
-      });
-      return items;
-    },
-    getCordGridItems() {
-      this.loading = true;
-      this.getCordsByStatus("Open")
-        .then(response => {
-          this.$store.commit("gridItems", response.data.data);
-          return this.validateUser();
-        })
-        .then(validationResponse => {
-          this.$store.commit("token", validationResponse.data.token || null);
-          this.setExpiry();
-          this.loading = false;
-        })
-        .catch(err => {
-          this.setAlert(
-            err.error ||
-              err.message ||
-              err.response.data.error ||
-              "Unknown error occurred",
-            "#DC2D37",
-            0
-          );
-          this.loading = false;
-        });
-    },
     refreshMyGrid() {
       this.refreshGridOne();
     },
@@ -371,7 +316,7 @@ export default {
   watch: {
     appToken: function(value) {
       if (value) {
-        this.getCordGridItems();
+        this.getCordGridItems("Open");
       }
     },
     selectItemType: function(value) {
