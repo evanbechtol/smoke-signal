@@ -35,7 +35,7 @@
                     flat
                     color="info"
                     append-icon="search"
-                    label="Search By Title"
+                    label="Search"
                     single-line
                     hide-details
                   >
