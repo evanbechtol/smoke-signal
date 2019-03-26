@@ -6,17 +6,18 @@
           dark
           v-on="on"
         >
-		<!--<Bellnotification />-->
-		<notification-bell
-		:size="30"
-		:count="notificationCount" 
-		counterLocation="upperRight"
-		counterStyle="round"
-		counterBackgroundColor="#ff0000"
-		counterTextColor="#FFFFFF"
-		iconColor="#FFFFFF"
-		:animated="true"
-		/> 
+		<v-badge right color="red" overlap="true" >
+		  <template v-slot:badge>
+			<span>{{ notificationCount }}</span>
+		  </template>
+		  <v-icon
+			large
+			color="white lighten-1"
+		  >
+			add_alert
+		  </v-icon>
+		</v-badge>
+		
         </v-btn>
       </template>
 	  <v-container fluid ma-0 pa-0 fill-height>
@@ -79,11 +80,10 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin.js";
 import { socketMixin } from "../mixins/socketMixin";
 import { TimeService } from "../services/timeService";
-import notificationBell from 'vue-notification-bell'
 
 export default {
   name: 'ToolNotification',   
-  components: { notificationBell },
+  components: { },
   mixins: [authMixin, themeMixin, notificationMixin, cordMixin, alertMixin, socketMixin, TimeService],
   data() {
     return {      
