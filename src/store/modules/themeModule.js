@@ -19,6 +19,7 @@ export default {
   },
   actions: {},
   getters: {
+    // eslint-disable-next-line
     darken: (state, getters) => {
       return state.isDark === true ? "darken-1" : "";
     }
