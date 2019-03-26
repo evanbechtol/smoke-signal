@@ -11,7 +11,7 @@ export const notificationMixin = {
      * @returns {Promise} Returns promise for request being generated
      */
     getNotifications(limit = 5, skip = 0, query = null) {
-      const route = `notifications/get/list?limit=${limit}&skip=${skip}&query=${
+      const route = `notifications/list?limit=${limit}&skip=${skip}&query=${
         query === null ? "" : query
       }`;
       const options = {

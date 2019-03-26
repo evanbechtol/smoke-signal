@@ -49,13 +49,13 @@
               </v-list-tile-avatar>
 			   
               <v-list-tile-content  xs12 sm6>
-                <v-list-tile-title v-html="item.subject +' by ' + item.created_by.username"></v-list-tile-title>
+                <v-list-tile-title v-html="item.subject +' by ' + item.createdBy.userName"></v-list-tile-title>
                 <v-list-tile-sub-title  xs12 sm6  v-html="item.app + ' - ' + item.title"></v-list-tile-sub-title>
               </v-list-tile-content>
 			    
 			  
 			  <v-list-tile-action>
-                <v-list-tile-action-text>{{ computeDuration(item.created_timestamp) }} </v-list-tile-action-text>                 
+                <v-list-tile-action-text>{{ computeDuration(item.createdTimeStamp) }} </v-list-tile-action-text>                 
               </v-list-tile-action> 
 			  
 			  
@@ -106,7 +106,7 @@ export default {
     getNotifyList() {
 	 if(this.user!=null){
      		const query = {
-			   notify_receiver: { _id: this.user._id, username: this.user.username }, read_timestamp: null
+			   notifyReceiver: { _id: this.user._id, userName: this.user.username }, readTimeStamp: null
 			};
 			this.getNotifications(this.limit, this.skip, JSON.stringify(query))
 			.then(response => {
@@ -123,7 +123,7 @@ export default {
 		  this.openItem(item.cord);
 		 //update status of notification		   
 		  const query = {
-		    notify_receiver: { _id: this.user._id, username: this.user.username }, read_timestamp: null
+		    notifyReceiver: { _id: this.user._id, userName: this.user.username }, readTimeStamp: null
 		  }
 		  this.updateNotification(item._id, this.limit, this.skip, JSON.stringify(query))
 		  .then(updateResponse => { 
