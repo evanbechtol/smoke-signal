@@ -6,18 +6,16 @@
           dark
           v-on="on"
         >
-		<v-badge right color="red" overlap="true" >
-		  <template v-slot:badge>
+		<v-badge right color="red" overlap>
+		  <template v-if="notifications.length >1" v-slot:badge>
 			<span>{{ notificationCount }}</span>
 		  </template>
 		  <v-icon
-			large
-			color="white lighten-1"
-		  >
-			add_alert
+			
+			color="white lighten-1">
+			notifications
 		  </v-icon>
 		</v-badge>
-		
         </v-btn>
       </template>
 	  <v-container fluid ma-0 pa-0 fill-height>
@@ -26,19 +24,25 @@
       <v-list two-line class="list-width">
           <template v-for="(item, index) in notifications">
             <v-subheader
-              v-if="item.header"
-              :key="item.header"
+              v-if="item.header && notifications.length>1"
+              :key="`subheader-${index}`"
             >
-              Notifications
+              Recent notifications
             </v-subheader>
-
-             
+			
+			<v-subheader
+              v-else-if="notifications.length==1"
+              :key="`sub-header-${index}`"
+            >
+             No notifications
+            </v-subheader>
+			
 
             <v-list-tile
               v-else
-              :key="item._id"
+              :key="`tile-${index}`"
               avatar
-              @click="openItem(item)"
+              @click="callOpenItem(item)"
             >
               <v-list-tile-avatar>
 				<v-icon size="40">perm_identity</v-icon>
@@ -58,8 +62,8 @@
             </v-list-tile>
 			
 			<v-divider
-              v-if="index + 2 < notifications.length"
-              :key="index"
+              v-if="index + 1 < notifications.length"
+              :key="`divider-${index}`"
             ></v-divider>
 			
           </template>
@@ -89,9 +93,13 @@ export default {
     return {      
 	  notify_user: {},
 	  notifications: [],
-	  notificationCount:0
+	  notificationCount: 0,
+	  limit:5,
+	  skip:0,
+
     };
   },
+  
   methods: {	
 	computeDuration: TimeService.computeDuration,
 	msToTime: TimeService.msToTime,
@@ -99,12 +107,11 @@ export default {
 	 if(this.user!=null){
      		const query = {
 			   notify_receiver: { _id: this.user._id, username: this.user.username }, read_timestamp: null
-			};	
-		    const limit = 5;
-			const skip = 0;
-			this.getNotifications(limit, skip, JSON.stringify(query))
+			};
+			this.getNotifications(this.limit, this.skip, JSON.stringify(query))
 			.then(response => {
 			   this.notifications = response.data.data.notificationList;
+			   this.notifications.unshift({header:true});
 			   this.notificationCount = response.data.data.notificationCount;		   
 			})
 			.catch(err => {
@@ -112,40 +119,22 @@ export default {
 			});
 		}
     },
-	openItem(item) {
-      this.getCordById(item.cord._id)
-        .then(response => {
-          const cord = response.data.data;
-		  
-		  //update status of notification		   
+	callOpenItem(item) {
+		  this.openItem(item.cord);
+		 //update status of notification		   
 		  const query = {
 		    notify_receiver: { _id: this.user._id, username: this.user.username }, read_timestamp: null
 		  }
-		  this.updateNotification(item._id, 5, 0, JSON.stringify(query))
+		  this.updateNotification(item._id, this.limit, this.skip, JSON.stringify(query))
 		  .then(updateResponse => { 
 		     this.notifications = updateResponse.data.data.notificationList;
+			 this.notifications.unshift({header:true});
 		     this.notificationCount = updateResponse.data.data.notificationCount;		   
 		  })
 		  .catch(err => {
 		     this.setAlert(err, "#DC2D37", 0);
-		  });
-		   
-          this.$store.commit("selectedCord", cord);
-          this.$router.push({ path: `/cord/${cord._id}`, props: cord });
-          this.joinSelectedCordRoom(cord._id);
-		   
-          return this.validateUser();
-        })
-        .then(validationResponse => {
-          this.$store.commit("token", validationResponse.data.token || null);
-          this.setExpiry();
-          this.loading = false;		  
-		   
-        })
-        .catch(err => {
-          this.setAlert(err.message, "#DC2D37", 0);
-        });
-    }  
+		  });	  
+    }
 	
   },
   watch: {   
@@ -162,6 +151,7 @@ export default {
 
 <style scoped>
 .list-width{
-   max-width:500px
+   max-width:500px;
+   min-width:300px;   
 }
 </style>
