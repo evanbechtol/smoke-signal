@@ -50,7 +50,7 @@
 			   
               <v-list-tile-content  xs12 sm6>
                 <v-list-tile-title v-html="item.subject +' by ' + item.createdBy.userName"></v-list-tile-title>
-                <v-list-tile-sub-title  xs12 sm6  v-html="item.app + ' - ' + item.title"></v-list-tile-sub-title>
+                <v-list-tile-sub-title  xs12 sm6  v-html="item.cord.app + ' - ' + item.cord.title"></v-list-tile-sub-title>
               </v-list-tile-content>
 			    
 			  
@@ -94,7 +94,7 @@ export default {
 	  notify_user: {},
 	  notifications: [],
 	  notificationCount: 0,
-	  limit:5,
+	  limit:50,
 	  skip:0,
 
     };
@@ -110,9 +110,9 @@ export default {
 			};
 			this.getNotifications(this.limit, this.skip, JSON.stringify(query))
 			.then(response => {
-			   this.notifications = response.data.data.notificationList;
+			   this.notifications = response.data.data;
+			   this.notificationCount = this.notifications.length;
 			   this.notifications.unshift({header:true});
-			   this.notificationCount = response.data.data.notificationCount;		   
 			})
 			.catch(err => {
 			  this.setAlert(err, "#DC2D37", 0);
@@ -127,9 +127,9 @@ export default {
 		  }
 		  this.updateNotification(item._id, this.limit, this.skip, JSON.stringify(query))
 		  .then(updateResponse => { 
-		     this.notifications = updateResponse.data.data.notificationList;
+		     this.notifications = updateResponse.data.data;
+			 this.notificationCount = this.notifications.length;
 			 this.notifications.unshift({header:true});
-		     this.notificationCount = updateResponse.data.data.notificationCount;		   
 		  })
 		  .catch(err => {
 		     this.setAlert(err, "#DC2D37", 0);
@@ -153,5 +153,9 @@ export default {
 .list-width{
    max-width:500px;
    min-width:300px;   
+}
+.v-list {
+  height: 300px;
+  overflow-y: auto;
 }
 </style>

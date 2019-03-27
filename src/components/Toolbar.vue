@@ -22,7 +22,7 @@
         flat
         @click.stop="rightDrawer = !rightDrawer"
         style="margin: 8px;"
-        class="mr-2 px-5"
+        class="mr-2 px-3"
       >
         <v-icon class="mr-3">perm_identity</v-icon>
         {{ user.username }}
