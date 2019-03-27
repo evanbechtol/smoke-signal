@@ -1,3 +1,5 @@
+
+
 <template>
   <v-dialog
     v-model="dialog"
@@ -107,6 +109,25 @@
                 required
               >
               </v-text-field>
+        
+           <div id="app" style="margin-left:28px">
+         
+<label>Applications</label>
+    <v-select
+    
+    multiple
+       name="project"  
+      label="Project:"
+      auto prepend-icon="map"
+      item-value="text"
+      :options="options"
+      id="langSelect"
+      v-model="registerUser.project" 
+      required
+    >
+      </v-select>
+ 
+</div>
             </v-form>
 
             <span class="caption grey--text text--darken-1">
@@ -207,18 +228,25 @@
   </v-dialog>
 </template>
 
+
 <script>
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { assetMixin } from "../mixins/assetMixin";
 import { themeMixin } from "../mixins/themeMixin";
+import { cordMixin } from "../mixins/cordMixin.js";
+import vSelect from 'vue-select';
+
+
 
 export default {
   name: "register",
+ 
   $_veeValidate: {
     validator: "new"
   },
-  mixins: [authMixin, assetMixin, alertMixin, themeMixin],
+  mixins: [authMixin, assetMixin, alertMixin, themeMixin,cordMixin ],
+   components: { vSelect },
   computed: {
     cancelLabel() {
       return this.step < 4 ? "Cancel" : "Close";
@@ -233,8 +261,20 @@ export default {
       return this.user.username;
     }
   },
+ created() {
+    var appDetails={};
+    this.getApps()
+    .then(response => { 
+         for(let i=0;i<response.data.data.length;i++)
+         {
+          appDetails[i]=response.data.data[i].name;
+         }
+         this.options=appDetails 
+       });
+  },
   data: () => ({
     backDisabled: false,
+    options:[],
     dictionary: {
       custom: {
         password: {
@@ -269,6 +309,7 @@ export default {
       lastName: "",
       email: "",
       username: "",
+      project:"",
       password: "",
       confirmPassword: ""
     },
@@ -324,13 +365,24 @@ export default {
             firstName: this.registerUser.firstName,
             lastName: this.registerUser.lastName,
             username: this.registerUser.username,
+             project: this.registerUser.project,
             email: this.registerUser.email,
-            password: this.registerUser.password
+            password: this.registerUser.password,
+            project: this.registerUser.project
           };
           this.eAuthRegister(obj)
+            .then((response) => {
+              console.log("hhhhhhh",response.data.user);
+               this.userAppsRegister(obj,response)
             .then(() => {
-              this.step++;
+              
+               this.step++;
               this.backDisabled = true;
+            }) .catch(err => {
+              console.log("errrr---",err);
+              const errorMessage = err.response.data.message;
+              let alertMessage = "";
+            })
             })
             .catch(err => {
               const errorMessage = err.response.data.message;
@@ -366,7 +418,10 @@ export default {
     }
   }
 };
+
+
 </script>
+
 
 <style scoped>
 .large {

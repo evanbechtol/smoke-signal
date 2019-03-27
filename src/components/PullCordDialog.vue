@@ -26,18 +26,22 @@
                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field
+                  <label>Application</label>
+                    <v-select
                       box
+                      :items='action'
                       label="Application"
                       type="text"
+                       item-text="name"
+                      item-value="name"
                       v-model="cord.app"
+                      text-color="info"
                       color="info"
-                      hint="What application is this related to?"
-                      required
-                      max="20"
-                      :rules="[rules.required, rules.maximum]"
+                      :options="options"
+                      :rules="[(v) => !!v || 'Item is required']"
+                      required                
                     >
-                    </v-text-field>
+                    </v-select>
                   </v-flex>
                   <v-flex xs12 sm4>
                     <v-text-field
@@ -134,14 +138,26 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import UploadFile from "./Upload.vue";
+import vSelect from 'vue-select';
 
 export default {
   name: "PullCordDialog",
   mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin],
-  components: { UploadFile },
+  components: { UploadFile, vSelect },
+ 
   data: function() {
-    return {
+    var appDetails={};
+    this.getApps()
+       .then(response => {   
+         for(let i=0;i<response.data.data.length;i++)
+         {
+          appDetails[i]=response.data.data[i].name;
+         }     
+         this.options=appDetails;      
+       });
+      return { 
       cord: {},
+      options:[],
       dialog: this.initialDialog,
       formData: new FormData(),
       formValid: false,
@@ -153,13 +169,23 @@ export default {
           (value && value.length <= 100) || "Please limit to 100 characters"
       },
       search: ""
+    
     };
+
+     
+ 
+     
   },
+
   methods: {
     cancel() {
       this.$refs.form.reset();
       this.$emit("closeDialog");
     },
+    action(){
+      console.log("aaaa");
+    },
+   
     save() {
       this.cord.puller = { _id: this.user._id, username: this.user.username };
       this.cord.openedOn = this.getDateTime();

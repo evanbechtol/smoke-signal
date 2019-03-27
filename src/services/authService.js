@@ -7,13 +7,13 @@ import { AlertService } from "./alertService";
 const base = process.env.VUE_APP_EAUTH;
 const appCode = process.env.VUE_APP_EAUTH_APP_CODE;
 const appUrl = process.env.VUE_APP_URL;
-
+const serviceUrl = process.env.VUE_APP_API_BASE;
 const AuthService = {
   /**
    * @description Authenticate the application, and store the returned JWT if provided
    */
   authenticateApp() {
-    const route = "e_auth/auth/apps";
+    const route = "auth/apps";
     const options = {
       method: "POST",
       headers: { Authorization: `Bearer ${appCode}` },
@@ -34,7 +34,7 @@ const AuthService = {
   eAuthForgotPassword(body = null) {
     return new Promise((resolve, reject) => {
       if (body && body.email) {
-        const route = `e_auth/users/email/${body.email}`;
+        const route = `users/email/${body.email}`;
         const options = {
           method: "GET",
           headers: { Authorization: `Bearer ${appCode}` },
@@ -51,7 +51,7 @@ const AuthService = {
               response.data.data
             ) {
               userId = response.data.data._id;
-              const generateNewPwRoute = "e_auth/users/resetPassword";
+              const generateNewPwRoute = "users/resetPassword";
               let params = new URLSearchParams();
 
               params.append("user_id", userId);
@@ -100,7 +100,7 @@ const AuthService = {
   eAuthLogin(body = null) {
     return new Promise((resolve, reject) => {
       if (body && body.username && body.password) {
-        const route = "e_auth/auth";
+        const route = "auth";
         const options = {
           method: "POST",
           headers: { Authorization: `Bearer ${appCode}` },
@@ -139,10 +139,11 @@ const AuthService = {
         !!body.username &&
         !!body.email &&
         !!body.firstName &&
-        !!body.lastName;
+        !!body.lastName &&
+        !!body.project;
 
       if (isValid) {
-        const route = "e_auth/users";
+        const route = "users";
         const options = {
           method: "POST",
           headers: { Authorization: `Bearer ${appCode}` },
@@ -155,19 +156,17 @@ const AuthService = {
           },
           url: `${base}/${route}`
         };
-
         ApiService.customRequest(options)
           .then(response => {
-            if (response && response.data && response.data.user) {
-              return resolve(response);
-            }
+            return resolve(response);
           })
           .catch(err => {
             return reject(err);
           });
       }
-    });
+    })
   },
+
   logout() {
     router.push({ path: "/login", name: "login" });
     store.commit("user", null);
@@ -233,7 +232,7 @@ const AuthService = {
       : "info";
   },
   validateApp(appToken) {
-    const route = "e_auth/validate/apps";
+    const route = "validate/apps";
     return new Promise(resolve => {
       ApiService.get(`${base}/${route}?token=${appToken}`)
         .then(response => {
@@ -250,7 +249,7 @@ const AuthService = {
     });
   },
   validateUser(token) {
-    const route = "e_auth/validate";
+    const route = "validate";
     return new Promise((resolve, reject) => {
       ApiService.get(`${base}/${route}?token=${token}`)
         .then(response => {
@@ -262,7 +261,38 @@ const AuthService = {
           return reject(err);
         });
     });
+  },
+
+  userAppsRegister(body = null, response = null) {
+    return new Promise((resolve, reject) => {
+      const isValid =
+        body &&
+        !!body.project;
+      if (isValid) {
+        const routeApp = "userApps/createUserApps";
+        const options = {
+          method: "POST",
+          headers: { Authorization: `Bearer ${appCode}` },
+          data: {
+            user: { _id: response.data.user._id, username: response.data.user.username },
+            apps: body.project
+          },
+          url: `${serviceUrl}/${routeApp}`
+        };
+        ApiService.customRequest(options)
+          .then(response => {
+            if (response) {
+              return resolve(response);
+            }
+
+          })
+          .catch(err => {
+            return reject(err);
+          });
+      }
+    });
   }
-};
+}
+
 
 export { AuthService };
