@@ -441,7 +441,7 @@
                                   :append-icon="
                                   comment[index] && comment[index].length >= 5 ? 'send' : undefined
                                   "
-                                  @click:append="addReply(content[index],index)"
+                                  @click:append="addReply(index)"
                                   hint="Must be at least 5 characters"
                                   placeholder="Reply..."
                                 ></v-text-field>
@@ -614,7 +614,7 @@ export default {
       confirmCloseDialog: false,
       formData: new FormData(),
       discussion: "",
-      comment: [], 
+      comment: [],
       loading: false,
       readonly: true
     };
@@ -728,7 +728,7 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
-    saveComment(index,refreshGrid = false) {
+    saveComment(index, refreshGrid = false) {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
           this.setAlert("Your comment updated successfully!", "#288964", 5000);
@@ -750,7 +750,7 @@ export default {
           this.loading = false;
         })
         .catch(err => {
-          console.log("sdfg"+err);
+          console.log("sdfg" + err);
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
@@ -793,19 +793,12 @@ export default {
         this.discussion = "";
       }
     },
-    addReply(content,index) {
-      
-      content = this.comment[index];
-      console.log(JSON.stringify(content));
-      console.log(index);
-      if(content && content.length >= 5){
-          console.log(this.selectedCord.discussion);
-       // console.log(this.selectedCord.discussion[index].comments);
-        console.log(this.selectedCord.discussion[index]);
-        if(this.selectedCord.discussion[index]['comments'] === undefined){
-          this.selectedCord.discussion[index]['comments'] = [];
+    addReply(index) {
+      const content = this.comment[index];
+      if (content && content.length >= 5) {
+        if (this.selectedCord.discussion[index]["comments"] === undefined) {
+          this.selectedCord.discussion[index]["comments"] = [];
         }
-        
         this.selectedCord.discussion[index].comments.push({
           time: new Date().toISOString(),
           user: { _id: this.user._id, username: this.user.username },
@@ -823,7 +816,7 @@ export default {
         this.discussion = "";
       }
     },
-        addingToComment: function() {
+    addingToComment: function() {
       if (this.addingToComment === false) {
         this.comment = "";
       }
@@ -864,27 +857,26 @@ function convertStringToDate(item) {
 </script>
 
 <style scoped>
-  .pulse:hover {
-    animation: pulse 1s infinite;
-  }
-  .comments_div{
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-left: 2%; 
-    padding-top: 2%; 
-    background-color:#D3D3D3; 
-    border-radius: 20px
-  }
-  .comment_timeline {
-    padding-top: 0px;
-  }
+.pulse:hover {
+  animation: pulse 1s infinite;
+}
+.comments_div {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-left: 2%;
+  padding-top: 2%;
+  background-color: #d3d3d3;
+  border-radius: 20px;
+}
+.comment_timeline {
+  padding-top: 0px;
+}
 
-  .comment_timeline_item {
-    padding-bottom: 0px;
-  }
-  .comment_input {
-    margin-top: 0px;    
-  }
-
+.comment_timeline_item {
+  padding-bottom: 0px;
+}
+.comment_input {
+  margin-top: 0px;
+}
 </style>
