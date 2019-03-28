@@ -395,20 +395,39 @@
                             <p v-html="content.data"></p>
                           </v-flex>
                         </v-layout>
-                     <!-- Inside discussion -->
-                      <!-- colors added from https://vuetifyjs.com/en/framework/colors in mixins/themeMinix.js -->
-                        <div class = "comments_div">
-                          <v-timeline class = "comment_timeline" align-top dense v-if="selectedCord.discussion[0].comments.length > 0">
-                            <v-timeline-item class = "comment_timeline_item" color="pink" small v-for="(comment_content, cIndex) in content.comments"
-                              :key="`discussion-${cIndex}`" 
+                        <!-- Thread Reply -->
+                        <!-- colors added from https://vuetifyjs.com/en/framework/colors in mixins/themeMinix.js -->
+                        <div
+                          class="comments_div"
+                        >
+                          <v-timeline
+                            v-if="selectedCord.discussion[0].comments.length > 0"
+                            class="comment_timeline"
+                            align-top
+                            dense 
+                          >
+                            <v-timeline-item
+                              v-for="(comment_content, cIndex) in content.comments"
+                              :key="`discussion-${cIndex}`"
+                              class="comment_timeline_item"
+                              color="pink"
+                              small 
+                            >
+                              <v-avatar 
+                                slot="icon"
+                                size="40"
                               >
-                              <v-avatar slot="icon" size="40">
-                                <v-tooltip bottom offset-x>
-                                  <template #activator="data">
+                                <v-tooltip 
+                                  bottom
+                                  offset-x
+                                >
+                                  <template 
+                                    #activator="data"
+                                  >
                                     <v-chip
-                                      v-on="data.on"
                                       :color="COLORS[index % 10]"
                                       dark
+                                      v-on="data.on"
                                     >
                                       {{ getInitials(comment_content.user.username) }}
                                     </v-chip>
@@ -416,34 +435,54 @@
                                   <span>{{ comment_content.user.username }}</span>
                                 </v-tooltip>
                               </v-avatar>
-                              <v-layout pt-3 wrap row fill-height>
-                                <v-flex xs12 sm2>
+                              <v-layout 
+                                pt-3 
+                                wrap
+                                row 
+                                fill-height
+                              >
+                                <v-flex 
+                                  xs12 
+                                  sm2
+                                >
                                   <strong>
                                     {{ convertStringToDate(comment_content.time).toLocaleDateString("en-us") }} -
                                     {{ convertStringToDate(comment_content.time).toLocaleTimeString("en-us") }}
                                   </strong>
                                 </v-flex>
-                                <v-flex grow>
-                                  <p v-html="comment_content.data"></p>
+                                <v-flex 
+                                  grow
+                                >
+                                  <p
+                                    v-html="comment_content.data"
+                                  >
+                                  </p>
                                 </v-flex>
                               </v-layout>
                             </v-timeline-item>
                           </v-timeline>
-                          <v-flex grow v-if="selectedCord.status === 'Open'">
-                            <v-layout column fill-height>
-                              <v-flex xs12 sm4>
+                          <v-flex
+                            v-if="selectedCord.status === 'Open'"
+                            grow
+                          >
+                            <v-layout 
+                              column 
+                              fill-height
+                            >
+                              <v-flex 
+                                xs12 
+                                sm4
+                              >
                                 <v-text-field
-                                  class="comment_input"
                                   v-model="comment[index]"
+                                  class="comment_input"
                                   outline
                                   counter
                                   color="info"
-                                  :append-icon="
-                                  comment[index] && comment[index].length >= 5 ? 'send' : undefined
-                                  "
-                                  @click:append="addReply(index)"
+                                  :append-icon="comment[index] && comment[index].length >= 5 ? 'send' : undefined"
                                   hint="Must be at least 5 characters"
                                   placeholder="Reply..."
+                                  @click:append="addReply(index)"
                                 ></v-text-field>
                               </v-flex>
                             </v-layout>
@@ -750,7 +789,6 @@ export default {
           this.loading = false;
         })
         .catch(err => {
-          console.log("sdfg" + err);
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
