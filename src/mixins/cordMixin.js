@@ -26,8 +26,8 @@ export const cordMixin = {
       return TimeService.computeDuration(duration).includes("Days")
         ? "error"
         : TimeService.computeDuration(duration).includes("Hrs")
-        ? "orangeWarning"
-        : "success";
+          ? "orangeWarning"
+          : "success";
     },
     /**
      * @description Attempts to create a new cord using the body provided
@@ -68,7 +68,23 @@ export const cordMixin = {
     getCords(limit = 100, skip = 0, query = null) {
       const route = `cords/get?limit=${limit}&skip=${skip}&query=${
         query === null ? "" : query
-      }`;
+        }`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return makeRequest(options);
+    },
+    /**
+     * @description
+     * @param query [string | object] Optional - Query to be used to retrieve data
+     * @returns {Promise} Returns promise for request being generated
+     */
+    getApps(query = null) {
+      const route = `cords/getapps?query=${
+        query === null ? "" : query
+        }`;
       const options = {
         method: "GET",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },

@@ -168,7 +168,8 @@
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
-                      <v-text-field
+                    <label>Application</label>
+                      <v-select
                         :box="readonly"
                         :outline="!readonly"
                         label="Application"
@@ -176,9 +177,10 @@
                         v-model="selectedCord.app"
                         :readonly="readonly"
                         color="info"
+                        :options="options"
                         @change="appChanged"
-                      >
-                      </v-text-field>
+                    >
+                    </v-select>
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
@@ -380,7 +382,8 @@
                                 {{ getInitials(content.user.username) }}
                               </v-chip>
                             </template>
-                            <span>{{ content.user.username }}</span>
+                            <span>{{ content.user.username }}</span><br>
+                              <span>{{ content.user.email }}</span>
                           </v-tooltip>
                         </v-avatar>
                         <v-layout pt-3 wrap row fill-height>
@@ -508,6 +511,7 @@ import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import UploadFile from "../components/Upload.vue";
 import { TimeService } from "../services/timeService";
+import vSelect from 'vue-select';
 
 export default {
   name: "SelectedCord",
@@ -519,7 +523,7 @@ export default {
     authMixin,
     socketMixin
   ],
-  components: { UploadFile },
+  components: { UploadFile, vSelect},
   computed: {
     files: function() {
       return this.selectedCord.files && this.selectedCord.files.length > 0
@@ -551,8 +555,19 @@ export default {
     }
   },
   data: function() {
+     var appDetails={};
+    this.getApps()
+       .then(response => {
+        for(let i=0;i<response.data.data.length;i++)
+         {
+          appDetails[i]=response.data.data[i].name;
+         }  
+         this.options=appDetails
+       
+       });
     return {
       appDirty: false,
+      options:[],
       categoryDirty: false,
       descriptionDirty: false,
       addingToDiscussion: false,
@@ -701,7 +716,7 @@ export default {
       if (this.discussion.length >= 10) {
         this.selectedCord.discussion.push({
           time: new Date().toISOString(),
-          user: { _id: this.user._id, username: this.user.username },
+          user: { _id: this.user._id, username: this.user.username, email: this.user.email },
           data: this.discussion
         });
 
