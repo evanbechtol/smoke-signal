@@ -17,16 +17,6 @@
             <p>The purpose of Smoke Signal is to enable users to signal when a problem is encountered, and has blocked them from completing a task. When a user has encountered a problem, they simply "pull their cord". This notifies other users that a colleague is blocked and needs assistance. Users are able to associate helpful information with their issues, allowing "rescuers" to better help the blocked user.</p>
             <p>Rescuers are simply users that aid in issue resolution. An issue could also have one, or many rescuers. Once an issue has been resolved, the cord is no longer pulled. However, a user could still have other cords pulled for different issues. This allows a user to break a large problem down into smaller issues.</p>
             <p>The overall goal of the application is to reduce time spent by users being blocked, encourage users to seek help sooner, and reward users for both helping and seeking help.</p>
-            <v-divider></v-divider>
-            <h4 class="hildaLight space-small">Recent Updates</h4>
-            <ul>
-              <li>Email notification and tool notification for the users</li>
-              <li>Category items are listed which will be easier to fill when opening a cord.</li>
-            </ul>
-            <h4 class="hildaLight space-small">Coming Soon</h4>
-            <ul>
-              <li>Filters based on date/users/project</li>
-            </ul>
           </v-card-text>
         </v-card>
       </v-flex>
