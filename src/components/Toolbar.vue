@@ -11,12 +11,10 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-	  
-	  
-	  <!--Tool Notification-->	
-		<tool-notification>
-		</tool-notification>
-	  
+
+      <!--Tool Notification-->
+      <tool-notification> </tool-notification>
+
       <v-btn
         v-if="user && user.username"
         flat
