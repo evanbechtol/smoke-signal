@@ -262,7 +262,7 @@ export default {
     }
   },
  created() {
-    var appDetails={};
+    var appDetails=[];
     this.getApps()
     .then(response => { 
          for(let i=0;i<response.data.data.length;i++)
@@ -372,14 +372,12 @@ export default {
           };
           this.eAuthRegister(obj)
             .then((response) => {
-              console.log("hhhhhhh",response.data.user);
                this.userAppsRegister(obj,response)
             .then(() => {
               
                this.step++;
               this.backDisabled = true;
             }) .catch(err => {
-              console.log("errrr---",err);
               const errorMessage = err.response.data.message;
               let alertMessage = "";
             })
