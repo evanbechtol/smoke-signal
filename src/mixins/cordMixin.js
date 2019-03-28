@@ -82,6 +82,7 @@ export const cordMixin = {
      * @returns {Promise} Returns promise for request being generated
      */
     getApps(query = null) {
+      console.log("HI");
       const route = `cords/getapps?query=${
         query === null ? "" : query
         }`;

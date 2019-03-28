@@ -555,7 +555,7 @@ export default {
     }
   },
   data: function() {
-     var appDetails={};
+     var appDetails=[];
     this.getApps()
        .then(response => {
         for(let i=0;i<response.data.data.length;i++)
