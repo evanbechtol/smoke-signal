@@ -113,8 +113,8 @@ let router = new Router({
       path: "/about",
       name: "about",
       meta: {
-        guest: false,
-        requiresAuth: true,
+        guest: true,
+        requiresAuth: false,
         isAdmin: false
       },
       component: () =>
