@@ -139,7 +139,7 @@ export default {
   mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin],
   components: { UploadFile },
   data: function() {
-    var categoryValuesFromDb = [];
+    const categoryValuesFromDb = [];
     this.getCategoryList()
       .then(response => {
         for (var i = 0; i < response.data.data.length; i++) {
