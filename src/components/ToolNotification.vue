@@ -43,7 +43,7 @@
 
                 <v-list-tile-content xs12 sm6>
                   <v-list-tile-title
-                    v-html="item.subject + ' by ' + item.createdBy.userName"
+                    v-html="item.subject + ' by ' + item.createdBy.username"
                   ></v-list-tile-title>
                   <v-list-tile-sub-title
                     xs12
@@ -108,7 +108,7 @@ export default {
     getNotifyList() {
       if (this.user != null) {
         const query = {
-          notifyReceiver: { _id: this.user._id, userName: this.user.username },
+          notifyReceiver: { _id: this.user._id, username: this.user.username },
           readTimeStamp: null
         };
         this.getNotifications(this.limit, this.skip, JSON.stringify(query))
@@ -126,7 +126,7 @@ export default {
       this.openItem(item.cord);
       //update status of notification
       const query = {
-        notifyReceiver: { _id: this.user._id, userName: this.user.username },
+        notifyReceiver: { _id: this.user._id, username: this.user.username },
         readTimeStamp: null
       };
       this.updateNotification(
