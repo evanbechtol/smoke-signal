@@ -215,11 +215,11 @@ export const cordMixin = {
       };
       return ApiService.customRequest(options);
     },
-	/**
-     * @description Attempts to retrieve a cord by the Object ID provided for cord details page
-     * 
-     */
-	 openItem(item) {
+    /**
+       * @description Attempts to retrieve a cord by the Object ID provided for cord details page
+       * 
+       */
+    openItem(item) {
       this.getCordById(item._id)
         .then(response => {
           const cord = response.data.data;
@@ -237,8 +237,8 @@ export const cordMixin = {
           this.setAlert(err.message, "#DC2D37", 0);
         });
     }
-	
-	
-	
+
+
+
   }
 };

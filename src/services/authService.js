@@ -176,10 +176,10 @@ const AuthService = {
     return minutes <= 1
       ? "error"
       : minutes > 1 && minutes <= 5
-      ? "warning"
-      : minutes > 5 && minutes <= 10
-      ? "info"
-      : "info";
+        ? "warning"
+        : minutes > 5 && minutes <= 10
+          ? "info"
+          : "info";
   },
   setExpiry(token, whenToWarn, isAuthenticated) {
     if (token !== null && token.length) {
@@ -228,8 +228,8 @@ const AuthService = {
     return minutes <= 1
       ? "error"
       : minutes > 1 && minutes <= 5
-      ? "warning"
-      : "info";
+        ? "warning"
+        : "info";
   },
   validateApp(appToken) {
     const route = "validate/apps";

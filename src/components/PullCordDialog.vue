@@ -26,10 +26,8 @@
                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                  <label>Application</label>
-                    <v-select
+                    <v-combobox
                       box
-                      :items='action'
                       label="Application"
                       type="text"
                        item-text="name"
@@ -37,11 +35,11 @@
                       v-model="cord.app"
                       text-color="info"
                       color="info"
-                      :options="options"
+                      :items="appOptions"
                       :rules="[(v) => !!v || 'Item is required']"
                       required                
                     >
-                    </v-select>
+                    </v-combobox>
                   </v-flex>
                   <v-flex xs12 sm4>
                     <v-text-field
@@ -138,26 +136,25 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import UploadFile from "./Upload.vue";
-import vSelect from 'vue-select';
 
 export default {
   name: "PullCordDialog",
   mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin],
-  components: { UploadFile, vSelect },
+  components: { UploadFile },
  
   data: function() {
     var appDetails=[];
     this.getApps()
        .then(response => {   
-         for(let i=0;i<response.data.data.length;i++)
+         for(let i = 0;i < response.data.data.length;i++)
          {
-          appDetails[i]=response.data.data[i].name;
+          appDetails[i] = response.data.data[i].name;
          }     
-         this.options=appDetails;      
+         this.appOptions = appDetails;      
        });
       return { 
       cord: {},
-      options:[],
+      appOptions: [],
       dialog: this.initialDialog,
       formData: new FormData(),
       formValid: false,

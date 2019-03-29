@@ -109,25 +109,19 @@
                 required
               >
               </v-text-field>
-        
-           <div id="app" style="margin-left:28px">
-         
-<label>Applications</label>
-    <v-select
-    
-    multiple
-       name="project"  
-      label="Project:"
-      auto prepend-icon="map"
-      item-value="text"
-      :options="options"
-      id="langSelect"
-      v-model="registerUser.project" 
-      required
-    >
-      </v-select>
- 
-</div>
+              <v-combobox
+                multiple
+                name="project"  
+                label="Applications"
+                prepend-icon="application"
+                :items="appOptions"
+                color="info darken-1"
+                id="appSelect"
+                v-model="registerUser.project" 
+                :rules="appRules"
+                required
+               >
+               </v-combobox>
             </v-form>
 
             <span class="caption grey--text text--darken-1">
@@ -235,9 +229,6 @@ import { authMixin } from "../mixins/authMixin";
 import { assetMixin } from "../mixins/assetMixin";
 import { themeMixin } from "../mixins/themeMixin";
 import { cordMixin } from "../mixins/cordMixin.js";
-import vSelect from 'vue-select';
-
-
 
 export default {
   name: "register",
@@ -246,7 +237,6 @@ export default {
     validator: "new"
   },
   mixins: [authMixin, assetMixin, alertMixin, themeMixin,cordMixin ],
-   components: { vSelect },
   computed: {
     cancelLabel() {
       return this.step < 4 ? "Cancel" : "Close";
@@ -265,16 +255,16 @@ export default {
     var appDetails=[];
     this.getApps()
     .then(response => { 
-         for(let i=0;i<response.data.data.length;i++)
+         for(let i = 0;i < response.data.data.length;i++)
          {
-          appDetails[i]=response.data.data[i].name;
+          appDetails[i] = response.data.data[i].name;
          }
-         this.options=appDetails 
+         this.appOptions = appDetails;
        });
   },
   data: () => ({
     backDisabled: false,
-    options:[],
+    appOptions: [],
     dictionary: {
       custom: {
         password: {
@@ -321,6 +311,10 @@ export default {
     usernameRules: [
       v => !!v || "Username is required",
       v => (v && v.length > 4) || "Username must at least 4 characters"
+    ],
+    appRules: [
+      v => !!v || "Applications is required",
+      v => (v && v.length != 0) || "Applications is required"
     ],
     passwordRules: [
       v => !!v || "Password is required",

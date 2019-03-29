@@ -168,19 +168,19 @@
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
-                    <label>Application</label>
-                      <v-select
+                   
+                      <v-combobox
                         :box="readonly"
                         :outline="!readonly"
                         label="Application"
                         type="text"
                         v-model="selectedCord.app"
-                        :readonly="readonly"
+                       
                         color="info"
-                        :options="options"
+                        :items="appOptions"
                         @change="appChanged"
                     >
-                    </v-select>
+                    </v-combobox>
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
@@ -511,7 +511,6 @@ import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import UploadFile from "../components/Upload.vue";
 import { TimeService } from "../services/timeService";
-import vSelect from 'vue-select';
 
 export default {
   name: "SelectedCord",
@@ -523,7 +522,7 @@ export default {
     authMixin,
     socketMixin
   ],
-  components: { UploadFile, vSelect},
+  components: { UploadFile},
   computed: {
     files: function() {
       return this.selectedCord.files && this.selectedCord.files.length > 0
@@ -558,16 +557,16 @@ export default {
      var appDetails=[];
     this.getApps()
        .then(response => {
-        for(let i=0;i<response.data.data.length;i++)
+        for(let i = 0;i < response.data.data.length;i++)
          {
-          appDetails[i]=response.data.data[i].name;
+          appDetails[i] = response.data.data[i].name;
          }  
-         this.options=appDetails
+         this.appOptions = appDetails
        
        });
     return {
       appDirty: false,
-      options:[],
+      appOptions: [],
       categoryDirty: false,
       descriptionDirty: false,
       addingToDiscussion: false,
