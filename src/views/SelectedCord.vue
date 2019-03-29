@@ -203,7 +203,17 @@
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
-                      <v-text-field
+                      <v-combobox
+                        :box="readonly"
+                        :outline="!readonly"
+                        v-model="selectedCord.category"
+                        :items="categoryList"
+                        label="Category"
+                        :readonly="readonly"
+                        color="info"
+                      >
+                      </v-combobox>
+                      <!-- <v-text-field
                         :box="readonly"
                         :outline="!readonly"
                         label="Category"
@@ -213,7 +223,7 @@
                         color="info"
                         @change="categoryChanged"
                       >
-                      </v-text-field>
+                      </v-text-field> -->
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -551,6 +561,17 @@ export default {
     }
   },
   data: function() {
+    var categoryValuesFromDb = [];
+    this.getCategoryList()
+      .then(response => {
+        for (var i = 0; i < response.data.data.length; i++) {
+          categoryValuesFromDb[i] = response.data.data[i].name;
+        }
+        this.categoryList = categoryValuesFromDb;
+      })
+      .catch(err => {
+        this.setAlert(err, "#DC2D37", 0);
+      });
     return {
       appDirty: false,
       categoryDirty: false,
@@ -560,7 +581,8 @@ export default {
       formData: new FormData(),
       discussion: "",
       loading: false,
-      readonly: true
+      readonly: true,
+      categoryList: []
     };
   },
   created() {

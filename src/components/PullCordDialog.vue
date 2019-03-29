@@ -40,18 +40,17 @@
                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field
+                    <v-combobox
                       box
-                      label="Category"
-                      type="text"
                       v-model="cord.category"
-                      color="info"
-                      hint="Ex) Bug Fix, Troubleshooting, Deployment, Admin, etc."
-                      required
-                      max="20"
-                      :rules="[rules.required, rules.maximum]"
+                      :items="categoryList"
+                      label="Category"
+                      :color="`info ${darken}`"
+                      :dark="isDark"
+                      hint="Select any of the category"
+                      :rules="[rules.required]"
                     >
-                    </v-text-field>
+                    </v-combobox>
                   </v-flex>
                 </v-layout>
               </v-flex>
@@ -140,8 +139,20 @@ export default {
   mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin],
   components: { UploadFile },
   data: function() {
+    var categoryValuesFromDb = [];
+    this.getCategoryList()
+      .then(response => {
+        for (var i = 0; i < response.data.data.length; i++) {
+          categoryValuesFromDb[i] = response.data.data[i].name;
+        }
+        this.categoryList = categoryValuesFromDb;
+      })
+      .catch(err => {
+        this.setAlert(err, "#DC2D37", 0);
+      });
     return {
       cord: {},
+      categoryList: [],
       dialog: this.initialDialog,
       formData: new FormData(),
       formValid: false,
