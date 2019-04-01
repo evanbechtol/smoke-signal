@@ -1,23 +1,33 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container
     fluid
-    class="light-l1 profile page"
+    fill-height
+    class="light-l1 profile"
     :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
-    <v-layout row wrap align-start justify-center fill-height mt-5>
-      <v-flex xs12 sm12 md5 mt-5 class="animated fast slideInLeft">
+    <v-layout column justify-center fill-height mt-5>
+      <!-- Statistics Section -->
+      <v-flex xs12 mt-5 class="animated fast slideInLeft">
         <v-layout row wrap justify-center align-space-around fill-height>
           <v-flex xs12 grow>
-            <v-card :dark="isDark" :color="`accent ${darken}`" height="85vh">
+            <v-card :dark="isDark" :color="`accent ${darken}`">
               <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
                 Statistics
               </v-card-title>
-              <v-card-text v-if="userStatsInitialized && userStats.length > 0">
-                <v-layout row align-center justify-center fill-height>
+              <v-card-text>
+                <v-layout
+                  row
+                  wrap
+                  align-center
+                  justify-center
+                  fill-height
+                  v-if="userStatsInitialized && userStats.length > 0"
+                >
                   <v-flex
-                    xs6
+                    xs12
                     sm4
                     text-xs-center
+                    self-
                     v-for="(item, index) in userStats"
                     :key="`stat-flex-${index}`"
                   >
@@ -42,18 +52,31 @@
                     </v-layout>
                   </v-flex>
                 </v-layout>
+
+                <v-layout v-else align-center justify-center fill-height>
+                  <v-flex xs12 align-self-center text-xs-center>
+                    <div>
+                      <p>Hang tight, we're crunching numbers!</p>
+                      <v-progress-linear
+                        :indeterminate="true"
+                        color="info"
+                      ></v-progress-linear>
+                    </div>
+                  </v-flex>
+                </v-layout>
               </v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
       </v-flex>
 
-      <v-flex xs12 sm12 md6 mt-5 :class="isSmall ? 'mx-0' : 'mx-4'">
+      <!-- History Section -->
+      <v-flex xs12 class="mb-3" :class="isSmall ? 'mt-0' : 'mt-5'">
         <v-card
           class="animated fast slideInRight"
           :dark="isDark"
           :color="`accent ${darken}`"
-          height="85vh"
+          max-height="85vh"
         >
           <v-card-title class="hildaLight space-small big mx-0 mt-0 pa-0">
             <v-toolbar :color="`accent ${darken}`" :dark="isDark" tabs flat>

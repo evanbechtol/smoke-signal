@@ -1,6 +1,6 @@
-import axios from "axios";
 import { mapState, mapGetters } from "vuex";
 import { TimeService } from "../services/timeService";
+import { ApiService } from "../services/apiService";
 
 const baseUrl = process.env.VUE_APP_API_BASE;
 
@@ -42,7 +42,7 @@ export const cordMixin = {
         url: `${baseUrl}/${route}`,
         data
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to delete a cord matching the provided Object ID
@@ -56,7 +56,7 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description
@@ -74,7 +74,7 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to retrieve a cord by the Object ID provided
@@ -88,7 +88,7 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to retrieve files for the cord matching the Object ID provided
@@ -102,7 +102,7 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to upload files for the cord matching the Object ID provided
@@ -121,7 +121,7 @@ export const cordMixin = {
         url: `${baseUrl}/${route}`,
         data: body
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to retrieve all cords with the status provided
@@ -135,7 +135,7 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to retrieve all cords with the status and user provided
@@ -150,7 +150,7 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to retrieve statistics for user provided
@@ -164,7 +164,7 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to update the cord matching the provided Object ID
@@ -180,7 +180,7 @@ export const cordMixin = {
         url: `${baseUrl}/${route}`,
         data
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
     /**
      * @description Attempts to update the cord rescuers for the cord matching the provided Object ID
@@ -196,45 +196,7 @@ export const cordMixin = {
         url: `${baseUrl}/${route}`,
         data
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     }
   }
 };
-
-/**
- * @description
- * @param options {object}
- * @returns {Promise} Returns a promise for the axios request being made.
- *   Will resolve if request was made successfully, will reject otherwise
- */
-function makeRequest(options = null) {
-  const bodyMethods = ["POST", "PUT"];
-  const isBodyRequired = bodyMethods.includes(options.method);
-  const isValid = options && options.method && options.url;
-
-  return new Promise((resolve, reject) => {
-    if (isValid) {
-      if (isBodyRequired && !options.data) {
-        return reject(
-          // Request invalid; options object not valid to perform request
-          respondError("Request not made: required body property not provided")
-        );
-      } else {
-        axios(options)
-          .then(response => {
-            return resolve(response);
-          })
-          .catch(err => {
-            return reject(err);
-          });
-      }
-    } else {
-      // Request invalid; options object not valid to perform request
-      return reject(respondError("Request not made: options object invalid"));
-    }
-  });
-}
-
-function respondError(message) {
-  return { success: false, error: message };
-}

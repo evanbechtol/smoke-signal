@@ -1,4 +1,5 @@
 import Vue from "vue";
+import store from "./store/store";
 import Router from "vue-router";
 
 Vue.use(Router);
@@ -50,6 +51,14 @@ let router = new Router({
         guest: true,
         requiresAuth: false,
         isAdmin: false
+      },
+      beforeEnter: (to, from, next) => {
+        if (store.getters.isAuthenticated && to.name === "login") {
+          // no need to go to login page, if user is already logged in - redirect
+          return router.push({ path: "/" });
+        }
+
+        return next();
       },
       component: () =>
         import(/* webpackChunkName: "login" */ "./views/Login.vue")

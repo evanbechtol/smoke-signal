@@ -1,6 +1,11 @@
 <template>
-  <v-dialog v-model="dialog" persistent :fullscreen="isSmall" :max-width="isSmall ? '100%' : '800px'">
-    <v-card color="accent" tile class="space-small mr-1">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    :fullscreen="isSmall"
+    :max-width="dialogWidth"
+  >
+    <v-card color="accent" light tile class="space-small mr-1">
       <v-layout row align-center justify-space-around>
         <v-flex xs12 mt-4>
           <v-stepper
@@ -48,7 +53,7 @@
       <v-window v-model="step">
         <v-window-item :value="1">
           <v-card-text>
-            <v-form v-model="form.step1.valid" ref="form1">
+            <v-form v-model="form.step1.valid" ref="form1" class="mb-5">
               <v-text-field
                 label="First Name"
                 name="first name"
@@ -70,7 +75,8 @@
             </v-form>
 
             <span class="caption grey--text text--darken-1">
-              This information is private and will not be shared
+              All information requested is private and will not be shared with
+              anyone
             </span>
           </v-card-text>
         </v-window-item>
@@ -216,6 +222,9 @@ export default {
   computed: {
     cancelLabel() {
       return this.step < 4 ? "Cancel" : "Close";
+    },
+    dialogWidth() {
+      return this.isSmall ? "100%" : "800px";
     },
     email() {
       return this.user.email;

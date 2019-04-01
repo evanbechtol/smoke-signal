@@ -115,7 +115,7 @@ export default {
     clear() {
       this.$refs.form.reset();
     },
-    resetPassword: function() {
+    resetPassword() {
       const route = `e_auth/users/forgot/${this.resetId}`;
       const base = process.env.VUE_APP_URL;
       const appCode = process.env.VUE_APP_EAUTH_APP_CODE;

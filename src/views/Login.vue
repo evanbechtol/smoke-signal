@@ -1,167 +1,163 @@
 <template>
-  <div class="dark-l1 login page">
-    <v-layout
-      row
-      :class="isSmall ? 'justify-center ml-0 mt-5' : 'justify-start ml-5'"
-    >
-      <v-flex xs12 sm1 class="mt-5 pt-5">
-        <v-img
-          :src="getImagePath('econ_rgb.svg')"
-          height="160px"
-          contain
-        ></v-img>
+  <v-container fluid fill-height class="dark-l1 login page">
+    <!-- E/// Logo --->
+    <v-layout row wrap :class="justification">
+      <v-flex xs12 class="pt-5" :class="isSmall ? 'mt-0' : 'mt-5'">
+        <v-layout :class="justification">
+          <img
+            alt="ericsson logo"
+            :src="getImagePath('econ_rgb.svg')"
+            height="160px"
+          />
+        </v-layout>
+      </v-flex>
+
+      <v-flex xs12>
+        <!-- Authentication Form -->
+        <v-layout column justify-center text-xs-center align-space-around>
+          <v-flex
+            xs12
+            sm8
+            md6
+            :class="isSmall ? 'mt-5' : 'mt-0'"
+            :style="isSmall ? 'width: 100%;' : 'width: 30%'"
+            align-self-center
+          >
+            <v-form
+              v-if="loggingIn"
+              ref="form"
+              v-model="valid"
+              class="animated faster fadeInDown"
+            >
+              <v-text-field
+                dark
+                outline
+                name="username"
+                color="info darken-1"
+                v-model="username"
+                :rules="usernameRules"
+                label="Username"
+                required
+              >
+              </v-text-field>
+              <v-text-field
+                dark
+                outline
+                name="password"
+                color="info darken-1"
+                v-model="password"
+                :rules="passwordRules"
+                type="password"
+                label="Password"
+                required
+              >
+              </v-text-field>
+              <v-layout column fill-height justify-start align-space-around>
+                <v-flex xs12 sm6>
+                  <v-btn
+                    :disabled="!valid"
+                    name="login"
+                    block
+                    :color="`info ${darken}`"
+                    dark
+                    @click="submit"
+                  >
+                    Sign In
+                  </v-btn>
+                </v-flex>
+                <v-flex xs12 mt-4>
+                  <v-btn
+                    flat
+                    name="Forgot Password"
+                    @click="resetDialog = true"
+                    dark
+                  >
+                    Forgot Password?
+                  </v-btn>
+                </v-flex>
+                <v-flex xs12>
+                  <v-btn
+                    flat
+                    @click="toggleRegistration()"
+                    dark
+                    :color="`info darken-1`"
+                    name="register"
+                  >
+                    Sign Up
+                  </v-btn>
+                </v-flex>
+              </v-layout>
+            </v-form>
+
+            <v-dialog v-model="resetDialog" :fullscreen="isSmall" width="500">
+              <v-card tile flat color="accent" light>
+                <v-card-title primary-title class="hildaLight space-small ma-0">
+                  Forgot Password?
+                </v-card-title>
+
+                <v-card-title class="space-small ma-0">
+                  <small>
+                    Provide the email associated to your account, and we'll send
+                    you instructions to reset your password
+                  </small>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-form v-model="form" ref="resetForm">
+                    <v-text-field
+                      label="Email"
+                      name="email"
+                      append-icon="mail_outline"
+                      type="email"
+                      color="info darken-1"
+                      :rules="emailRules"
+                      v-model="email"
+                      required
+                      placeholder="example@ericsson.com"
+                    >
+                    </v-text-field>
+                  </v-form>
+                  <v-layout row fill-height align-center justify-end>
+                    <v-flex xs6 sm3 mr-1>
+                      <v-btn
+                        block
+                        color="primary"
+                        outline
+                        dark
+                        @click="closeResetDialog"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-flex>
+                    <v-flex xs6 sm3 ml-1>
+                      <v-btn
+                        block
+                        :disabled="!this.form"
+                        color="info"
+                        depressed
+                        name="Submit Reset Form"
+                        @click="submitResetForm"
+                      >
+                        Submit
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+          </v-flex>
+
+          <v-flex xs12 v-if="!loggingIn" class="animated faster fadeIn">
+            <register
+              v-on:cancelRegistration="toggleRegistration()"
+              :dialog="!loggingIn"
+            >
+            </register>
+          </v-flex>
+        </v-layout>
       </v-flex>
     </v-layout>
-    <v-container>
-      <v-layout
-        column
-        justify-center
-        style="height: 74vh;"
-        text-xs-center
-        class="dark"
-        align-space-around
-      >
-        <v-flex
-          xs12
-          sm8
-          md6
-          :class="isSmall ? 'mt-5' : 'mt-0'"
-          :style="isSmall ? 'width: 100%;' : 'width: 30%'"
-          align-self-center
-        >
-          <v-form
-            v-if="loggingIn"
-            ref="form"
-            v-model="valid"
-            class="animated faster fadeInDown"
-          >
-            <v-text-field
-              dark
-              outline
-              name="username"
-              color="info darken-1"
-              v-model="username"
-              :rules="usernameRules"
-              label="Username"
-              required
-            >
-            </v-text-field>
-            <v-text-field
-              dark
-              outline
-              name="password"
-              color="info darken-1"
-              v-model="password"
-              :rules="passwordRules"
-              type="password"
-              label="Password"
-              required
-            >
-            </v-text-field>
-            <v-layout column fill-height justify-start align-space-around>
-              <v-flex xs12 sm6>
-                <v-btn
-                  :disabled="!valid"
-                  name="login"
-                  block
-                  :color="`info ${darken}`"
-                  dark
-                  @click="submit"
-                >
-                  Sign In
-                </v-btn>
-              </v-flex>
-              <v-flex xs12 mt-4>
-                <v-btn
-                  flat
-                  name="Forgot Password"
-                  @click="resetDialog = true"
-                  dark
-                >
-                  Forgot Password?
-                </v-btn>
-              </v-flex>
-              <v-flex xs12>
-                <v-btn
-                  flat
-                  @click="toggleRegistration()"
-                  dark
-                  :color="`info darken-1`"
-                  name="register"
-                >
-                  Sign Up
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-form>
-
-          <v-dialog v-model="resetDialog" width="500">
-            <v-card tile flat color="accent">
-              <v-card-title primary-title class="hildaLight space-small ma-0"
-                >Forgot Password?
-              </v-card-title>
-
-              <v-card-title class="space-small ma-0">
-                <small>
-                  Provide the email associated to your account, and we'll send
-                  you instructions to reset your password
-                </small>
-              </v-card-title>
-
-              <v-card-text>
-                <v-form v-model="form" ref="resetForm">
-                  <v-text-field
-                    label="Email"
-                    name="email"
-                    append-icon="mail_outline"
-                    type="email"
-                    color="info darken-1"
-                    :rules="emailRules"
-                    v-model="email"
-                    required
-                    placeholder="example@ericsson.com"
-                  >
-                  </v-text-field>
-                </v-form>
-                <v-layout row wrap fill-height align-center justify-end>
-                  <v-flex xs12 sm3>
-                    <v-btn
-                      color="primary"
-                      outline
-                      dark
-                      @click="closeResetDialog"
-                    >
-                      Cancel
-                    </v-btn>
-                  </v-flex>
-                  <v-flex xs12 sm3>
-                    <v-btn
-                      :disabled="!this.form"
-                      block
-                      color="info"
-                      depressed
-                      name="Submit Reset Form"
-                      @click="submitResetForm"
-                    >
-                      Submit
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
-              </v-card-text>
-            </v-card>
-          </v-dialog>
-        </v-flex>
-
-        <v-flex xs12 v-if="!loggingIn" class="animated faster fadeIn">
-          <register
-            v-on:cancelRegistration="toggleRegistration()"
-            :dialog="!loggingIn"
-          >
-          </register>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -200,14 +196,31 @@ export default {
       default: false
     }
   }),
+  computed: {
+    justification: function() {
+      return this.isSmall ? "justify-center ml-0 mt-5" : "justify-start ml-5";
+    }
+  },
+  created() {
+    const _this = this;
+    window.addEventListener("keydown", e => {
+      if (_this.$route.name === "login" && e.key === "Enter") {
+        _this.submit();
+      }
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    window.removeEventListener("keydown", () => {});
+    next();
+  },
   methods: {
-    closeResetDialog: function() {
+    closeResetDialog() {
       this.resetDialog = false;
       this.email = "";
       this.$refs.resetForm.reset();
     },
     submit() {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form && this.$refs.form.validate()) {
         const obj = {
           username: this.username,
           email: this.username,
@@ -246,6 +259,10 @@ export default {
 </script>
 
 <style scoped>
+.forgotPwBtn {
+  position: relative;
+  left: 20px;
+}
 .darkCard {
   background: var(--e-light-layer-0);
   color: var(--e-dark-text);
