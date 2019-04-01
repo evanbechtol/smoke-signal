@@ -1,12 +1,9 @@
 <template>
-  <v-container fluid fill-height class="home page">
-    <v-layout row wrap fill-height align-start justify-center>
-      <v-flex xs12 shrink mb-5>
-        <v-parallax height="20"></v-parallax>
-      </v-flex>
+  <v-container fluid fill-height class="about page">
+    <v-layout row wrap fill-height align-end justify-center>
       <v-flex xs12 sm12 mb-5 mx-1>
         <v-card elevation="0" class="animated faster slideInLeft">
-          <v-card-title class="darkCard">
+          <v-card-title>
             <h1 class="hildaLight" style="font-size: 3em;">What is it?</h1>
           </v-card-title>
           <v-card-text style="font-size: 1.3em;">
@@ -36,7 +33,7 @@
       </v-flex>
       <v-flex xs12 mb-5>
         <v-card elevation="0" class="animated faster slideInRight">
-          <v-card-title class="darkCard">
+          <v-card-title>
             <h1 class="hildaLight" style="font-size: 3em;">
               Whom do I contact for support?
             </h1>
@@ -68,11 +65,10 @@
 // @ is an alias to /src
 import { themeMixin } from "../mixins/themeMixin.js";
 import { authMixin } from "../mixins/authMixin";
-import { assetMixin } from "../mixins/assetMixin";
 
 export default {
   name: "home",
-  mixins: [authMixin, assetMixin, themeMixin],
+  mixins: [authMixin, themeMixin],
   components: {},
   data: () => ({}),
   created() {
