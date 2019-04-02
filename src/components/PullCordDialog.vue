@@ -47,7 +47,7 @@
                       label="Category"
                       :color="`info ${darken}`"
                       :dark="isDark"
-                      hint="Select any of the category"
+                      hint="Select a category"
                       :rules="[rules.required]"
                     >
                     </v-combobox>

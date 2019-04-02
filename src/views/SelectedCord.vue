@@ -213,17 +213,6 @@
                         color="info"
                       >
                       </v-combobox>
-                      <!-- <v-text-field
-                        :box="readonly"
-                        :outline="!readonly"
-                        label="Category"
-                        type="text"
-                        v-model="selectedCord.category"
-                        :readonly="readonly"
-                        color="info"
-                        @change="categoryChanged"
-                      >
-                      </v-text-field> -->
                     </v-flex>
                   </v-layout>
                 </v-flex>
