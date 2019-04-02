@@ -139,17 +139,6 @@ export default {
   mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin],
   components: { UploadFile },
   data: function() {
-    const categoryValuesFromDb = [];
-    this.getCategoryList()
-      .then(response => {
-        for (var i = 0; i < response.data.data.length; i++) {
-          categoryValuesFromDb[i] = response.data.data[i].name;
-        }
-        this.categoryList = categoryValuesFromDb;
-      })
-      .catch(err => {
-        this.setAlert(err, "#DC2D37", 0);
-      });
     return {
       cord: {},
       categoryList: [],
@@ -204,6 +193,21 @@ export default {
     getDateTime() {
       return new Date().toISOString();
     }
+  },
+  mounted() {
+    this.getCategoryList()
+      .then(response => {
+        const data =
+          response && response.data && response.data.data
+            ? response.data.data
+            : [];
+        for (var i = 0; i < data.length; i++) {
+          this.categoryList.push(data[i].name);
+        }
+      })
+      .catch(err => {
+        this.setAlert(err, "#DC2D37", 0);
+      });
   },
   props: ["initialDialog"],
   watch: {
