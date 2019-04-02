@@ -201,9 +201,9 @@ export default {
           response && response.data && response.data.data
             ? response.data.data
             : [];
-        for (var i = 0; i < data.length; i++) {
-          this.categoryList.push(data[i].name);
-        }
+        data.forEach(function(elem) {
+          this.categoryList.push(elem.name);
+        });
       })
       .catch(err => {
         this.setAlert(err, "#DC2D37", 0);
