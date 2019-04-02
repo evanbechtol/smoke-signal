@@ -197,6 +197,15 @@ export const cordMixin = {
         data
       };
       return ApiService.customRequest(options);
+    },
+    getCategoryList() {
+      const route = `cords/category/list`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return ApiService.customRequest(options);
     }
   }
 };
