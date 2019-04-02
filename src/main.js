@@ -13,7 +13,6 @@ import "./css/materialIcons.css";
 import "./css/e-font.css";
 import "./css/eColors.css";
 import "./css/animate.css";
-import Select from 'vue-select'
 import theme from "./themes";
 import { ApiService } from "./services/apiService";
 
@@ -22,7 +21,6 @@ import "./jwt-decode";
 Vue.use(VeeValidate);
 Vue.use(VTooltip);
 Vue.use(Vuetify, { theme });
-Vue.use(Select);
 Vue.prototype.$apiBase = process.env.VUE_APP_API_BASE;
 Vue.prototype.$appUrl = process.env.VUE_APP_URL;
 Vue.prototype.$compareString = compareString;

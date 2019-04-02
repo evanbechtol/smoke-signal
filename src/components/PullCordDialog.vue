@@ -135,11 +135,12 @@ import { alertMixin } from "../mixins/alertMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
+import { appsMixin } from "../mixins/appsMixin";
 import UploadFile from "./Upload.vue";
 
 export default {
   name: "PullCordDialog",
-  mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin],
+  mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin,appsMixin],
   components: { UploadFile },
  
   data: function() {

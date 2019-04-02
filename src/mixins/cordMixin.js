@@ -76,23 +76,7 @@ export const cordMixin = {
       };
       return makeRequest(options);
     },
-    /**
-     * @description
-     * @param query [string | object] Optional - Query to be used to retrieve data
-     * @returns {Promise} Returns promise for request being generated
-     */
-    getApps(query = null) {
-      console.log("HI");
-      const route = `cords/getapps?query=${
-        query === null ? "" : query
-        }`;
-      const options = {
-        method: "GET",
-        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
-        url: `${baseUrl}/${route}`
-      };
-      return ApiService.customRequest(options);
-    },
+    
     /**
      * @description Attempts to retrieve a cord by the Object ID provided
      * @param id {string} Object ID for the cord to retrieve

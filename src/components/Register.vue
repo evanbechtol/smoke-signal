@@ -229,6 +229,7 @@ import { authMixin } from "../mixins/authMixin";
 import { assetMixin } from "../mixins/assetMixin";
 import { themeMixin } from "../mixins/themeMixin";
 import { cordMixin } from "../mixins/cordMixin.js";
+import { appsMixin } from "../mixins/appsMixin.js";
 
 export default {
   name: "register",
@@ -236,7 +237,7 @@ export default {
   $_veeValidate: {
     validator: "new"
   },
-  mixins: [authMixin, assetMixin, alertMixin, themeMixin,cordMixin ],
+  mixins: [authMixin, assetMixin, alertMixin, themeMixin,cordMixin,appsMixin ],
   computed: {
     cancelLabel() {
       return this.step < 4 ? "Cancel" : "Close";
@@ -368,7 +369,6 @@ export default {
             .then((response) => {
                this.userAppsRegister(obj,response)
             .then(() => {
-              
                this.step++;
               this.backDisabled = true;
             }) .catch(err => {

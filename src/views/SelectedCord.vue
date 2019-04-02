@@ -509,6 +509,7 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
+import { appsMixin } from "../mixins/appsMixin";
 import UploadFile from "../components/Upload.vue";
 import { TimeService } from "../services/timeService";
 
@@ -520,7 +521,8 @@ export default {
     cordMixin,
     alertMixin,
     authMixin,
-    socketMixin
+    socketMixin,
+    appsMixin
   ],
   components: { UploadFile},
   computed: {
