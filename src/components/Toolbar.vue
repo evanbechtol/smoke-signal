@@ -7,7 +7,7 @@
       ></v-toolbar-side-icon>
       <v-toolbar-title class="space-base" style="margin: 8px;">
         <router-link class="link white--text" to="/">
-          AnA Smoke Signal
+          AnA Hero
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
