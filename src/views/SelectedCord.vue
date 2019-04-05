@@ -67,16 +67,10 @@
                                 <v-chip
                                   v-on="data.on"
                                   :close="canRemoveRescuer(rescuer)"
-                                  :color="COLORS[index % 3]"
+                                  :color="genColor()"
                                   @input="removeRescuer(rescuer)"
                                   dark
                                 >
-                                  <!--<v-avatar>
-                                      <img
-                                        src="https://randomuser.me/api/portraits/men/35.jpg"
-                                        alt="Claudius"
-                                      />
-                                    </v-avatar>-->
                                   {{ getInitials(rescuer.username) }}
                                 </v-chip>
                               </template>
@@ -87,42 +81,6 @@
                               }}</span>
                             </v-tooltip>
                           </v-item>
-                          <!--
-                            <v-item>
-                              <v-chip
-                                close
-                                color="success"
-                                dark
-                                slot-scope="{ active, toggle }"
-                                :selected="active"
-                              >
-                                <v-avatar>
-                                  <img
-                                    src="https://randomuser.me/api/portraits/women/31.jpg"
-                                    alt="Fifi"
-                                  />
-                                </v-avatar>
-                                Fifi Trixiebell
-                              </v-chip>
-                            </v-item>
-    
-                            <v-item>
-                              <v-chip
-                                close
-                                color="purple"
-                                dark
-                                slot-scope="{ active, toggle }"
-                                :selected="active"
-                              >
-                                <v-avatar>
-                                  <img
-                                    src="https://randomuser.me/api/portraits/women/5.jpg"
-                                    alt="Gertrude"
-                                  />
-                                </v-avatar>
-                                Gertrude Von Winkle
-                              </v-chip>
-                            </v-item>-->
 
                           <v-item class="pulse" v-if="showRescueButton">
                             <v-chip
@@ -198,22 +156,21 @@
                             ? ''
                             : computeDurationBg(selectedCord.openedOn)
                         "
-                        :dark="selectedCord.status !== 'Resolved'"
+                        :dark="!isResolved"
                         color="primary"
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
-                      <v-text-field
+                      <v-combobox
                         :box="readonly"
                         :outline="!readonly"
-                        label="Category"
-                        type="text"
                         v-model="selectedCord.category"
+                        :items="categoryList"
+                        label="Category"
                         :readonly="readonly"
                         color="info"
-                        @change="categoryChanged"
                       >
-                      </v-text-field>
+                      </v-combobox>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -346,13 +303,9 @@
                   <v-divider></v-divider>
 
                   <div
-                    style="max-height: 500px; overflow-y: auto; overflow-x: hidden;"
+                    style="max-height: 1000px; overflow-y: auto; overflow-x: hidden;"
                   >
-                    <v-timeline
-                      align-top
-                      dense
-                      v-if="selectedCord.discussion.length > 0"
-                    >
+                    <v-timeline align-top dense v-if="shouldShowDiscussion">
                       <v-timeline-item
                         color="pink"
                         small
@@ -360,23 +313,9 @@
                         :key="`discussion-${index}`"
                       >
                         <v-avatar slot="icon" size="40">
-                          <!--<img
-                                    src="https://randomuser.me/api/portraits/women/31.jpg"
-                                    alt="Fifi"
-                            />-->
                           <v-tooltip bottom offset-x>
                             <template #activator="data">
-                              <v-chip
-                                v-on="data.on"
-                                :color="COLORS[index % 3]"
-                                dark
-                              >
-                                <!--<v-avatar>
-                                    <img
-                                      src="https://randomuser.me/api/portraits/men/35.jpg"
-                                      alt="Claudius"
-                                    />
-                                  </v-avatar>-->
+                              <v-chip v-on="data.on" :color="genColor()" dark>
                                 {{ getInitials(content.user.username) }}
                               </v-chip>
                             </template>
@@ -396,11 +335,84 @@
                             <p v-html="content.data"></p>
                           </v-flex>
                         </v-layout>
+                        <!-- Thread Reply -->
+                        <div class="comments_div">
+                          <v-timeline
+                            v-if="shouldShowComments"
+                            class="pt-0"
+                            align-top
+                            dense
+                          >
+                            <v-timeline-item
+                              v-for="(comment, cIndex) in content.comments"
+                              :key="`discussion-${cIndex}`"
+                              class="pb-0"
+                              color="pink"
+                              small
+                            >
+                              <v-avatar slot="icon" size="40">
+                                <v-tooltip bottom offset-x>
+                                  <template #activator="data">
+                                    <v-chip
+                                      :color="genColor()"
+                                      dark
+                                      v-on="data.on"
+                                    >
+                                      {{ getInitials(comment.user.username) }}
+                                    </v-chip>
+                                  </template>
+                                  <span>{{ comment.user.username }}</span>
+                                </v-tooltip>
+                              </v-avatar>
+                              <v-layout pt-3 wrap row fill-height>
+                                <v-flex xs12 sm2>
+                                  <strong>
+                                    {{
+                                      convertStringToDate(
+                                        comment.time
+                                      ).toLocaleDateString("en-us")
+                                    }}
+                                    -
+                                    {{
+                                      convertStringToDate(
+                                        comment.time
+                                      ).toLocaleTimeString("en-us")
+                                    }}
+                                  </strong>
+                                </v-flex>
+                                <v-flex grow>
+                                  <p v-html="comment.data"></p>
+                                </v-flex>
+                              </v-layout>
+                            </v-timeline-item>
+                          </v-timeline>
+                          <v-flex v-if="selectedIsOpen" grow>
+                            <v-layout column fill-height>
+                              <v-flex xs12 sm4>
+                                <v-text-field
+                                  v-model="comment[index]"
+                                  class="mt-0"
+                                  outline
+                                  counter
+                                  color="info"
+                                  :append-icon="
+                                    comment[index] && comment[index].length >= 2
+                                      ? 'send'
+                                      : undefined
+                                  "
+                                  hint="Must be at least 2 characters"
+                                  placeholder="Reply..."
+                                  @click:append="addReply(index)"
+                                ></v-text-field>
+                              </v-flex>
+                            </v-layout>
+                          </v-flex>
+                        </div>
                       </v-timeline-item>
                     </v-timeline>
                   </div>
                 </v-flex>
-                <v-flex grow v-if="selectedCord.status === 'Open'">
+                <v-flex grow v-if="selectedIsOpen">
                   <v-layout column fill-height>
                     <v-flex xs12 sm4>
                       <v-text-field
@@ -413,6 +425,7 @@
                         "
                         @click:append="updateDiscussion"
                         hint="Must be at least 10 characters"
+                        placeholder="Start a discussion!!!"
                       ></v-text-field>
                     </v-flex>
                   </v-layout>
@@ -536,6 +549,15 @@ export default {
           }).length === 0
         : false;
     },
+    selectedIsOpen: function() {
+      return this.selectedCord.status === "Open";
+    },
+    shouldShowDiscussion: function() {
+      return this.selectedCord.discussion.length > 0;
+    },
+    shouldShowComments: function() {
+      return this.selectedCord.discussion[0].comments.length > 0;
+    },
     unpullDisabled() {
       return !(
         this.user.username === this.selectedCord.puller.username &&
@@ -556,9 +578,11 @@ export default {
       categoryDirty: false,
       descriptionDirty: false,
       addingToDiscussion: false,
+      addingToComment: false,
       confirmCloseDialog: false,
       formData: new FormData(),
       discussion: "",
+      comment: [],
       loading: false,
       readonly: true
     };
@@ -618,7 +642,9 @@ export default {
     },
     removeRescuer(rescuer) {
       // eslint-disable-next-line
-      this.selectedCord.rescuers = this.selectedCord.rescuers.filter(function(elem) {
+      this.selectedCord.rescuers = this.selectedCord.rescuers.filter(function(
+        elem
+      ) {
         return elem.username !== rescuer.username;
       });
 
@@ -650,6 +676,31 @@ export default {
         .then(response => {
           this.setAlert("Cord updated successfully!", "#288964", 5000);
           response.data.data.discussion.forEach(function(elem) {
+            return convertStringToDate(elem);
+          });
+
+          // Optionally refresh the grid for other users. This is only necessary
+          // when the cord status is changed
+          if (refreshGrid) {
+            this.refreshGrid();
+          }
+          this.refreshItem(this.selectedCord._id);
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+          this.loading = false;
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
+    },
+    saveComment(index, refreshGrid = false) {
+      this.updateCord(this.selectedCord._id, this.selectedCord)
+        .then(response => {
+          this.setAlert("Your comment updated successfully!", "#288964", 5000);
+          response.data.data.discussion[index].comments.forEach(function(elem) {
             return convertStringToDate(elem);
           });
 
@@ -708,6 +759,21 @@ export default {
         this.save();
         this.discussion = "";
       }
+    },
+    addReply(index) {
+      const content = this.comment[index];
+      if (content && content.length >= 2) {
+        if (this.selectedCord.discussion[index].comments === undefined) {
+          this.selectedCord.discussion[index].comments = [];
+        }
+        this.selectedCord.discussion[index].comments.push({
+          time: new Date().toISOString(),
+          user: { _id: this.user._id, username: this.user.username },
+          data: content
+        });
+        this.saveComment(index);
+        this.comment[index] = "";
+      }
     }
   },
   props: ["id"],
@@ -717,6 +783,12 @@ export default {
         this.discussion = "";
       }
     },
+    addingToComment: function() {
+      if (this.addingToComment === false) {
+        this.comment = "";
+      }
+    },
+
     "selectedCord.tags": {
       handler: function(after, before) {
         if (
@@ -754,5 +826,13 @@ function convertStringToDate(item) {
 <style scoped>
 .pulse:hover {
   animation: pulse 1s infinite;
+}
+.comments_div {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-left: 2%;
+  padding-top: 2%;
+  border-radius: 20px;
 }
 </style>

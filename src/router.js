@@ -108,6 +108,17 @@ let router = new Router({
         import(/* webpackChunkName: "resetPassword" */ "./views/ResetPassword.vue")
     },
     {
+      path: "/about",
+      name: "about",
+      meta: {
+        guest: true,
+        requiresAuth: false,
+        isAdmin: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/About.vue")
+    },
+    {
       path: "/404",
       name: "404",
       meta: {

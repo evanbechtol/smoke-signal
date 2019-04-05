@@ -2,6 +2,7 @@ import { TimeService } from "../../services/timeService";
 
 export default {
   state: {
+    categoryList: [],
     cordPullMessage: {
       data: {
         _id: "",
@@ -19,6 +20,9 @@ export default {
     selectedCord: null
   },
   mutations: {
+    categoryList: function(state, payload) {
+      state.categoryList = payload;
+    },
     cordPullNotification: function(state, payload) {
       state.cordPullNotification = payload;
     },

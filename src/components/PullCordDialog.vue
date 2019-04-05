@@ -40,18 +40,17 @@
                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field
+                    <v-combobox
                       box
-                      label="Category"
-                      type="text"
                       v-model="cord.category"
-                      color="info"
-                      hint="Ex) Bug Fix, Troubleshooting, Deployment, Admin, etc."
-                      required
-                      max="20"
-                      :rules="[rules.required, rules.maximum]"
+                      :items="categoryList"
+                      label="Category"
+                      :color="`info ${darken}`"
+                      :dark="isDark"
+                      hint="Select a category"
+                      :rules="[rules.required]"
                     >
-                    </v-text-field>
+                    </v-combobox>
                   </v-flex>
                 </v-layout>
               </v-flex>
@@ -192,6 +191,26 @@ export default {
     },
     getDateTime() {
       return new Date().toISOString();
+    }
+  },
+  mounted() {
+    if (!this.categoryList.length) {
+      this.getCategoryList()
+        .then(response => {
+          const data =
+            response && response.data && response.data.data
+              ? response.data.data
+              : [];
+          const list = [];
+          data.forEach(function(elem) {
+            list.push(elem.name);
+          });
+
+          this.$store.commit("categoryList", list);
+        })
+        .catch(err => {
+          this.setAlert(err, "#DC2D37", 0);
+        });
     }
   },
   props: ["initialDialog"],

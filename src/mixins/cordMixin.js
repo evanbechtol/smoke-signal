@@ -7,6 +7,7 @@ const baseUrl = process.env.VUE_APP_API_BASE;
 export const cordMixin = {
   computed: {
     ...mapState({
+      categoryList: state => state.cordModule.categoryList,
       cordPullMessage: state => state.cordModule.cordPullMessage,
       cordPullNotification: state => state.cordModule.cordPullNotification,
       gridItems: state => state.cordModule.gridItems,
@@ -195,6 +196,15 @@ export const cordMixin = {
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`,
         data
+      };
+      return ApiService.customRequest(options);
+    },
+    getCategoryList() {
+      const route = `cords/category/list`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
       };
       return ApiService.customRequest(options);
     }

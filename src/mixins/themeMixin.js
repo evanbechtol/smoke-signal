@@ -3,7 +3,7 @@ import { mapState, mapGetters } from "vuex";
 export const themeMixin = {
   data: function() {
     return {
-      COLORS: ["info", "purple", "success"]
+      COLORS: ["info", "purple", "success", "error"]
     };
   },
   computed: {
@@ -18,8 +18,7 @@ export const themeMixin = {
   },
   methods: {
     genColor() {
-      const COLORS = ["info", "purple", "success"];
-      return COLORS[Math.floor(Math.random() * 3)];
+      return this.COLORS[Math.floor(Math.random() * 4)];
     },
     toggleTheme(value) {
       const color = this.isDark ? "#181818" : "#e0e0e0";
