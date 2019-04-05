@@ -25,54 +25,11 @@
       </v-btn>
     </v-snackbar>
 
-    <v-bottom-sheet
-      v-if="user && isAuthenticated"
-      :inset="$vuetify.breakpoint.name === 'xs'"
-      :value="cordPullNotification"
-      :hide-overlay="$vuetify.breakpoint.name !== 'xs'"
-    >
-      <v-toolbar dark>
-        <v-icon class="ml-1 mr-2">{{ alertSeverity }}</v-icon>
-        <v-toolbar-title class="hildaLight space-small">
-          {{ cordPullMessage.message }}
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-btn dark icon @click="closeCordPullNotification">
-            <v-icon>close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-      <v-card tile>
-        <v-card-text>
-          <v-layout row wrap fill-height>
-            <v-flex xs12>
-              <p class="hildaLight">
-                <strong>{{ cordPullMessage.data.title }}</strong>
-              </p>
-            </v-flex>
-            <v-flex xs12>
-              <div style="height: 100px; overflow-x: hidden;">
-                <div v-html="cordPullMessage.data.description"></div>
-              </div>
-            </v-flex>
-            <v-flex xs12>
-              <v-btn
-                depressed
-                color="info"
-                class="ml-0 mt-4"
-                dark
-                @click="goToCord"
-                :block="$vuetify.breakpoint.name === 'xs'"
-              >
-                Check it out!
-                <v-icon class="ml-2">navigate_next</v-icon>
-              </v-btn>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-      </v-card>
-    </v-bottom-sheet>
+    <!-- Cord Notification Card -->
+    <cord-notification-card
+      :show-notification-card="showNotificationCard"
+      v-on:closeCordPullNotification="closeCordPullNotification"
+    ></cord-notification-card>
 
     <!--<badge-card></badge-card>-->
   </v-app>
@@ -88,12 +45,13 @@ import { TokenService } from "./services/tokenService";
 import { ThemeService } from "./services/themeService";
 import { UserService } from "./services/userService";
 import { cordMixin } from "./mixins/cordMixin";
+import CordNotificationCard from "./components/CordNotificationCard";
 //import BadgeCard from "./components/BadgeCard";
 
 export default {
   name: "app",
   mixins: [alertMixin, authMixin, cordMixin, themeMixin, socketMixin],
-  components: { /*BadgeCard, Footer,*/ Toolbar },
+  components: { CordNotificationCard, /*BadgeCard, Footer,*/ Toolbar },
   created() {
     this.init();
     const theme = ThemeService.getTheme();
@@ -105,6 +63,11 @@ export default {
     }
     // For E-Auth application authentication
     this.authenticateApp();
+  },
+  computed: {
+    showNotificationCard: function() {
+      return !!(this.user && this.isAuthenticated && this.cordPullNotification);
+    }
   },
   data() {
     return {

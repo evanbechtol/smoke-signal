@@ -1,4 +1,5 @@
 import Vue from "vue";
+import store from "./store/store";
 import Router from "vue-router";
 
 Vue.use(Router);
@@ -51,6 +52,14 @@ let router = new Router({
         requiresAuth: false,
         isAdmin: false
       },
+      beforeEnter: (to, from, next) => {
+        if (store.getters.isAuthenticated && to.name === "login") {
+          // no need to go to login page, if user is already logged in - redirect
+          return router.push({ path: "/" });
+        }
+
+        return next();
+      },
       component: () =>
         import(/* webpackChunkName: "login" */ "./views/Login.vue")
     },
@@ -97,6 +106,17 @@ let router = new Router({
       },
       component: () =>
         import(/* webpackChunkName: "resetPassword" */ "./views/ResetPassword.vue")
+    },
+    {
+      path: "/about",
+      name: "about",
+      meta: {
+        guest: true,
+        requiresAuth: false,
+        isAdmin: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
       path: "/404",

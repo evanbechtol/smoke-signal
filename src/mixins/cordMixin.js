@@ -220,9 +220,14 @@ export const cordMixin = {
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);
         });
+    },
+    getCategoryList() {
+      const route = `cords/category/list`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return ApiService.customRequest(options);
     }
-
-
-
-  }
 };

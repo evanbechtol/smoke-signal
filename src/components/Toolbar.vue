@@ -188,7 +188,8 @@ export default {
           path: "/resolved"
         },
         { title: "Admin", icon: "settings", path: "/admin" },
-        { title: "My Profile", icon: "settings", path: "/profile" }
+        { title: "My Profile", icon: "settings", path: "/profile" },
+        { title: "About", icon: "settings", path: "/about" }
       ],
 	  notifications: [],
       themes: [

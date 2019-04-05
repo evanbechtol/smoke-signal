@@ -3,7 +3,7 @@ import { mapState, mapGetters } from "vuex";
 export const themeMixin = {
   data: function() {
     return {
-      COLORS: ["info", "purple", "success"]
+      COLORS: ["info", "purple", "success","red","lime darken-4","green","blue","cyan","black","orange"]
     };
   },
   computed: {

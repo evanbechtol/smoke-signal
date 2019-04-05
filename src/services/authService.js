@@ -58,22 +58,19 @@ const AuthService = {
               params.append("email", body.email);
               params.append("support_team_email", "evan.bechtol@ericsson.com");
               params.append("support_team_phone", "469-417-9422");
-              // eslint-disable-next-line
               params.append("url", `${appUrl}/resetPassword?id=`);
 
               const generateNewPwOptions = {
+                url: `${base}/${generateNewPwRoute}`,
                 method: "POST",
+                data: params,
                 headers: {
                   Authorization: `Bearer ${appCode}`,
                   "Content-Type": "application/x-www-form-urlencoded"
                 }
               };
 
-              return ApiService.post(
-                `${base}/${generateNewPwRoute}`,
-                params,
-                generateNewPwOptions
-              );
+              return ApiService.customRequest(generateNewPwOptions);
             }
           })
           .then(response => {
