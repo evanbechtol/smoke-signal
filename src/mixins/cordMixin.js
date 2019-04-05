@@ -7,6 +7,7 @@ const baseUrl = process.env.VUE_APP_API_BASE;
 export const cordMixin = {
   computed: {
     ...mapState({
+      categoryList: state => state.cordModule.categoryList,
       cordPullMessage: state => state.cordModule.cordPullMessage,
       cordPullNotification: state => state.cordModule.cordPullNotification,
       gridItems: state => state.cordModule.gridItems,

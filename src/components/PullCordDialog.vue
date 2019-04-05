@@ -141,7 +141,6 @@ export default {
   data: function() {
     return {
       cord: {},
-      categoryList: [],
       dialog: this.initialDialog,
       formData: new FormData(),
       formValid: false,
@@ -195,19 +194,24 @@ export default {
     }
   },
   mounted() {
-    this.getCategoryList()
-      .then(response => {
-        const data =
-          response && response.data && response.data.data
-            ? response.data.data
-            : [];
-        data.forEach(function(elem) {
-          this.categoryList.push(elem.name);
+    if (!this.categoryList.length) {
+      this.getCategoryList()
+        .then(response => {
+          const data =
+            response && response.data && response.data.data
+              ? response.data.data
+              : [];
+          const list = [];
+          data.forEach(function(elem) {
+            list.push(elem.name);
+          });
+
+          this.$store.commit("categoryList", list);
+        })
+        .catch(err => {
+          this.setAlert(err, "#DC2D37", 0);
         });
-      })
-      .catch(err => {
-        this.setAlert(err, "#DC2D37", 0);
-      });
+    }
   },
   props: ["initialDialog"],
   watch: {
