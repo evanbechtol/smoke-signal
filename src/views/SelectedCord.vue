@@ -67,7 +67,7 @@
                                 <v-chip
                                   v-on="data.on"
                                   :close="canRemoveRescuer(rescuer)"
-                                  :color="genColor()"
+                                  :color="COLORS[index % 4]"
                                   @input="removeRescuer(rescuer)"
                                   dark
                                 >
@@ -315,7 +315,7 @@
                         <v-avatar slot="icon" size="40">
                           <v-tooltip bottom offset-x>
                             <template #activator="data">
-                              <v-chip v-on="data.on" :color="genColor()" dark>
+                              <v-chip v-on="data.on" :color="COLORS[index % 4]" dark>
                                 {{ getInitials(content.user.username) }}
                               </v-chip>
                             </template>
@@ -354,7 +354,7 @@
                                 <v-tooltip bottom offset-x>
                                   <template #activator="data">
                                     <v-chip
-                                      :color="genColor()"
+                                      :color="COLORS[index % 4]"
                                       dark
                                       v-on="data.on"
                                     >
