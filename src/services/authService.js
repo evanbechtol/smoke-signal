@@ -7,12 +7,13 @@ import { AlertService } from "./alertService";
 const base = process.env.VUE_APP_EAUTH;
 const appCode = process.env.VUE_APP_EAUTH_APP_CODE;
 const appUrl = process.env.VUE_APP_URL;
+
 const AuthService = {
   /**
    * @description Authenticate the application, and store the returned JWT if provided
    */
   authenticateApp() {
-    const route = "auth/apps";
+    const route = "e_auth/auth/apps";
     const options = {
       method: "POST",
       headers: { Authorization: `Bearer ${appCode}` },
@@ -33,7 +34,7 @@ const AuthService = {
   eAuthForgotPassword(body = null) {
     return new Promise((resolve, reject) => {
       if (body && body.email) {
-        const route = `users/email/${body.email}`;
+        const route = `e_auth/users/email/${body.email}`;
         const options = {
           method: "GET",
           headers: { Authorization: `Bearer ${appCode}` },
@@ -50,7 +51,7 @@ const AuthService = {
               response.data.data
             ) {
               userId = response.data.data._id;
-              const generateNewPwRoute = "users/resetPassword";
+              const generateNewPwRoute = "e_auth/users/resetPassword";
               let params = new URLSearchParams();
 
               params.append("user_id", userId);
@@ -96,7 +97,7 @@ const AuthService = {
   eAuthLogin(body = null) {
     return new Promise((resolve, reject) => {
       if (body && body.username && body.password) {
-        const route = "auth";
+        const route = "e_auth/auth";
         const options = {
           method: "POST",
           headers: { Authorization: `Bearer ${appCode}` },
@@ -139,7 +140,7 @@ const AuthService = {
         !!body.project;
 
       if (isValid) {
-        const route = "users";
+        const route = "e_auth/users";
         const options = {
           method: "POST",
           headers: { Authorization: `Bearer ${appCode}` },
@@ -152,9 +153,12 @@ const AuthService = {
           },
           url: `${base}/${route}`
         };
+
         ApiService.customRequest(options)
           .then(response => {
-            return resolve(response);
+            if (response && response.data && response.data.user) {
+              return resolve(response);
+            }
           })
           .catch(err => {
             return reject(err);
@@ -171,10 +175,10 @@ const AuthService = {
     return minutes <= 1
       ? "error"
       : minutes > 1 && minutes <= 5
-        ? "warning"
-        : minutes > 5 && minutes <= 10
-          ? "info"
-          : "info";
+      ? "warning"
+      : minutes > 5 && minutes <= 10
+      ? "info"
+      : "info";
   },
   setExpiry(token, whenToWarn, isAuthenticated) {
     if (token !== null && token.length) {
@@ -223,11 +227,11 @@ const AuthService = {
     return minutes <= 1
       ? "error"
       : minutes > 1 && minutes <= 5
-        ? "warning"
-        : "info";
+      ? "warning"
+      : "info";
   },
   validateApp(appToken) {
-    const route = "validate/apps";
+    const route = "e_auth/validate/apps";
     return new Promise(resolve => {
       ApiService.get(`${base}/${route}?token=${appToken}`)
         .then(response => {
@@ -244,7 +248,7 @@ const AuthService = {
     });
   },
   validateUser(token) {
-    const route = "validate";
+    const route = "e_auth/validate";
     return new Promise((resolve, reject) => {
       ApiService.get(`${base}/${route}?token=${token}`)
         .then(response => {
