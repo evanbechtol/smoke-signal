@@ -1,5 +1,3 @@
-
-
 <template>
   <v-dialog
     v-model="dialog"
@@ -111,17 +109,17 @@
               </v-text-field>
               <v-combobox
                 multiple
-                name="project"  
+                name="project"
                 label="Applications"
                 prepend-icon="application"
                 :items="appOptions"
                 color="info darken-1"
                 id="appSelect"
-                v-model="registerUser.project" 
+                v-model="registerUser.project"
                 :rules="appRules"
                 required
-               >
-               </v-combobox>
+              >
+              </v-combobox>
             </v-form>
 
             <span class="caption grey--text text--darken-1">
@@ -311,8 +309,8 @@ export default {
       v => (v && v.length > 4) || "Username must at least 4 characters"
     ],
     appRules: [
-      v => !!v || "Applications is required",
-      v => (v && v.length != 0) || "Applications is required"
+      v => !!v || "Application is required",
+      v => (v && v.length === 0) || "Application is required"
     ],
     passwordRules: [
       v => !!v || "Password is required",
@@ -343,10 +341,12 @@ export default {
     computeColor: function(step) {
       return this.step === step
         ? "info"
-        : this.step > step ? "success" : "#4e4e4e";
+        : this.step > step
+        ? "success"
+        : "#4e4e4e";
     },
     updateProgressBar: function() {
-      return Math.ceil(this.step / this.numSteps * 100);
+      return Math.ceil((this.step / this.numSteps) * 100);
     },
     validateAndNext: function() {
       if (this.form[`step${this.step}`].valid === true) {
@@ -361,15 +361,11 @@ export default {
           };
           this.eAuthRegister(obj)
             .then(response => {
-              this.userAppsRegister(obj, response)
-                .then(() => {
-                  this.step++;
-                  this.backDisabled = true;
-                })
-                .catch(err => {
-                  const errorMessage = err.response.data.message;
-                  let alertMessage = "";
-                });
+              return this.userAppsRegister(obj, response);
+            })
+            .then(() => {
+              this.step++;
+              this.backDisabled = true;
             })
             .catch(err => {
               const errorMessage = err.response.data.message;
@@ -406,12 +402,4 @@ export default {
   }
 };
 </script>
-<style scoped>
-.large {
-  width: 500px;
-}
-
-.fill {
-  width: 100vw;
-}
-</style>
+<style scoped></style>

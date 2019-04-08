@@ -136,7 +136,7 @@
                         :items="appOptions"
                         @change="appChanged"
                       >
-                    </v-combobox>
+                      </v-combobox>
                     </v-flex>
                     <v-flex xs12 sm4>
                       <v-text-field
@@ -319,8 +319,9 @@
                                 {{ getInitials(content.user.username) }}
                               </v-chip>
                             </template>
-                            <span>{{ content.user.username }}</span><br>
-                              <span>{{ content.user.email }}</span>
+                            <span>{{ content.user.username }}</span
+                            ><br />
+                            <span>{{ content.user.email }}</span>
                           </v-tooltip>
                         </v-avatar>
                         <v-layout pt-3 wrap row fill-height>
@@ -576,24 +577,6 @@ export default {
     }
   },
   data: function() {
-    let appDetails = [];
-    this.getApps().then(response => {
-      for ( let i = 0; i < response.data.data.length; i++ ) {
-        appDetails[i] = response.data.data[i].name;
-      }
-      this.appOptions = appDetails;
-    });
-    const categoryValuesFromDb = [];
-    this.getCategoryList()
-      .then(response => {
-        for (var i = 0; i < response.data.data.length; i++) {
-          categoryValuesFromDb[i] = response.data.data[i].name;
-        }
-        this.categoryList = categoryValuesFromDb;
-      })
-      .catch(err => {
-        this.setAlert(err, "#DC2D37", 0);
-      });
     return {
       appDirty: false,
       appOptions: [],
@@ -630,6 +613,35 @@ export default {
         .catch(err => {
           this.setAlert(err.message, "#DC2D37", 0);
           this.loading = false;
+        });
+    }
+  },
+  mounted() {
+    this.getApps().then(response => {
+      const data =
+        response.data && response.data.data ? response.data.data : [];
+
+      data.forEach(function(elem) {
+        this.appOptions.push(elem.name);
+      });
+    });
+
+    if (!this.categoryList.length) {
+      this.getCategoryList()
+        .then(response => {
+          const data =
+            response && response.data && response.data.data
+              ? response.data.data
+              : [];
+          const list = [];
+          data.forEach(function(elem) {
+            list.push(elem.name);
+          });
+
+          this.$store.commit("categoryList", list);
+        })
+        .catch(err => {
+          this.setAlert(err, "#DC2D37", 0);
         });
     }
   },

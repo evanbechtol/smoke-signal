@@ -54,8 +54,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-	
-	
+
     <!-- RIGHT DRAWER -->
     <v-navigation-drawer
       v-if="user"
@@ -69,7 +68,6 @@
       temporary
     >
       <v-layout column fill-height align-space-around justify-center>
-	  
         <v-flex xs12 mt-5 shrink>
           <v-layout column align-space-around justify-center mt-4>
             <v-flex xs12 text-xs-center>
@@ -191,7 +189,7 @@ export default {
         { title: "My Profile", icon: "settings", path: "/profile" },
         { title: "About", icon: "settings", path: "/about" }
       ],
-	  notifications: [],
+      notifications: [],
       themes: [
         { label: "Dark", value: "dark" },
         { label: "Light", value: "light" }
@@ -229,19 +227,6 @@ export default {
   align-items: center;
   text-decoration: none;
   height: 100%;
-}
-
-#select {
-  width: 300px !important;
-}
-
-#selectContainer {
-  padding: 0 0 !important;
-}
-
-.menuIcon {
-  position: relative;
-  top: 8px;
 }
 
 .userDetail {
