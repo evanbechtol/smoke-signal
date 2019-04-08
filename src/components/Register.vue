@@ -250,12 +250,13 @@ export default {
     }
   },
   created() {
-    let appDetails = [];
     this.getApps().then(response => {
-      for (let i = 0; i < response.data.data.length; i++) {
-        appDetails[i] = response.data.data[i].name;
-      }
-      this.appOptions = appDetails;
+      const data =
+        response.data && response.data.data ? response.data.data : [];
+
+      data.forEach(function(elem) {
+        this.appOptions.push(elem.name);
+      });
     });
   },
   data: () => ({
