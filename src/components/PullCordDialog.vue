@@ -149,13 +149,6 @@ export default {
   ],
   components: { UploadFile },
   data: function() {
-    let appDetails = [];
-    this.getApps().then(response => {
-      for (let i = 0; i < response.data.data.length; i++) {
-        appDetails[i] = response.data.data[i].name;
-      }
-      this.appOptions = appDetails;
-    });
     return {
       cord: {},
       appOptions: [],
@@ -213,6 +206,15 @@ export default {
     }
   },
   mounted() {
+    this.getApps().then(response => {
+      const data =
+        response.data && response.data.data ? response.data.data : [];
+
+      data.forEach(function(elem) {
+        this.appOptions.push(elem.name);
+      });
+    });
+
     if (!this.categoryList.length) {
       this.getCategoryList()
         .then(response => {
