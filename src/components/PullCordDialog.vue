@@ -37,8 +37,8 @@
                       color="info"
                       :items="appOptions"
                       :rules="[v => !!v || 'Item is required']"
-                      required                
-                      >
+                      required
+                    >
                     </v-combobox>
                   </v-flex>
                   <v-flex xs12 sm4>
@@ -159,7 +159,6 @@ export default {
     return {
       cord: {},
       appOptions: [],
-      categoryList: [],
       dialog: this.initialDialog,
       formData: new FormData(),
       formValid: false,
@@ -179,10 +178,6 @@ export default {
       this.$refs.form.reset();
       this.$emit("closeDialog");
     },
-    action() {
-      console.log("aaaa");
-    },
-
     save() {
       this.cord.puller = { _id: this.user._id, username: this.user.username };
       this.cord.openedOn = this.getDateTime();

@@ -4,14 +4,12 @@ const baseUrl = process.env.VUE_APP_API_BASE;
 export const appsMixin = {
   methods: {
     /**
-       * @description
-       * @param query [string | object] Optional - Query to be used to retrieve data
-       * @returns {Promise} Returns promise for request being generated
-       */
+     * @description
+     * @param query [string | object] Optional - Query to be used to retrieve data
+     * @returns {Promise} Returns promise for request being generated
+     */
     getApps(query = null) {
-      const route = `apps/apps?query=${
-        query === null ? "" : query
-        }`;
+      const route = `apps/?${query === null ? "" : "query=" + query}`;
       const options = {
         method: "GET",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
@@ -19,6 +17,5 @@ export const appsMixin = {
       };
       return ApiService.customRequest(options);
     }
-
   }
 };

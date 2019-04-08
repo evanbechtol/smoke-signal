@@ -27,8 +27,8 @@ export const cordMixin = {
       return TimeService.computeDuration(duration).includes("Days")
         ? "error"
         : TimeService.computeDuration(duration).includes("Hrs")
-          ? "orangeWarning"
-          : "success";
+        ? "orangeWarning"
+        : "success";
     },
     /**
      * @description Attempts to create a new cord using the body provided
@@ -69,13 +69,13 @@ export const cordMixin = {
     getCords(limit = 100, skip = 0, query = null) {
       const route = `cords/get?limit=${limit}&skip=${skip}&query=${
         query === null ? "" : query
-        }`;
+      }`;
       const options = {
         method: "GET",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
       };
-      return makeRequest(options);
+      return ApiService.customRequest(options);
     },
 
     /**
@@ -201,9 +201,9 @@ export const cordMixin = {
       return ApiService.customRequest(options);
     },
     /**
-       * @description Attempts to retrieve a cord by the Object ID provided for cord details page
-       * 
-       */
+     * @description Attempts to retrieve a cord by the Object ID provided for cord details page
+     *
+     */
     openItem(item) {
       this.getCordById(item._id)
         .then(response => {

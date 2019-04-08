@@ -23,12 +23,14 @@ export const notificationMixin = {
     },
     /**
      * @description Attempts to update the read timestamp for the tool notification matching the provided Object ID
-     * @param id {string} Object ID for the cord to update
-     * @param data {object} Body to use after updating the tool notification to re-generate the data
+     * @param id {string} Body to use after updating the tool notification to re-generate the data
+     * @param limit {string} Used to control and implement pagination on returned data set
+     * @param skip {string} Used to control and implement pagination on returned data set
+     * @param query {object} MongoDB Query to be executed on the collection
      * @returns {Promise} Returns promise for request being generated
      */
-	updateNotification(id, limit = 5, skip = 0, query = null) {
-	  const data = { limit: limit, skip:skip, query:query };	 
+    updateNotification(id, limit = 5, skip = 0, query = null) {
+      const data = { limit: limit, skip: skip, query: query };
       const route = `notifications/${id}`;
       const options = {
         method: "PUT",
@@ -38,6 +40,5 @@ export const notificationMixin = {
       };
       return ApiService.customRequest(options);
     }
-	
   }
 };
