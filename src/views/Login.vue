@@ -165,11 +165,10 @@ import { alertMixin } from "../mixins/alertMixin";
 import { assetMixin } from "../mixins/assetMixin";
 import { authMixin } from "../mixins/authMixin";
 import { themeMixin } from "../mixins/themeMixin";
-import Register from "../components/Register";
 
 export default {
   name: "login",
-  components: { Register },
+  components: { Register: () => import("../components/Register") },
   mixins: [themeMixin, alertMixin, assetMixin, authMixin],
   data: () => ({
     checkbox: false,
@@ -258,13 +257,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.forgotPwBtn {
-  position: relative;
-  left: 20px;
-}
-.darkCard {
-  background: var(--e-light-layer-0);
-  color: var(--e-dark-text);
-}
-</style>
+<style scoped></style>

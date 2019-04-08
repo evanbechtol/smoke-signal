@@ -315,7 +315,11 @@
                         <v-avatar slot="icon" size="40">
                           <v-tooltip bottom offset-x>
                             <template #activator="data">
-                              <v-chip v-on="data.on" :color="COLORS[index % 4]" dark>
+                              <v-chip
+                                v-on="data.on"
+                                :color="COLORS[index % 4]"
+                                dark
+                              >
                                 {{ getInitials(content.user.username) }}
                               </v-chip>
                             </template>
@@ -519,7 +523,6 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
-import UploadFile from "../components/Upload.vue";
 import { TimeService } from "../services/timeService";
 
 export default {
@@ -532,7 +535,7 @@ export default {
     authMixin,
     socketMixin
   ],
-  components: { UploadFile },
+  components: { UploadFile: () => import("../components/Upload.vue") },
   computed: {
     files: function() {
       return this.selectedCord.files && this.selectedCord.files.length > 0

@@ -203,8 +203,6 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import { gridMixin } from "../mixins/gridMixin";
 import { TimeService } from "../services/timeService";
-import Grid from "../components/Grid";
-import PullCordDialog from "../components/PullCordDialog";
 
 export default {
   name: "resolvedCords",
@@ -217,8 +215,8 @@ export default {
     themeMixin
   ],
   components: {
-    PullCordDialog,
-    Grid
+    PullCordDialog: () => import("../components/Grid"),
+    Grid: () => import("../components/PullCordDialog")
   },
   computed: {
     filteredGridItems: function() {

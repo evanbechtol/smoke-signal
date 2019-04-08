@@ -161,11 +161,9 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { cordMixin } from "../mixins/cordMixin";
-import CircleCard from "../components/CircleCard";
 
 export default {
   name: "Profile",
-  components: { CircleCard },
   mixins: [themeMixin, alertMixin, authMixin, cordMixin],
   computed: {
     userString: function() {
@@ -305,12 +303,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.vertDiv {
-  border-right: 1px dashed var(--e-gray);
-  height: 120px;
-}
-.tileHover:hover {
-  background-color: var(--e-dark-brand-blue) !important;
-}
-</style>
+<style scoped></style>
