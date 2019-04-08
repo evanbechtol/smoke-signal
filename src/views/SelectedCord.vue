@@ -126,18 +126,16 @@
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4>
-                   
                       <v-combobox
                         :box="readonly"
                         :outline="!readonly"
                         label="Application"
                         type="text"
                         v-model="selectedCord.app"
-                       
                         color="info"
                         :items="appOptions"
                         @change="appChanged"
-                    >
+                      >
                     </v-combobox>
                     </v-flex>
                     <v-flex xs12 sm4>
@@ -537,7 +535,7 @@ export default {
     socketMixin,
     appsMixin
   ],
-  components: { UploadFile},
+  components: { UploadFile },
   computed: {
     files: function() {
       return this.selectedCord.files && this.selectedCord.files.length > 0
@@ -578,16 +576,13 @@ export default {
     }
   },
   data: function() {
-     var appDetails=[];
-    this.getApps()
-       .then(response => {
-        for(let i = 0;i < response.data.data.length;i++)
-         {
-          appDetails[i] = response.data.data[i].name;
-         }  
-         this.appOptions = appDetails
-       
-       });
+    let appDetails = [];
+    this.getApps().then(response => {
+      for ( let i = 0; i < response.data.data.length; i++ ) {
+        appDetails[i] = response.data.data[i].name;
+      }
+      this.appOptions = appDetails;
+    });
     const categoryValuesFromDb = [];
     this.getCategoryList()
       .then(response => {
@@ -779,7 +774,11 @@ export default {
       if (this.discussion.length >= 10) {
         this.selectedCord.discussion.push({
           time: new Date().toISOString(),
-          user: { _id: this.user._id, username: this.user.username, email: this.user.email },
+          user: {
+            _id: this.user._id,
+            username: this.user.username,
+            email: this.user.email
+          },
           data: this.discussion
         });
 

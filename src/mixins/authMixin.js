@@ -62,9 +62,6 @@ export const authMixin = {
     },
     validateUser(token = this.token) {
       return AuthService.validateUser(token);
-    },
-    userAppsRegister(body = null,response = null) {
-      return AuthService.userAppsRegister(body,response);
     }
   },
   props: {

@@ -30,15 +30,15 @@
                       box
                       label="Application"
                       type="text"
-                       item-text="name"
+                      item-text="name"
                       item-value="name"
                       v-model="cord.app"
                       text-color="info"
                       color="info"
                       :items="appOptions"
-                      :rules="[(v) => !!v || 'Item is required']"
+                      :rules="[v => !!v || 'Item is required']"
                       required                
-                    >
+                      >
                     </v-combobox>
                   </v-flex>
                   <v-flex xs12 sm4>
@@ -139,20 +139,24 @@ import UploadFile from "./Upload.vue";
 
 export default {
   name: "PullCordDialog",
-  mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin,appsMixin],
+  mixins: [
+    themeMixin,
+    alertMixin,
+    cordMixin,
+    authMixin,
+    socketMixin,
+    appsMixin
+  ],
   components: { UploadFile },
- 
   data: function() {
-    var appDetails=[];
-    this.getApps()
-       .then(response => {   
-         for(let i = 0;i < response.data.data.length;i++)
-         {
-          appDetails[i] = response.data.data[i].name;
-         }     
-         this.appOptions = appDetails;      
-       });
-      return { 
+    let appDetails = [];
+    this.getApps().then(response => {
+      for (let i = 0; i < response.data.data.length; i++) {
+        appDetails[i] = response.data.data[i].name;
+      }
+      this.appOptions = appDetails;
+    });
+    return {
       cord: {},
       appOptions: [],
       categoryList: [],
@@ -167,12 +171,7 @@ export default {
           (value && value.length <= 100) || "Please limit to 100 characters"
       },
       search: ""
-    
     };
-
-     
- 
-     
   },
 
   methods: {
@@ -180,10 +179,10 @@ export default {
       this.$refs.form.reset();
       this.$emit("closeDialog");
     },
-    action(){
+    action() {
       console.log("aaaa");
     },
-   
+
     save() {
       this.cord.puller = { _id: this.user._id, username: this.user.username };
       this.cord.openedOn = this.getDateTime();

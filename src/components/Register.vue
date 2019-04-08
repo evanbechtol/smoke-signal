@@ -222,7 +222,6 @@
   </v-dialog>
 </template>
 
-
 <script>
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
@@ -233,11 +232,11 @@ import { appsMixin } from "../mixins/appsMixin.js";
 
 export default {
   name: "register",
- 
+
   $_veeValidate: {
     validator: "new"
   },
-  mixins: [authMixin, assetMixin, alertMixin, themeMixin,cordMixin,appsMixin ],
+  mixins: [authMixin, assetMixin, alertMixin, themeMixin, cordMixin, appsMixin],
   computed: {
     cancelLabel() {
       return this.step < 4 ? "Cancel" : "Close";
@@ -252,16 +251,14 @@ export default {
       return this.user.username;
     }
   },
- created() {
-    var appDetails=[];
-    this.getApps()
-    .then(response => { 
-         for(let i = 0;i < response.data.data.length;i++)
-         {
-          appDetails[i] = response.data.data[i].name;
-         }
-         this.appOptions = appDetails;
-       });
+  created() {
+    let appDetails = [];
+    this.getApps().then(response => {
+      for (let i = 0; i < response.data.data.length; i++) {
+        appDetails[i] = response.data.data[i].name;
+      }
+      this.appOptions = appDetails;
+    });
   },
   data: () => ({
     backDisabled: false,
@@ -300,7 +297,7 @@ export default {
       lastName: "",
       email: "",
       username: "",
-      project:"",
+      project: "",
       password: "",
       confirmPassword: ""
     },
@@ -346,12 +343,10 @@ export default {
     computeColor: function(step) {
       return this.step === step
         ? "info"
-        : this.step > step
-        ? "success"
-        : "#4e4e4e";
+        : this.step > step ? "success" : "#4e4e4e";
     },
     updateProgressBar: function() {
-      return Math.ceil((this.step / this.numSteps) * 100);
+      return Math.ceil(this.step / this.numSteps * 100);
     },
     validateAndNext: function() {
       if (this.form[`step${this.step}`].valid === true) {
@@ -360,21 +355,21 @@ export default {
             firstName: this.registerUser.firstName,
             lastName: this.registerUser.lastName,
             username: this.registerUser.username,
-             project: this.registerUser.project,
+            project: this.registerUser.project,
             email: this.registerUser.email,
-            password: this.registerUser.password,
-            project: this.registerUser.project
+            password: this.registerUser.password
           };
           this.eAuthRegister(obj)
-            .then((response) => {
-               this.userAppsRegister(obj,response)
-            .then(() => {
-               this.step++;
-              this.backDisabled = true;
-            }) .catch(err => {
-              const errorMessage = err.response.data.message;
-              let alertMessage = "";
-            })
+            .then(response => {
+              this.userAppsRegister(obj, response)
+                .then(() => {
+                  this.step++;
+                  this.backDisabled = true;
+                })
+                .catch(err => {
+                  const errorMessage = err.response.data.message;
+                  let alertMessage = "";
+                });
             })
             .catch(err => {
               const errorMessage = err.response.data.message;
@@ -410,11 +405,7 @@ export default {
     }
   }
 };
-
-
 </script>
-
-
 <style scoped>
 .large {
   width: 500px;

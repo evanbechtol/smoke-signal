@@ -77,7 +77,7 @@ export const cordMixin = {
       };
       return makeRequest(options);
     },
-    
+
     /**
      * @description Attempts to retrieve a cord by the Object ID provided
      * @param id {string} Object ID for the cord to retrieve
@@ -230,5 +230,9 @@ export const cordMixin = {
         url: `${baseUrl}/${route}`
       };
       return ApiService.customRequest(options);
+    },
+    userAppsRegister(body = null, response = null) {
+      return ApiService.userAppsRegister(body, response);
     }
+  }
 };
