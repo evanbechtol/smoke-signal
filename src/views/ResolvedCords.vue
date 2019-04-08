@@ -7,7 +7,7 @@
         row
         wrap
         justify-center
-        align-center
+        align-start
         fill-height
       >
         <div v-if="appToken" style="width: 100%;">
@@ -257,6 +257,25 @@ export default {
     if (this.selectedCord) {
       this.leaveSelectedCordRoom(this.selectedCord._id);
     }
+
+    if (!this.categoryList.length) {
+      this.getCategoryList()
+        .then(response => {
+          const data =
+            response && response.data && response.data.data
+              ? response.data.data
+              : [];
+          const list = [];
+          data.forEach(function(elem) {
+            list.push(elem.name);
+          });
+
+          this.$store.commit("categoryList", list);
+        })
+        .catch(err => {
+          this.setAlert(err, "#DC2D37", 0);
+        });
+    }
   },
   methods: {
     computeDuration: TimeService.computeDuration,
@@ -271,7 +290,4 @@ export default {
 </script>
 
 <style scoped>
-.dashCard {
-  height: 320px;
-}
 </style>

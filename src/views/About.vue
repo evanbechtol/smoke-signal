@@ -49,7 +49,7 @@
               name="support email"
               class="ma-0"
               color="info"
-              href="mailto:evan.bechtol@ericsson.com?Subject=AnA Smoke Signal Support"
+              href="mailto:evan.bechtol@ericsson.com?Subject=AnA Hero Support"
             >
               <v-icon class="pr-2">email</v-icon>
               Send Email

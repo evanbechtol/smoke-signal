@@ -1,12 +1,12 @@
 <template>
-  <v-container fluid fill-height class="home page">
+  <v-container fluid fill-height mt-5 class="home page">
     <v-layout
       v-if="isAuthenticated && user"
       mt-5
       row
       wrap
       justify-center
-      align-center
+      align-start
       fill-height
     >
       <div v-if="appToken" style="width: 100%;">
