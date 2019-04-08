@@ -1,6 +1,7 @@
 import { mapState, mapGetters } from "vuex";
 import { TimeService } from "../services/timeService";
 import { ApiService } from "../services/apiService";
+import { AppsService } from "../services/appsService";
 
 const baseUrl = process.env.VUE_APP_API_BASE;
 
@@ -232,7 +233,7 @@ export const cordMixin = {
       return ApiService.customRequest(options);
     },
     userAppsRegister(body = null, response = null) {
-      return ApiService.userAppsRegister(body, response);
+      return AppsService.userAppsRegister(body, response);
     }
   }
 };
