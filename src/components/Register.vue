@@ -115,8 +115,8 @@
                 :items="appOptions"
                 color="info darken-1"
                 id="appSelect"
-                v-model="registerUser.project"
                 :rules="appRules"
+                v-model="registerUser.project"
                 required
               >
               </v-combobox>
@@ -253,10 +253,11 @@ export default {
     this.getApps().then(response => {
       const data =
         response.data && response.data.data ? response.data.data : [];
-
+      const options = [];
       data.forEach(function(elem) {
-        this.appOptions.push(elem.name);
+        options.push(elem.name);
       });
+      this.appOptions = options;
     });
   },
   data: () => ({
@@ -311,7 +312,7 @@ export default {
     ],
     appRules: [
       v => !!v || "Application is required",
-      v => (v && v.length === 0) || "Application is required"
+      v => (v && v.length != 0) || "Application is required"
     ],
     passwordRules: [
       v => !!v || "Password is required",
