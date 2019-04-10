@@ -100,6 +100,7 @@
           <v-card-text class="ma-0 pa-0" style="overflow-y: scroll;">
             <v-tabs-items v-model="activeTab">
               <v-tab-item
+                lazy
                 v-for="(item, index) in cords"
                 :key="`tab-item-${index}`"
               >
@@ -175,7 +176,7 @@ export default {
     filteredCords: function() {
       return this.selectItemType === "myActiveCords"
         ? this.cords[0].value
-        : this.selectItemType === "myResolvedCords"
+        : this.selectItemType === "myRescueCords"
         ? this.cords[1].value
         : this.cords[2].value;
     }
@@ -232,6 +233,7 @@ export default {
             0
           );
         });
+
       this.getUserStats(this.userString)
         .then(response => {
           const data = response.data.data;
@@ -257,17 +259,6 @@ export default {
       this.getCordsByUser(this.userString, "Open")
         .then(response => {
           this.cords[0].value = response.data.data;
-        })
-        .catch(err => {
-          this.setAlert(err.response.data.error, "#DC2D37", 0);
-        });
-
-      const query = {
-        rescuers: { _id: this.user._id, username: this.user.username }
-      };
-      this.getCords(100, 0, JSON.stringify(query))
-        .then(response => {
-          this.cords[2].value = response.data.data;
           this.initialized = true;
         })
         .catch(err => {
@@ -289,10 +280,22 @@ export default {
       this.initPage();
     },
     selectItemType: function(value) {
-      if (value === "myResolvedCords" && this.cords[1].length === 0) {
+      if (value === "myResolvedCords" && this.cords[2].value.length === 0) {
         this.getCordsByUser(this.userString, "Resolved")
           .then(response => {
+            this.cords[2].value = response.data.data;
+          })
+          .catch(err => {
+            this.setAlert(err.response.data.error, "#DC2D37", 0);
+          });
+      } else if (value === "myRescueCords" && this.cords[1].value.length === 0) {
+        const query = {
+          rescuers: { _id: this.user._id, username: this.user.username }
+        };
+        this.getCords(100, 0, JSON.stringify(query))
+          .then(response => {
             this.cords[1].value = response.data.data;
+            this.initialized = true;
           })
           .catch(err => {
             this.setAlert(err.response.data.error, "#DC2D37", 0);
