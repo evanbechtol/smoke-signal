@@ -250,12 +250,15 @@ export default {
     }
   },
   created() {
+    const _this = this;
     this.getApps().then(response => {
       const data =
         response.data && response.data.data ? response.data.data : [];
 
       data.forEach(function(elem) {
-        this.appOptions.push(elem.name);
+        if (elem.name) {
+          _this.appOptions.push(elem.name);
+        }
       });
     });
   },
@@ -311,7 +314,7 @@ export default {
     ],
     appRules: [
       v => !!v || "Application is required",
-      v => (v && v.length === 0) || "Application is required"
+      v => (v && v.length !== 0) || "Application is required"
     ],
     passwordRules: [
       v => !!v || "Password is required",
