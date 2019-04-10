@@ -1,77 +1,74 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
   <v-container
     fluid
     fill-height
+    mt-5
     class="light-l1 profile"
     :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
-    <v-layout column justify-center fill-height mt-5>
+    <v-layout row wrap justify-start>
       <!-- Statistics Section -->
-      <v-flex xs12 mt-5 class="animated fast slideInLeft">
-        <v-layout row wrap justify-center align-space-around fill-height>
-          <v-flex xs12 grow>
-            <v-card :dark="isDark" :color="`accent ${darken}`">
-              <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
-                Statistics
-              </v-card-title>
-              <v-card-text>
-                <v-layout
-                  row
-                  wrap
-                  align-center
-                  justify-center
-                  fill-height
-                  v-if="userStatsInitialized && userStats.length > 0"
-                >
-                  <v-flex
-                    xs12
-                    sm4
-                    text-xs-center
-                    self-
-                    v-for="(item, index) in userStats"
-                    :key="`stat-flex-${index}`"
-                  >
-                    <v-layout row align-center justify-start ml-2>
-                      <v-flex shrink>
-                        <p
-                          class="hildaLight"
-                          style="font-size: 3em;"
-                          :class="isDark ? 'white--text' : 'dark--text'"
-                        >
-                          {{ item.value }}
-                        </p>
-                      </v-flex>
-                      <v-flex shrink ml-4>
-                        <div
-                          class="ma-0 hildaLight text-xs-center subheading"
-                          :class="isDark ? 'white--text' : 'dark--text'"
-                        >
-                          {{ item.label }}
-                        </div>
-                      </v-flex>
-                    </v-layout>
+      <v-flex xs12 mt-4 class="animated fast slideInLeft">
+        <v-card :dark="isDark" :color="`accent ${darken}`">
+          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
+            Statistics
+          </v-card-title>
+          <v-card-text>
+            <v-layout
+              row
+              wrap
+              align-center
+              justify-center
+              fill-height
+              v-if="userStatsInitialized && userStats.length > 0"
+            >
+              <v-flex
+                xs12
+                sm4
+                text-xs-center
+                self-
+                v-for="(item, index) in userStats"
+                :key="`stat-flex-${index}`"
+              >
+                <v-layout row align-center justify-start ml-2>
+                  <v-flex shrink>
+                    <p
+                      class="hildaLight"
+                      style="font-size: 3em;"
+                      :class="isDark ? 'white--text' : 'dark--text'"
+                    >
+                      {{ item.value }}
+                    </p>
                   </v-flex>
-                </v-layout>
-
-                <v-layout v-else align-center justify-center fill-height>
-                  <v-flex xs12 align-self-center text-xs-center>
-                    <div>
-                      <p>Hang tight, we're crunching numbers!</p>
-                      <v-progress-linear
-                        :indeterminate="true"
-                        color="info"
-                      ></v-progress-linear>
+                  <v-flex shrink ml-4>
+                    <div
+                      class="ma-0 hildaLight text-xs-center subheading"
+                      :class="isDark ? 'white--text' : 'dark--text'"
+                    >
+                      {{ item.label }}
                     </div>
                   </v-flex>
                 </v-layout>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
+              </v-flex>
+            </v-layout>
+
+            <v-layout v-else align-center justify-center fill-height>
+              <v-flex xs12 align-self-center text-xs-center>
+                <div>
+                  <p>Hang tight, we're crunching numbers!</p>
+                  <v-progress-linear
+                    :indeterminate="true"
+                    color="info"
+                  ></v-progress-linear>
+                </div>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-card>
       </v-flex>
 
       <!-- History Section -->
-      <v-flex xs12 class="mb-3" :class="isSmall ? 'mt-0' : 'mt-5'">
+      <v-flex xs12 class="mb-3" :class="{ isSmall: 'mt-0' }">
         <v-card
           class="animated fast slideInRight"
           :dark="isDark"
@@ -100,6 +97,7 @@
           <v-card-text class="ma-0 pa-0" style="overflow-y: scroll;">
             <v-tabs-items v-model="activeTab">
               <v-tab-item
+                lazy
                 v-for="(item, index) in cords"
                 :key="`tab-item-${index}`"
               >
@@ -175,7 +173,7 @@ export default {
     filteredCords: function() {
       return this.selectItemType === "myActiveCords"
         ? this.cords[0].value
-        : this.selectItemType === "myResolvedCords"
+        : this.selectItemType === "myRescueCords"
         ? this.cords[1].value
         : this.cords[2].value;
     }
@@ -232,6 +230,7 @@ export default {
             0
           );
         });
+
       this.getUserStats(this.userString)
         .then(response => {
           const data = response.data.data;
@@ -257,17 +256,6 @@ export default {
       this.getCordsByUser(this.userString, "Open")
         .then(response => {
           this.cords[0].value = response.data.data;
-        })
-        .catch(err => {
-          this.setAlert(err.response.data.error, "#DC2D37", 0);
-        });
-
-      const query = {
-        rescuers: { _id: this.user._id, username: this.user.username }
-      };
-      this.getCords(100, 0, JSON.stringify(query))
-        .then(response => {
-          this.cords[2].value = response.data.data;
           this.initialized = true;
         })
         .catch(err => {
@@ -289,10 +277,25 @@ export default {
       this.initPage();
     },
     selectItemType: function(value) {
-      if (value === "myResolvedCords" && this.cords[1].length === 0) {
+      if (value === "myResolvedCords" && this.cords[2].value.length === 0) {
         this.getCordsByUser(this.userString, "Resolved")
           .then(response => {
+            this.cords[2].value = response.data.data;
+          })
+          .catch(err => {
+            this.setAlert(err.response.data.error, "#DC2D37", 0);
+          });
+      } else if (
+        value === "myRescueCords" &&
+        this.cords[1].value.length === 0
+      ) {
+        const query = {
+          rescuers: { _id: this.user._id, username: this.user.username }
+        };
+        this.getCords(100, 0, JSON.stringify(query))
+          .then(response => {
             this.cords[1].value = response.data.data;
+            this.initialized = true;
           })
           .catch(err => {
             this.setAlert(err.response.data.error, "#DC2D37", 0);

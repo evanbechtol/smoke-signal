@@ -234,6 +234,9 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import { gridMixin } from "../mixins/gridMixin";
 import { TimeService } from "../services/timeService";
+import CircleCard from "../components/CircleCard";
+import Grid from "../components/Grid";
+import PullCordDialog from "../components/PullCordDialog";
 
 export default {
   name: "home",
@@ -246,9 +249,9 @@ export default {
     themeMixin
   ],
   components: {
-    CircleCard: () => import("../components/Grid"),
-    Grid: () => import("../components/CircleCard"),
-    PullCordDialog: () => import("../components/PullCordDialog")
+    CircleCard,
+    Grid,
+    PullCordDialog
   },
   computed: {
     filteredGridItems: function() {
