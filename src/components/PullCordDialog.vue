@@ -36,8 +36,8 @@
                       text-color="info"
                       color="info"
                       :items="appOptions"
-                      :rules="[v => !!v || 'Item is required']"
-                      required
+                      hint="Select a application"
+                      :rules="[rules.required]"
                     >
                     </v-combobox>
                   </v-flex>
@@ -209,10 +209,11 @@ export default {
     this.getApps().then(response => {
       const data =
         response.data && response.data.data ? response.data.data : [];
-
+      const options = [];
       data.forEach(function(elem) {
-        this.appOptions.push(elem.name);
+        options.push(elem.name);
       });
+      this.appOptions = options;
     });
 
     if (!this.categoryList.length) {

@@ -250,16 +250,14 @@ export default {
     }
   },
   created() {
-    const _this = this;
     this.getApps().then(response => {
       const data =
         response.data && response.data.data ? response.data.data : [];
-
+      const options = [];
       data.forEach(function(elem) {
-        if (elem.name) {
-          _this.appOptions.push(elem.name);
-        }
+        options.push(elem.name);
       });
+      this.appOptions = options;
     });
   },
   data: () => ({

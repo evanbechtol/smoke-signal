@@ -620,10 +620,11 @@ export default {
     this.getApps().then(response => {
       const data =
         response.data && response.data.data ? response.data.data : [];
-
+      const options = [];
       data.forEach(function(elem) {
-        this.appOptions.push(elem.name);
+        options.push(elem.name);
       });
+      this.appOptions = options;
     });
 
     if (!this.categoryList.length) {
