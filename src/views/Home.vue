@@ -57,6 +57,22 @@
                 </v-tooltip>
               </v-flex>
 
+              <v-flex shrink align-self-center mt-3>
+                <v-tooltip bottom offset-y>
+                  <template #activator="data">
+                    <v-btn
+                      icon
+                      :dark="isDark"
+                      v-on="data.on"
+                      @click="csvExport(filteredGridItems)"
+                    >
+                      <v-icon>cloud_download</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Export Data to CSV</span>
+                </v-tooltip>
+              </v-flex>
+
               <v-flex shrink mt-3 mr-3>
                 <v-tooltip bottom class="ml-3">
                   <template #activator="data">
@@ -78,7 +94,7 @@
             <v-flex xs12 class="hidden-xs-only">
               <v-layout row wrap justify-space-between align-center fill-height>
                 <!-- CORD FILTER CHIPS -->
-                <v-flex xs12 ml-3 pl-1>
+                <v-flex grow ml-3 pl-1>
                   <v-chip
                     :color="chipBg"
                     :dark="isDark"
@@ -237,6 +253,7 @@ import { TimeService } from "../services/timeService";
 import CircleCard from "../components/CircleCard";
 import Grid from "../components/Grid";
 import PullCordDialog from "../components/PullCordDialog";
+import { DataExportService } from "../services/dataExportService";
 
 export default {
   name: "home",
@@ -304,6 +321,9 @@ export default {
   },
   methods: {
     computeDuration: TimeService.computeDuration,
+    csvExport(data) {
+      DataExportService.csvExport(data);
+    },
     refreshMyGrid() {
       this.refreshGridOne();
     },
