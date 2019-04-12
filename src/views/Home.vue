@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height mt-5 class="home page">
+  <v-container fluid fill-height mt-5 class="home page" id="home">
     <v-layout
       v-if="isAuthenticated && user"
       mt-5
@@ -250,7 +250,6 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import { gridMixin } from "../mixins/gridMixin";
 import { TimeService } from "../services/timeService";
-import CircleCard from "../components/CircleCard";
 import Grid from "../components/Grid";
 import PullCordDialog from "../components/PullCordDialog";
 import { DataExportService } from "../services/dataExportService";
@@ -266,7 +265,6 @@ export default {
     themeMixin
   ],
   components: {
-    CircleCard,
     Grid,
     PullCordDialog
   },

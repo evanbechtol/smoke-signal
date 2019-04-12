@@ -35,7 +35,7 @@ const DataExportService = {
     link.setAttribute("href", data);
     link.setAttribute("download", "export.csv");
 
-    const app = document.getElementById("app");
+    const app = document.getElementById("home");
     app.appendChild(link);
 
     link.click();

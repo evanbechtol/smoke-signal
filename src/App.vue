@@ -1,6 +1,17 @@
 <template>
-  <v-app id="app" :dark="isDark">
-    <Toolbar color="primary" />
+  <v-app id="appEntry" :dark="isDark">
+    <Toolbar color="primary">
+      <template v-slot:installer>
+        <v-btn
+          ouline
+          depressed
+          dark
+          @click="installer"
+          :style="{ display: installBtn }"
+          >Install App
+        </v-btn>
+      </template>
+    </Toolbar>
     <transition
       name="routerAnimation"
       enter-active-class="animated faster fadeIn"
@@ -63,6 +74,18 @@ export default {
     }
     // For E-Auth application authentication
     this.authenticateApp();
+
+    // This is used to install the app as a PWA to home screen
+    window.addEventListener("beforeinstallprompt", e => {
+      // Prevent Old browsers from prompting immediately
+      e.preventDefault();
+
+      // Store the event for use when the button is clicked
+      this.installPrompt = e;
+
+      // Show the button to install when appropriate
+      this.installBtn = "block";
+    });
   },
   computed: {
     showNotificationCard: function() {
@@ -71,6 +94,8 @@ export default {
   },
   data() {
     return {
+      installBtn: "none", // Controls displaying A2HS button
+      installPrompt: undefined, // Holds reference to A2HS event
       color: "#0c0c0c",
       y: "top",
       x: null,
@@ -97,6 +122,25 @@ export default {
       if (user) {
         this.$store.commit("user", JSON.parse(user));
       }
+    },
+    installer() {
+      // Hide the button once it's clicked
+      this.installBtn = "none";
+
+      // Show the install prompt
+      this.installPrompt.prompt(
+        "Do you want to add this application to your home screen?",
+        "Click 'Yes' or 'Cancel'"
+      );
+
+      this.installPrompt.userChoice.then(result => {
+        if (result.outcome === "accepted") {
+          console.log("User accepted");
+        } else {
+          console.log("User denied");
+        }
+        this.installPrompt = null;
+      });
     }
   },
   mounted() {
@@ -107,10 +151,10 @@ export default {
 </script>
 
 <style>
-@import "https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css";
-@import "https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons";
+/*@import "https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css";
+@import "https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons";*/
 
-#app {
+#appEntry {
   font-family: "Hilda-Regular", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -10,13 +10,17 @@
           AnA Hero
         </router-link>
       </v-toolbar-title>
+
       <v-spacer></v-spacer>
+
+      <slot name="installer"></slot>
+
       <v-btn
         v-if="user && user.username"
         flat
         @click.stop="rightDrawer = !rightDrawer"
         style="margin: 8px;"
-        class="mr-2 px-5"
+        class="mr-2 px-3"
       >
         <v-icon class="mr-3">perm_identity</v-icon>
         {{ user.username }}
@@ -221,19 +225,6 @@ export default {
   align-items: center;
   text-decoration: none;
   height: 100%;
-}
-
-#select {
-  width: 300px !important;
-}
-
-#selectContainer {
-  padding: 0 0 !important;
-}
-
-.menuIcon {
-  position: relative;
-  top: 8px;
 }
 
 .userDetail {
