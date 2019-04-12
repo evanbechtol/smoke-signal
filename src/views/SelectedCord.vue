@@ -671,7 +671,15 @@ export default {
           this.loading = false;
         })
         .catch(err => {
-          this.setAlert(err.response.data.error, "#DC2D37", 0);
+          this.setAlert(
+            (err &&
+              err.response &&
+              err.response.data &&
+              err.response.data.error) ||
+              "Error Occurred updating rescuers",
+            "#DC2D37",
+            0
+          );
         });
     },
     save(refreshGrid = false) {
