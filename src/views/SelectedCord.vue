@@ -88,7 +88,7 @@
                               outline
                               :color="isDark ? 'accent' : 'primary'"
                               :dark="isDark"
-                              slot-scope="{ active, toggle }"
+                              slot-scope="{ active }"
                               :selected="active"
                             >
                               <v-avatar>

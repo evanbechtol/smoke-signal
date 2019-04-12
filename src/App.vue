@@ -3,7 +3,7 @@
     <Toolbar color="primary">
       <template v-slot:installer>
         <v-btn
-          ouline
+          outline
           depressed
           dark
           @click="installer"

@@ -52,15 +52,12 @@
 import { themeMixin } from "../mixins/themeMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { authMixin } from "../mixins/authMixin";
-import PullCordDialog from "./PullCordDialog.vue";
-import MenuBtn from "./MenuBtn";
 import { socketMixin } from "../mixins/socketMixin";
 import { TimeService } from "../services/timeService";
 
 export default {
   name: "Grid",
   mixins: [themeMixin, cordMixin, socketMixin, authMixin],
-  components: { MenuBtn, PullCordDialog },
   data: () => ({
     gridLoading: false,
     pullingCord: false,
