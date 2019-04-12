@@ -106,7 +106,7 @@ export default {
     computeDuration: TimeService.computeDuration,
     msToTime: TimeService.msToTime,
     getNotifyList() {
-      if (this.user != null) {
+      if (this.user) {
         const query = {
           notifyReceiver: { _id: this.user._id, username: this.user.username },
           readTimeStamp: null
@@ -147,7 +147,7 @@ export default {
   },
   watch: {
     appToken: function(value) {
-      if (value != null) {
+      if (value) {
         const _this = this;
         window.setTimeout(_this.getNotifyList, 1000);
       }
