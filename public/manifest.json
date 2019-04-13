@@ -1,5 +1,6 @@
 {
-  "name": "AnA Hero",
+  "name": "Hero",
+  "version": "1.0.0",
   "short_name": "ana-hero",
   "icons": [
     {
