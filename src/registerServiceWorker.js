@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === "production") {
 
 let refreshing;
 
-navigator.serviceWorker.addEventListener("controllerChange", function() {
+navigator.serviceWorker.addEventListener("controllerchange", function() {
   console.log("Service worker has handed control over to new worker");
   if (refreshing) return;
   window.location.reload();
