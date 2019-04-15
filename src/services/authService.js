@@ -17,7 +17,8 @@ const AuthService = {
     const options = {
       method: "POST",
       headers: { Authorization: `Bearer ${appCode}` },
-      url: `${base}/${route}`
+      url: `${base}/${route}`,
+      data: { tokenLife: "999999s" }
     };
 
     ApiService.customRequest(options)
