@@ -105,7 +105,7 @@ const AuthService = {
           data: {
             username: body.username,
             password: body.password,
-            tokenLife: body.tokenLife || 900
+            tokenLife: body.tokenLife || "999999s"
           },
           url: `${base}/${route}`
         };

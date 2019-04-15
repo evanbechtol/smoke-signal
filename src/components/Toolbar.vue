@@ -78,7 +78,7 @@
             </v-flex>
             <v-flex xs12>
               <jwt-expiry
-                v-if="isAuthenticated && token"
+                v-if="shouldShowExpiryDetails"
                 :expiry-details="expiryDetails"
               ></jwt-expiry>
             </v-flex>
@@ -162,6 +162,9 @@ export default {
     color: String
   },
   computed: {
+    shouldShowExpiryDetails: function() {
+      return this.isAuthenticated && this.token && this.expiryDetails.minutes <= 15;
+    },
     switchLabel: function() {
       return this.isDark ? "Dark" : "Light";
     }
