@@ -5,9 +5,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 // install new service worker when ok, then reload page
 self.addEventListener("message", msg => {
   if (msg.data.action === "skipWaiting") {
-    self.skipWaiting().then(() => {
-      window.location.reload(true);
-    });
+    self.skipWaiting().then(() => {});
   }
 });
 
