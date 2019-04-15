@@ -108,7 +108,7 @@
             <p class="hildaLight white--text mb-4">User Details</p>
             <v-layout column align-start justify-start>
               <v-flex xs12 mb-0 shrink>
-                <p class="subheading">
+                <p class="subheading white--text">
                   Signum
                 </p>
               </v-flex>
@@ -117,7 +117,7 @@
               </v-flex>
 
               <v-flex xs12 mb-0 shrink>
-                <p class="subheading">
+                <p class="subheading white--text">
                   Name
                 </p>
               </v-flex>
@@ -128,7 +128,7 @@
               </v-flex>
 
               <v-flex xs12 mb-0 shrink>
-                <p class="subheading">
+                <p class="subheading white--text">
                   Email
                 </p>
               </v-flex>
