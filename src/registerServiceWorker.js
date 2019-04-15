@@ -4,9 +4,12 @@ import { register } from "register-service-worker";
 import alertify from "alertify.js";
 
 const notifyUserAboutUpdate = worker => {
-  alertify.confirm("An update is available!\nDo you want to update?", () => {
-    worker.postMessage({ action: "skipWaiting" });
-  });
+  alertify.confirm(
+    "An update is available!\nDo you want to update and refresh this page?",
+    () => {
+      worker.postMessage({ action: "skipWaiting" });
+    }
+  );
 };
 
 if (process.env.NODE_ENV === "production") {
@@ -54,9 +57,3 @@ navigator.serviceWorker.addEventListener("controllerchange", function() {
   window.location.reload();
   refreshing = true;
 });
-
-// navigator.serviceWorker.addEventListener("fetch", function() {
-//   if (refreshing) return;
-//   window.location.reload();
-//   refreshing = true;
-// });
