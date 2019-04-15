@@ -1,10 +1,13 @@
-FROM node:lts-alpine
+FROM node:10.15.2
 
-ARG http_proxy
-ARG https_proxy
+# Update the below proxy and timezone arguments using "--build-arg" inputs during "docker build"
+ARG http_proxy=http://10.125.198.138:8080
+ARG https_proxy=http://10.125.198.138:8080
+ARG no_proxy="mongo, e_auth"
+ARG TZ=America/Chicago
 
-ENV http_proxy=$http_proxy
-ENV https_proxy=$https_proxy
+# Set the proxy and timezone environment variables using "-e" inputs during "docker run"
+ENV http_proxy=${http_proxy} https_proxy=${https_proxy} no_proxy=${no_proxy} TZ=${TZ}
 
 # install simple http server for serving static content
 RUN npm install -g spa-http-server
