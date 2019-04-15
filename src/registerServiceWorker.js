@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "production") {
       const newWorker = registration.installing;
 
       newWorker.addEventListener("statechange", () => {
-        console.log(`New service worker changed to ${newWorker.state}`);
+        console.log(`New service worker is ${newWorker.state}`);
       });
     },
     updated(registration) {

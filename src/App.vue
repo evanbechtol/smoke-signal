@@ -2,14 +2,20 @@
   <v-app id="appEntry" :dark="isDark">
     <Toolbar color="primary">
       <template v-slot:installer>
-        <v-btn
-          outline
-          depressed
-          dark
-          @click="installer"
-          :style="{ display: installBtn }"
-          >Install App
-        </v-btn>
+        <v-tooltip bottom class="ml-3">
+          <template #activator="data">
+            <v-btn
+              v-on="data.on"
+              flat
+              depressed
+              dark
+              @click="installer"
+              :style="{ display: installBtn }"
+              >Install App
+            </v-btn>
+          </template>
+          <span>Installs this app to your desktop</span>
+        </v-tooltip>
       </template>
     </Toolbar>
     <transition
