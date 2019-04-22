@@ -22,7 +22,10 @@
         style="margin: 8px;"
         class="mr-2 px-3"
       >
-        <v-icon class="mr-3">perm_identity</v-icon>
+        <!--<v-icon class="mr-3">perm_identity</v-icon>-->
+        <v-avatar class="mr-3" size="36">
+          <v-img :src="getImagePath('evanbechtolHeadshot.png')" />
+        </v-avatar>
         {{ user.username }}
       </v-btn>
     </v-toolbar>
@@ -70,10 +73,12 @@
       <v-layout column fill-height align-space-around justify-center>
         <v-flex xs12 mt-5 shrink>
           <v-layout column align-space-around justify-center mt-4>
-            <v-flex xs12 text-xs-center>
-              <v-icon size="100">perm_identity</v-icon>
+            <v-flex xs12 text-xs-center mb-2>
+              <v-avatar size="150">
+                <v-img :src="getImagePath('evanbechtolHeadshot.png')"></v-img>
+              </v-avatar>
             </v-flex>
-            <v-flex xs12 class="hildaLight white--text" text-xs-center>
+            <v-flex xs12 class="hildaLight white--text" text-xs-center mb-2>
               {{ user.username }}
             </v-flex>
             <v-flex xs12>
@@ -153,17 +158,20 @@
 import { themeMixin } from "../mixins/themeMixin.js";
 import { authMixin } from "../mixins/authMixin.js";
 import JwtExpiry from "./JWTExpiry";
+import { assetMixin } from "../mixins/assetMixin";
 
 export default {
   name: "toolbar",
   components: { JwtExpiry },
-  mixins: [authMixin, themeMixin],
+  mixins: [authMixin, assetMixin, themeMixin],
   props: {
     color: String
   },
   computed: {
     shouldShowExpiryDetails: function() {
-      return this.isAuthenticated && this.token && this.expiryDetails.minutes <= 15;
+      return (
+        this.isAuthenticated && this.token && this.expiryDetails.minutes <= 15
+      );
     },
     switchLabel: function() {
       return this.isDark ? "Dark" : "Light";
