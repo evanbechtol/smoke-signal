@@ -14,13 +14,13 @@ const TimeService = {
     const days = (duration / (1000 * 60 * 60 * 24)).toFixed(1);
 
     if (seconds < 60) {
-      return seconds + " Sec";
+      return seconds + " sec";
     } else if (minutes < 60) {
-      return minutes + " Min";
+      return minutes + " min";
     } else if (hours < 24) {
-      return hours + " Hrs";
+      return hours + " hrs";
     } else {
-      return days + " Days";
+      return days + " days";
     }
   }
 };

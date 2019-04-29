@@ -24,9 +24,9 @@ export const cordMixin = {
   },
   methods: {
     computeDurationBg(duration) {
-      return TimeService.computeDuration(duration).includes("Days")
+      return TimeService.computeDuration(duration).includes("days")
         ? "error"
-        : TimeService.computeDuration(duration).includes("Hrs")
+        : TimeService.computeDuration(duration).includes("hrs")
         ? "orangeWarning"
         : "success";
     },
