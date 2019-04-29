@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar v-bind:color="color" dark app>
+    <v-toolbar v-bind:color="color" dark app flat>
       <v-toolbar-side-icon
         @click.stop="drawer = !drawer"
         style="margin: 8px;"
