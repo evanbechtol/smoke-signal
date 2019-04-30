@@ -1,12 +1,12 @@
 <template>
   <v-container
     fluid
-    fill-height
+    align-center
     mt-5
     class="light-l1 profile"
     :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
-    <v-layout row wrap justify-start>
+    <v-layout column justify-start v-if="!loading">
       <!-- Statistics Section -->
       <v-flex xs12 mt-4 class="animated fast slideInLeft">
         <v-card :dark="isDark" :color="`accent ${darken}`">
@@ -49,18 +49,6 @@
                     </div>
                   </v-flex>
                 </v-layout>
-              </v-flex>
-            </v-layout>
-
-            <v-layout v-else align-center justify-center fill-height>
-              <v-flex xs12 align-self-center text-xs-center>
-                <div>
-                  <p>Hang tight, we're crunching numbers!</p>
-                  <v-progress-linear
-                    :indeterminate="true"
-                    color="info"
-                  ></v-progress-linear>
-                </div>
               </v-flex>
             </v-layout>
           </v-card-text>
@@ -151,6 +139,18 @@
         </v-card>
       </v-flex>
     </v-layout>
+
+    <v-layout v-else align-center justify-center fill-height>
+      <v-flex xs12 align-self-center text-xs-center>
+        <div>
+          <p>Hang tight, we're crunching numbers!</p>
+          <v-progress-linear
+            :indeterminate="true"
+            color="info"
+          ></v-progress-linear>
+        </div>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -164,13 +164,18 @@ export default {
   name: "Profile",
   mixins: [themeMixin, alertMixin, authMixin, cordMixin],
   computed: {
-    userString: function() {
+    loading() {
+      return this.validateLoading || this.statsLoading || this.cordsLoading;
+    },
+
+    userString() {
       return JSON.stringify({
         _id: this.user._id,
         username: this.user.username
       });
     },
-    filteredCords: function() {
+
+    filteredCords() {
       return this.selectItemType === "myActiveCords"
         ? this.cords[0].value
         : this.selectItemType === "myRescueCords"
@@ -179,6 +184,9 @@ export default {
     }
   },
   data: () => ({
+    validateLoading: false,
+    statsLoading: false,
+    cordsLoading: false,
     activeTab: null,
     initialized: false,
     userStatsInitialized: false,
@@ -215,6 +223,10 @@ export default {
       this.$router.push({ path: `/cord/${cord._id}`, props: cord });
     },
     initPage() {
+      this.validateLoading = true;
+      this.statsLoading = true;
+      this.cordsLoading = true;
+
       this.validateUser()
         .then(validationResponse => {
           this.$store.commit("token", validationResponse.data.token || null);
@@ -229,6 +241,9 @@ export default {
             "#DC2D37",
             0
           );
+        })
+        .finally(() => {
+          this.validateLoading = false;
         });
 
       this.getUserStats(this.userString)
@@ -252,7 +267,11 @@ export default {
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
+        })
+        .finally(() => {
+          this.statsLoading = false;
         });
+
       this.getCordsByUser(this.userString, "Open")
         .then(response => {
           this.cords[0].value = response.data.data;
@@ -260,6 +279,9 @@ export default {
         })
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
+        })
+        .finally(() => {
+          this.cordsLoading = false;
         });
     },
     updateSelectItemType(value) {
