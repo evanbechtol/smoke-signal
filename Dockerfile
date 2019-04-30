@@ -10,7 +10,10 @@ ARG TZ=America/Chicago
 ENV http_proxy=${http_proxy} https_proxy=${https_proxy} no_proxy=${no_proxy} TZ=${TZ}
 
 # install simple http server for serving static content
+RUN npm install -g yarn
 RUN npm install -g spa-http-server
+RUN npm install -g @vue/cli
+RUN npm install -g @vue/cli-service
 
 # make the 'app' folder the current working directory
 WORKDIR /app
@@ -19,7 +22,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # install project dependencies
-RUN npm install
+RUN yarn install
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
