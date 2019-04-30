@@ -1,6 +1,16 @@
 {
   "name": "ana-hero",
-  "version": "0.1.0",
+  "author": "Evan Bechtol <evan.bechtol@ericsson.com>",
+  "description": "Ask others for help resolving blocking issues, and rescue your colleagues",
+  "version": "1.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://scmgr.eams.ericsson.net/incubation/smoke-signal.git"
+  },
+  "bugs": {
+    "url": "https://scmgr.eams.ericsson.net/incubation/smoke-signal/issues"
+  },
+  "homepage": "https://scmgr.eams.ericsson.net/incubation/smoke-signal#readme",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
