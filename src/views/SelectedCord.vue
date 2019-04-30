@@ -2,7 +2,7 @@
   <v-container fill-height :class="isSmall ? 'pa-0' : 'mt-4'">
     <v-layout
       row
-      align-center
+      align-start
       justify-center
       v-touch="{
         right: () => goBack()
