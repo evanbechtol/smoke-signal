@@ -107,7 +107,10 @@
         <v-divider class="mx-3"></v-divider>
 
         <!-- Cord Content -->
-        <v-card-text v-if="selectedCord" class="px-0 animated contentFadeInDown">
+        <v-card-text
+          v-if="selectedCord"
+          class="px-0 animated contentFadeInDown"
+        >
           <v-container grid-list-md fluid fill-height pt-0>
             <v-layout wrap row>
               <!-- Description -->
