@@ -10,48 +10,88 @@
     >
       <v-flex xs12 sm10 lg8 xl8>
         <!-- Cord Title -->
-        <v-card-title primary-title class="hildaLight space-small ma-0">
-          <div v-if="selectedCord && !loading">
-            <v-tooltip bottom v-if="isSmall">
-              <template #activator="data">
-                <v-btn
-                  fab
-                  outline
-                  color="accent"
-                  v-on="data.on"
-                  dark
-                  class="mb-2 mr-4"
-                  @click="goBack"
-                >
-                  <v-icon size="30">arrow_back</v-icon>
-                </v-btn>
-              </template>
-              <span>Go back</span>
-            </v-tooltip>
+        <v-card-title
+          primary-title
+          class="hildaLight space-small mx-0 mb-0 mt-5 px-0"
+        >
+          <v-layout row justify-center>
+            <!-- Go Back Button -->
+            <v-flex shrink mr-2 align-self-center v-if="readonly">
+              <v-tooltip bottom v-if="isSmall">
+                <template #activator="data">
+                  <v-btn
+                    left
+                    fab
+                    small
+                    :color="`info $[darken}`"
+                    v-on="data.on"
+                    :dark="isDark"
+                    @click="goBack"
+                  >
+                    <v-icon size="30">arrow_back</v-icon>
+                  </v-btn>
+                </template>
+                <span>Go back</span>
+              </v-tooltip>
+            </v-flex>
+            
+            <v-flex grow>
+              <!-- Cord Title Text -->
+              <div v-if="selectedCord && !loading">
+                <span class="ml-3 pt-5 header" v-if="readonly">
+                  {{ selectedCord.title }}
+                </span>
+                <br />
 
-            <span class="ml-3 header">{{ selectedCord.title }}</span>
+                <!-- Application & Category -->
+                <span class="ml-3">
+                  <small v-if="readonly">
+                    {{ selectedCord.app }} {{ selectedCord.category }}
+                  </small>
 
-            <br />
+                  <v-layout row wrap v-else ml-3 pl-0>
+                    <v-flex xs12>
+                      <v-text-field v-model="selectedCord.title" label="Title" outline :dark="isDark"
+                                    :color="`info ${darken}`">
+                  {{ selectedCord.title }}
+                </v-text-field>
+                    </v-flex>
+                    <v-flex shrink mr-2>
+                      <v-text-field v-model="selectedCord.app" label="Application" outline :dark="isDark"
+                                    :color="`info ${darken}`">
+                        {{ selectedCord.app }}
+                      </v-text-field>
+                    </v-flex>
+                    <v-flex shrink>
+                      <v-text-field v-model="selectedCord.category" label="Category" outline :dark="isDark"
+                                    :color="`info ${darken}`">
+                        {{ selectedCord.category }}
+                      </v-text-field>
+                    </v-flex>
+                  </v-layout>
+                </span>
+              </div>
 
-            <!-- Application & Category -->
-            <small class="ml-3">
-              {{ selectedCord.app }} {{ selectedCord.category }}
-            </small>
-          </div>
-
-          <div v-else style="z-index: 99; width: 100%;" class="text-xs-center">
-            <p>Please wait! Loading Data</p>
-            <v-progress-linear
-              :indeterminate="true"
-              color="primary"
-            ></v-progress-linear>
-          </div>
+              <!-- Loading text -->
+              <div
+                v-else
+                style="z-index: 99; width: 100%;"
+                class="text-xs-center"
+              >
+                <p>Please wait! Loading Data</p>
+                <v-progress-linear
+                  :indeterminate="true"
+                  color="primary"
+                ></v-progress-linear>
+              </div>
+            </v-flex>
+          </v-layout>
         </v-card-title>
 
-        <v-divider class="mx-4"></v-divider>
+        <v-divider class="mx-3"></v-divider>
 
         <!-- Cord Content -->
-        <v-card-text v-if="selectedCord">
+        <v-card-text v-if="selectedCord" class="px-0">
           <v-container grid-list-md fluid fill-height pt-0>
             <v-layout wrap row>
               <!-- Description -->
@@ -63,7 +103,7 @@
                   :solo="readonly"
                   auto-grow
                   :outline="!readonly"
-                  label="Issue Description"
+                  label="Description"
                   :readonly="readonly"
                   v-model="selectedCord.description"
                   @change="descriptionChanged"
@@ -124,7 +164,6 @@
                       :dark="isDark"
                       :readonly="readonly"
                       hide-selected
-                      hint="Add some tags/keywords"
                       label="Tags"
                       multiple
                       persistent-hint
@@ -194,7 +233,7 @@
                   <!-- Rescuers -->
                   <v-flex xs12>
                     <v-layout row>
-                      <v-flex xs12 sm4>
+                      <v-flex grow>
                         <p class="mb-0">Rescuers</p>
                         <div class="mb-3">
                           <v-item-group multiple>
@@ -251,6 +290,7 @@
                           elevation="0"
                           :color="`accent ${darken}`"
                           class="px-3 py-2"
+                          max-width="150px"
                           :dark="isDark"
                         >
                           <span>
@@ -261,7 +301,7 @@
 
                           <br />
 
-                          <v-avatar class="mr-2" size="26">
+                          <v-avatar class="mr-2" size="26" tile>
                             <v-img
                               :src="getImagePath('evanbechtolHeadshot.png')"
                             />
@@ -419,6 +459,7 @@
                   <v-tooltip right>
                     <template #activator="data">
                       <v-btn
+                        v-if="readonly"
                         v-on="data.on"
                         :block="isSmall"
                         color="purple darken-1"
@@ -434,7 +475,6 @@
 
                   <v-btn
                     v-if="!readonly"
-                    :class="isSmall ? 'ml-0' : 'ml-3'"
                     :block="isSmall"
                     :outline="readonly"
                     :color="readonly ? 'info darken-1' : 'success darken-1'"
@@ -442,7 +482,7 @@
                     dark
                     @click="readonly = !readonly"
                   >
-                    Save Cord
+                    Save Changes
                   </v-btn>
                 </v-card-actions>
               </v-flex>
