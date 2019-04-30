@@ -34,10 +34,10 @@
                 <span>Go back</span>
               </v-tooltip>
             </v-flex>
-            
-            <v-flex grow>
-              <!-- Cord Title Text -->
-              <div v-if="selectedCord && !loading">
+
+            <!-- Cord Title Text -->
+            <v-flex v-if="selectedCord && !loading" grow>
+              <div class="animated titleFadeInLeft">
                 <span class="ml-3 pt-5 header" v-if="readonly">
                   {{ selectedCord.title }}
                 </span>
@@ -51,33 +51,49 @@
 
                   <v-layout row wrap v-else ml-3 pl-0>
                     <v-flex xs12>
-                      <v-text-field v-model="selectedCord.title" label="Title" outline :dark="isDark"
-                                    :color="`info ${darken}`">
-                  {{ selectedCord.title }}
-                </v-text-field>
+                      <v-text-field
+                        v-model="selectedCord.title"
+                        label="Title"
+                        outline
+                        :dark="isDark"
+                        :color="`info ${darken}`"
+                        @change="titleChanged"
+                      >
+                        {{ selectedCord.title }}
+                      </v-text-field>
                     </v-flex>
                     <v-flex shrink mr-2>
-                      <v-text-field v-model="selectedCord.app" label="Application" outline :dark="isDark"
-                                    :color="`info ${darken}`">
+                      <v-text-field
+                        v-model="selectedCord.app"
+                        label="Application"
+                        outline
+                        :dark="isDark"
+                        :color="`info ${darken}`"
+                        @change="appChanged"
+                      >
                         {{ selectedCord.app }}
                       </v-text-field>
                     </v-flex>
                     <v-flex shrink>
-                      <v-text-field v-model="selectedCord.category" label="Category" outline :dark="isDark"
-                                    :color="`info ${darken}`">
+                      <v-text-field
+                        v-model="selectedCord.category"
+                        label="Category"
+                        outline
+                        :dark="isDark"
+                        :color="`info ${darken}`"
+                        @change="categoryChanged"
+                      >
                         {{ selectedCord.category }}
                       </v-text-field>
                     </v-flex>
                   </v-layout>
                 </span>
               </div>
+            </v-flex>
 
-              <!-- Loading text -->
-              <div
-                v-else
-                style="z-index: 99; width: 100%;"
-                class="text-xs-center"
-              >
+            <!-- Loading text -->
+            <v-flex v-else grow>
+              <div style="z-index: 9; width: 100%;" class="text-xs-center">
                 <p>Please wait! Loading Data</p>
                 <v-progress-linear
                   :indeterminate="true"
@@ -91,7 +107,7 @@
         <v-divider class="mx-3"></v-divider>
 
         <!-- Cord Content -->
-        <v-card-text v-if="selectedCord" class="px-0">
+        <v-card-text v-if="selectedCord" class="px-0 animated contentFadeInDown">
           <v-container grid-list-md fluid fill-height pt-0>
             <v-layout wrap row>
               <!-- Description -->
@@ -322,9 +338,7 @@
 
                 <v-divider></v-divider>
 
-                <div
-                  style="max-height: 1000px; overflow-y: auto; overflow-x: hidden;"
-                >
+                <div class="timeline">
                   <v-timeline align-top dense v-if="shouldShowDiscussion">
                     <v-timeline-item
                       color="pink"
@@ -351,6 +365,7 @@
                           <strong>
                             <!--eslint-disable-next-line-->
                             {{ convertStringToDate(content.time).toLocaleDateString("en-us") }}
+                            -
                             <!--eslint-disable-next-line-->
                             {{ convertStringToDate(content.time).toLocaleTimeString("en-us") }}
                           </strong>
@@ -548,6 +563,7 @@ import { TimeService } from "../services/timeService";
 
 export default {
   name: "SelectedCord",
+
   mixins: [
     themeMixin,
     assetMixin,
@@ -556,7 +572,9 @@ export default {
     authMixin,
     socketMixin
   ],
+
   components: { UploadFile: () => import("../components/Upload.vue") },
+
   computed: {
     descriptionBgColor() {
       return this.readonly ? "transparent" : `accent ${this.darken}`;
@@ -586,15 +604,20 @@ export default {
           }).length === 0
         : false;
     },
+
     selectedIsOpen() {
       return this.selectedCord.status === "Open";
     },
+
     shouldShowDiscussion() {
       return this.selectedCord.discussion.length > 0;
     },
+
     shouldShowComments() {
-      return this.selectedCord.discussion[0].comments.length > 0;
+      const comments = this.selectedCord.discussion[0].comments;
+      return comments && comments.length > 0;
     },
+
     unpullDisabled() {
       return !(
         this.user.username === this.selectedCord.puller.username &&
@@ -602,18 +625,22 @@ export default {
         this.selectedCord.status === "Open"
       );
     },
+
     isResolved() {
       return this.selectedCord.status === "Resolved";
     },
+
     isMine() {
       return this.selectedCord.puller.username === this.user.username;
     }
   },
+
   data: function() {
     return {
       appDirty: false,
       categoryDirty: false,
       descriptionDirty: false,
+      titleDirty: false,
       addingToDiscussion: false,
       addingToComment: false,
       confirmCloseDialog: false,
@@ -624,10 +651,12 @@ export default {
       readonly: true
     };
   },
+
   created() {
     if (!this.appToken) {
       this.authenticateApp();
     }
+
     if (!this.selectedCord) {
       this.loading = true;
       this.getCordById(this.id)
@@ -648,35 +677,49 @@ export default {
         });
     }
   },
+
   methods: {
     computeDuration: TimeService.computeDuration,
+
     msToTime: TimeService.msToTime,
+
     appChanged() {
       this.appDirty = true;
     },
+
     categoryChanged() {
       this.categoryDirty = true;
     },
+
     descriptionChanged() {
       this.descriptionDirty = true;
     },
+
+    titleChanged() {
+      this.titleDirty = true;
+    },
+
     canRemoveRescuer(rescuer) {
       return (
         this.selectedCord.status === "Open" &&
         rescuer.username === this.user.username
       );
     },
+
     convertStringToDate(item) {
       return new Date(item);
     },
+
     getInitials(item) {
       return item && typeof item === "string"
         ? item.slice(0, 2).toLocaleUpperCase()
         : "";
     },
+
     goBack() {
       window.history.back();
     },
+
     removeRescuer(rescuer) {
       // eslint-disable-next-line
       this.selectedCord.rescuers = this.selectedCord.rescuers.filter(function(
@@ -689,6 +732,7 @@ export default {
         this.save();
       }
     },
+
     rescue() {
       const data = {
         rescuers: [{ _id: this.user._id, username: this.user.username }]
@@ -716,6 +760,7 @@ export default {
           );
         });
     },
+
     save(refreshGrid = false) {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
@@ -741,6 +786,7 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
+
     saveComment(index, refreshGrid = false) {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
@@ -766,9 +812,11 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
+
     setFile(data) {
       this.formData = data;
     },
+
     updateFile() {
       if (this.formData && this.formData.get("cordFile") !== null) {
         this.uploadFileByCordId(this.selectedCord._id, this.formData)
@@ -787,12 +835,14 @@ export default {
           });
       }
     },
+
     unpullCord() {
       this.selectedCord.status = "Resolved";
       this.selectedCord.resolvedOn = new Date().toISOString();
       this.save(true);
       this.confirmCloseDialog = false;
     },
+
     updateDiscussion() {
       if (this.discussion.length >= 10) {
         this.selectedCord.discussion.push({
@@ -805,6 +855,7 @@ export default {
         this.discussion = "";
       }
     },
+
     addReply(index) {
       const content = this.comment[index];
       if (content && content.length >= 2) {
@@ -821,7 +872,9 @@ export default {
       }
     }
   },
+
   props: ["id"],
+
   watch: {
     addingToDiscussion: function() {
       if (this.addingToDiscussion === false) {
@@ -855,7 +908,11 @@ export default {
       }
 
       const dataChanged =
-        this.appDirty || this.categoryDirty || this.descriptionDirty;
+        this.appDirty ||
+        this.categoryDirty ||
+        this.descriptionDirty ||
+        this.titleDirty;
+
       if (this.readonly && dataChanged) {
         this.save();
       }
@@ -869,12 +926,20 @@ function convertStringToDate(item) {
 </script>
 
 <style scoped>
+.timeline {
+  max-height: 1000px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .header {
   font-size: 2rem;
 }
+
 .pulse:hover {
   animation: pulse 1s infinite;
 }
+
 .comments_div {
   max-height: 500px;
   overflow-y: auto;
@@ -882,5 +947,93 @@ function convertStringToDate(item) {
   padding-left: 2%;
   padding-top: 2%;
   border-radius: 20px;
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes titleFadeInLeft {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+  }
+}
+
+@keyframes titleFadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.titleFadeInLeft {
+  -webkit-animation-name: titleFadeInLeft;
+  animation-name: titleFadeInLeft;
+}
+
+@-webkit-keyframes titleFadeOutLeft {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateX(-20px);
+  }
+}
+
+@keyframes titleFadeOutLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.titleFadeOutLeft {
+  -webkit-animation-name: titleFadeOutLeft;
+  animation-name: titleFadeOutLeft;
+}
+
+@-webkit-keyframes contentFadeInDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+
+@keyframes contentFadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contentFadeInDown {
+  -webkit-animation-name: contentFadeInDown;
+  animation-name: contentFadeInDown;
 }
 </style>
