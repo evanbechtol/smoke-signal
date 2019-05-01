@@ -460,6 +460,7 @@
                     <v-text-field
                       v-model="discussion"
                       outline
+                      small
                       counter
                       color="info"
                       :append-icon="discussionAppendIcon"
@@ -657,27 +658,19 @@ export default {
 
   created() {
     if (!this.appToken) {
-      this.authenticateApp();
-    }
-
-    if (!this.selectedCord) {
-      this.loading = true;
-      this.getCordById(this.id)
+      this.authenticateApp()
         .then(response => {
-          const cord = response.data.data;
-          this.$store.commit("selectedCord", cord);
-          this.joinSelectedCordRoom(cord._id);
-          return this.validateUser();
-        })
-        .then(validationResponse => {
-          this.$store.commit("token", validationResponse.data.token || null);
-          this.setExpiry();
-          this.loading = false;
+          if (response && response.data && response.data.success === true) {
+            this.$store.commit("appToken", response.data.token || null);
+            this.getSelectedCord();
+          }
         })
         .catch(err => {
-          this.setAlert(err.message, "#DC2D37", 0);
-          this.loading = false;
+          this.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
+          return err;
         });
+    } else if (!this.selectedCord) {
+      this.getSelectedCord();
     }
   },
 
@@ -717,6 +710,26 @@ export default {
       return item && typeof item === "string"
         ? item.slice(0, 2).toLocaleUpperCase()
         : "";
+    },
+
+    getSelectedCord() {
+      this.loading = true;
+      this.getCordById(this.id)
+        .then(response => {
+          const cord = response.data.data;
+          this.$store.commit("selectedCord", cord);
+          this.joinSelectedCordRoom(cord._id);
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+          this.loading = false;
+        })
+        .catch(err => {
+          this.setAlert(err.message, "#DC2D37", 0);
+          this.loading = false;
+        });
     },
 
     goBack() {

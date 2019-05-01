@@ -79,7 +79,16 @@ export default {
       this.$store.commit("theme", this.isDark ? "dark" : "light");
     }
     // For E-Auth application authentication
-    this.authenticateApp();
+    this.authenticateApp()
+      .then(response => {
+        if (response && response.data && response.data.success === true) {
+          this.$store.commit("appToken", response.data.token || null);
+        }
+      })
+      .catch(err => {
+        this.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
+        return err;
+      });
 
     // This is used to install the app as a PWA to home screen
     window.addEventListener("beforeinstallprompt", e => {
