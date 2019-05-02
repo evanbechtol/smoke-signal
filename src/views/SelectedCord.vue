@@ -115,7 +115,9 @@
             <v-layout wrap row>
               <!-- Description -->
               <v-flex xs12 mb-0>
+                <div v-html="selectedCord.description" v-if="readonly"></div>
                 <tip-tap
+                  v-else
                   :editable="!readonly"
                   :content="selectedCord.description"
                   v-on:contentChanged="updateDescription"
