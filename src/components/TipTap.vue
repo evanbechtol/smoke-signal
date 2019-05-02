@@ -7,264 +7,269 @@
         leave-active-class="animated faster fadeOut"
       >
         <editor-menu-bar v-if="editable" class="pa-0" :editor="editor">
-          <v-toolbar
-            dense
-            flat
-            floating
-            style="margin: 0 !important; width: 100%;"
-            extended
+          <v-card-title
             class="menubar"
             slot-scope="{ commands, isActive }"
+            :style="cardTitleColor"
           >
-            <v-toolbar-items>
-              <v-btn-toggle class="transparent" rounded>
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.bold() }"
-                      @click="commands.bold"
-                    >
-                      <v-icon>format_bold</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Bold</span>
-                </v-tooltip>
+            <v-layout row wrap align-start justify-start pt-1>
+              <v-flex shrink px-1 mx-0 py-0>
+                <v-btn-toggle v-model="styling" class="transparent">
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.bold() }"
+                        @click="commands.bold"
+                      >
+                        <v-icon>format_bold</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Bold</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.italic() }"
-                      @click="commands.italic"
-                    >
-                      <v-icon>format_italic</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Italicize</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.italic() }"
+                        @click="commands.italic"
+                      >
+                        <v-icon>format_italic</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Italicize</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.strike() }"
-                      @click="commands.strike"
-                    >
-                      <v-icon>format_strikethrough</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Strikethrough</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.strike() }"
+                        @click="commands.strike"
+                      >
+                        <v-icon>format_strikethrough</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Strikethrough</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.underline() }"
-                      @click="commands.underline"
-                    >
-                      <v-icon>format_underline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Underline</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.underline() }"
+                        @click="commands.underline"
+                      >
+                        <v-icon>format_underline</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Underline</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.code() }"
-                      @click="commands.code"
-                    >
-                      <v-icon>code</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Code snippet</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.code() }"
+                        @click="commands.code"
+                      >
+                        <v-icon>code</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Code snippet</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.code_block() }"
-                      @click="commands.code_block"
-                    >
-                      <v-icon>settings_ethernet</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Code block</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.code_block() }"
+                        @click="commands.code_block"
+                      >
+                        <v-icon>settings_ethernet</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Code block</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.link() }"
-                      @click="commands.link"
-                    >
-                      <v-icon>insert_link</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Hyperlink</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.link() }"
+                        @click="commands.link"
+                      >
+                        <v-icon>insert_link</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Hyperlink</span>
+                  </v-tooltip>
+                  <v-divider vertical></v-divider>
+                </v-btn-toggle>
+              </v-flex>
 
-                <v-btn
-                  flat
-                  small
-                  :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-                  @click="commands.heading({ level: 1 })"
-                >
-                  H1
-                </v-btn>
+              <v-flex shrink px-1 mx-0 py-0>
+                <v-btn-toggle v-model="headings" class="transparent">
+                  <v-btn
+                    flat
+                    small
+                    :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+                    @click="commands.heading({ level: 1 })"
+                  >
+                    H1
+                  </v-btn>
 
-                <v-btn
-                  flat
-                  small
-                  :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-                  @click="commands.heading({ level: 2 })"
-                >
-                  H2
-                </v-btn>
+                  <v-btn
+                    flat
+                    small
+                    :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+                    @click="commands.heading({ level: 2 })"
+                  >
+                    H2
+                  </v-btn>
 
-                <v-btn
-                  flat
-                  small
-                  :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-                  @click="commands.heading({ level: 3 })"
-                >
-                  H3
-                </v-btn>
-              </v-btn-toggle>
+                  <v-btn
+                    flat
+                    small
+                    :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+                    @click="commands.heading({ level: 3 })"
+                  >
+                    H3
+                  </v-btn>
+                  <v-divider vertical></v-divider>
+                </v-btn-toggle>
+              </v-flex>
 
-              <v-divider vertical></v-divider>
+              <v-flex shrink px-1 mx-0 py-0>
+                <v-btn-toggle v-model="formatting" class="transparent">
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.bullet_list() }"
+                        @click="commands.bullet_list"
+                      >
+                        <v-icon>format_list_bulleted</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Bulleted list</span>
+                  </v-tooltip>
 
-              <v-btn-toggle class="transparent" multiple>
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.bullet_list() }"
-                      @click="commands.bullet_list"
-                    >
-                      <v-icon>format_list_bulleted</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Bulleted list</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.ordered_list() }"
+                        @click="commands.ordered_list"
+                      >
+                        <v-icon>format_list_numbered</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Numbered list</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.ordered_list() }"
-                      @click="commands.ordered_list"
-                    >
-                      <v-icon>format_list_numbered</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Numbered list</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.paragraph() }"
+                        @click="commands.paragraph"
+                      >
+                        <v-icon>notes</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Paragraph</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.paragraph() }"
-                      @click="commands.paragraph"
-                    >
-                      <v-icon>notes</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Paragraph</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        :class="{ 'is-active': isActive.blockquote() }"
+                        @click="commands.blockquote"
+                      >
+                        <v-icon>format_quote</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Blockquote</span>
+                  </v-tooltip>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      :class="{ 'is-active': isActive.blockquote() }"
-                      @click="commands.blockquote"
-                    >
-                      <v-icon>format_quote</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Blockquote</span>
-                </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        class="menubar__button"
+                        @click="commands.horizontal_rule"
+                      >
+                        <v-icon>border_horizontal</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Horizontal rule</span>
+                  </v-tooltip>
+                  <v-divider vertical></v-divider>
+                </v-btn-toggle>
+              </v-flex>
 
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      class="menubar__button"
-                      @click="commands.horizontal_rule"
-                    >
-                      <v-icon>border_horizontal</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Horizontal rule</span>
-                </v-tooltip>
-              </v-btn-toggle>
+              <v-flex shrink px-1 mx-0 py-0>
+                <v-btn-toggle v-model="editorActions" class="transparent">
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        class="menubar__button"
+                        @click="commands.undo"
+                      >
+                        <v-icon>undo</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Undo</span>
+                  </v-tooltip>
 
-              <v-divider vertical></v-divider>
-
-              <v-btn-toggle class="transparent">
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      class="menubar__button"
-                      @click="commands.undo"
-                    >
-                      <v-icon>undo</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Undo</span>
-                </v-tooltip>
-
-                <v-tooltip bottom>
-                  <template #activator="data">
-                    <v-btn
-                      flat
-                      small
-                      v-on="data.on"
-                      class="menubar__button"
-                      @click="commands.redo"
-                    >
-                      <v-icon>redo</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Redo</span>
-                </v-tooltip>
-              </v-btn-toggle>
-            </v-toolbar-items>
-          </v-toolbar>
+                  <v-tooltip bottom>
+                    <template #activator="data">
+                      <v-btn
+                        flat
+                        small
+                        v-on="data.on"
+                        class="menubar__button"
+                        @click="commands.redo"
+                      >
+                        <v-icon>redo</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Redo</span>
+                  </v-tooltip>
+                </v-btn-toggle>
+              </v-flex>
+            </v-layout>
+          </v-card-title>
         </editor-menu-bar>
       </transition>
 
@@ -310,6 +315,11 @@ export default {
   computed: {
     cardColor() {
       return this.editable ? "`secondary ${darken}`" : "transparent";
+    },
+
+    cardTitleColor() {
+      const bgColor = this.isDark ? "#181818" : "#e0e0e0";
+      return `background-color: ${bgColor}`;
     }
   },
 
@@ -353,7 +363,11 @@ export default {
           new Underline(),
           new History()
         ]
-      })
+      }),
+      styling: undefined,
+      headings: undefined,
+      formatting: undefined,
+      editorActions: undefined
     };
   },
 

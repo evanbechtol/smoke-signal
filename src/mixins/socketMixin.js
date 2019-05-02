@@ -36,7 +36,7 @@ export const socketMixin = {
       this.$socket.emit("LEAVE_ITEM_ROOM", _id);
     },
     notify: function(data) {
-      this.$socket.emit("NOTIFY", data);
+      // this.$socket.emit("NOTIFY", data);
     },
     refreshGrid: function() {
       this.$socket.emit("REFRESH_GRID_ALL", { query: { status: "Open" } });
