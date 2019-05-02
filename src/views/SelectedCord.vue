@@ -14,7 +14,18 @@
           primary-title
           class="hildaLight space-small mx-0 mb-0 mt-5 px-0"
         >
-          <v-layout row justify-center>
+          <v-layout row wrap justify-center>
+            <!-- Loading text -->
+            <v-flex v-if="loading" xs12 pa-0 ma-0>
+              <div style="z-index: 9; width: 100%;" class="text-xs-center">
+                <small>Loading Data</small>
+                <v-progress-linear
+                  :indeterminate="true"
+                  color="info"
+                ></v-progress-linear>
+              </div>
+            </v-flex>
+
             <!-- Go Back Button -->
             <v-flex shrink mr-2 align-self-center v-if="readonly">
               <v-tooltip bottom v-if="isSmall">
@@ -36,7 +47,7 @@
             </v-flex>
 
             <!-- Cord Title Text -->
-            <v-flex v-if="selectedCord && !loading" grow>
+            <v-flex v-if="selectedCord" xs12>
               <div class="animated titleFadeInLeft">
                 <span class="ml-3 pt-5 header" v-if="readonly">
                   {{ selectedCord.title }}
@@ -88,17 +99,6 @@
                     </v-flex>
                   </v-layout>
                 </span>
-              </div>
-            </v-flex>
-
-            <!-- Loading text -->
-            <v-flex v-else grow>
-              <div style="z-index: 9; width: 100%;" class="text-xs-center">
-                <p>Please wait! Loading Data</p>
-                <v-progress-linear
-                  :indeterminate="true"
-                  color="primary"
-                ></v-progress-linear>
               </div>
             </v-flex>
           </v-layout>
