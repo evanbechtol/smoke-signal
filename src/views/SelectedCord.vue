@@ -115,19 +115,11 @@
             <v-layout wrap row>
               <!-- Description -->
               <v-flex xs12 mb-0>
-                <v-textarea
-                  color="info"
-                  :background-color="descriptionBgColor"
-                  :flat="readonly"
-                  :solo="readonly"
-                  auto-grow
-                  :outline="!readonly"
-                  label="Description"
-                  :readonly="readonly"
-                  v-model="selectedCord.description"
-                  @change="descriptionChanged"
-                >
-                </v-textarea>
+                <tip-tap
+                  :editable="!readonly"
+                  :content="selectedCord.description"
+                  v-on:contentChanged="updateDescription"
+                ></tip-tap>
               </v-flex>
 
               <!-- File -->
@@ -335,10 +327,6 @@
 
               <!-- Discussion -->
               <v-flex xs12>
-                <div class="hildaLight space-small">
-                  Discussion
-                </div>
-
                 <v-divider></v-divider>
 
                 <div class="timeline">
@@ -454,7 +442,23 @@
                   </v-timeline>
                 </div>
               </v-flex>
-              <v-flex grow v-if="selectedIsOpen">
+
+              <!-- Add to discussion -->
+              <v-flex shrink v-if="!addingComment" my-0 align-self-start>
+                <v-btn
+                  class="mx-0"
+                  :color="`info ${darken}`"
+                  flat
+                  small
+                  depressed
+                  tag="a"
+                  @click="addingComment = true"
+                >
+                  Add a comment
+                </v-btn>
+              </v-flex>
+
+              <v-flex grow v-if="shouldShowAddComment">
                 <v-layout column fill-height>
                   <v-flex xs12 sm4>
                     <v-text-field
@@ -468,12 +472,30 @@
                       hint="Must be at least 2 characters"
                       placeholder="Discuss this issue"
                     ></v-text-field>
+                    <tip-tap
+                      :editable="!readonly"
+                      :content="selectedCord.description"
+                      v-on:contentChanged="updateDescription"
+                    ></tip-tap>
+                  </v-flex>
+
+                  <v-flex shrink>
+                    <v-btn
+                      small
+                      depressed
+                      @click="updateDiscussion"
+                      :color="`info ${darken}`"
+                    >
+                      Add comment
+                    </v-btn>
                   </v-flex>
                 </v-layout>
               </v-flex>
 
               <!-- Actions -->
-              <v-flex xs12>
+              <v-flex xs12 mt-4 v-if="isMine">
+                <v-divider></v-divider>
+
                 <v-card-actions v-if="showUnpullButton" class="px-0">
                   <v-tooltip right>
                     <template #activator="data">
@@ -577,7 +599,10 @@ export default {
     socketMixin
   ],
 
-  components: { UploadFile: () => import("../components/Upload.vue") },
+  components: {
+    UploadFile: () => import("../components/Upload.vue"),
+    TipTap: () => import("../components/TipTap.vue")
+  },
 
   computed: {
     descriptionBgColor() {
@@ -607,6 +632,10 @@ export default {
             return elem.username === user.username;
           }).length === 0
         : false;
+    },
+
+    shouldShowAddComment() {
+      return this.selectedIsOpen && this.addingComment;
     },
 
     selectedIsOpen() {
@@ -641,6 +670,7 @@ export default {
 
   data: function() {
     return {
+      addingComment: false,
       appDirty: false,
       categoryDirty: false,
       descriptionDirty: false,
@@ -685,10 +715,6 @@ export default {
 
     categoryChanged() {
       this.categoryDirty = true;
-    },
-
-    descriptionChanged() {
-      this.descriptionDirty = true;
     },
 
     titleChanged() {
@@ -831,6 +857,13 @@ export default {
 
     setFile(data) {
       this.formData = data;
+    },
+
+    updateDescription(value) {
+      if (!this.readonly) {
+        this.selectedCord.description = value;
+        this.descriptionDirty = true;
+      }
     },
 
     updateFile() {
