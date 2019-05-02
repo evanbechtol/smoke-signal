@@ -372,7 +372,7 @@ export default {
   },
 
   created() {
-    this.editor.setContent(this.content);
+    this.setContent();
     this.editor.setOptions({
       editable: this.editable
     });
@@ -382,9 +382,19 @@ export default {
     this.editor.destroy();
   },
 
+  methods: {
+    setContent() {
+      this.editor.setContent(this.content);
+    }
+  },
+
   watch: {
     content(value) {
-      this.$emit("contentChanged", value);
+      if (value.length >= 2) {
+        this.$emit("contentChanged", value);
+      } else {
+        this.setContent(value);
+      }
     },
 
     editable() {

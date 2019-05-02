@@ -461,34 +461,39 @@
               <v-flex grow v-if="shouldShowAddComment">
                 <v-layout column fill-height>
                   <v-flex xs12 sm4>
-                    <v-text-field
-                      v-model="discussion"
-                      outline
-                      small
-                      counter
-                      color="info"
-                      :append-icon="discussionAppendIcon"
-                      @click:append="updateDiscussion"
-                      hint="Must be at least 2 characters"
-                      placeholder="Discuss this issue"
-                    ></v-text-field>
                     <tip-tap
-                      :editable="!readonly"
-                      :content="selectedCord.description"
-                      v-on:contentChanged="updateDescription"
+                      :editable="addingComment"
+                      :content="discussion"
+                      v-on:contentChanged="updateComment"
                     ></tip-tap>
                   </v-flex>
 
-                  <v-flex shrink>
-                    <v-btn
-                      small
-                      depressed
-                      @click="updateDiscussion"
-                      :color="`info ${darken}`"
-                    >
-                      Add comment
-                    </v-btn>
-                  </v-flex>
+                  <v-layout row wrap align-center justify-start>
+                    <v-flex shrink>
+                      <v-btn
+                        small
+                        depressed
+                        outline
+                        flat
+                        @click="cancelAddingDiscussion"
+                        :dark="isDark"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-flex>
+
+                    <v-flex shrink>
+                      <v-btn
+                        small
+                        depressed
+                        :disabled="discussion.length < 2"
+                        @click="updateDiscussion"
+                        :color="`info ${darken}`"
+                      >
+                        Add comment
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
                 </v-layout>
               </v-flex>
 
@@ -709,8 +714,17 @@ export default {
 
     msToTime: TimeService.msToTime,
 
+    addToDiscussion() {
+      this.updateDiscussion();
+    },
+
     appChanged() {
       this.appDirty = true;
+    },
+
+    cancelAddingDiscussion() {
+      this.discussion = "";
+      this.addingComment = false;
     },
 
     categoryChanged() {
@@ -859,6 +873,10 @@ export default {
       this.formData = data;
     },
 
+    updateComment(value) {
+      this.discussion = value;
+    },
+
     updateDescription(value) {
       if (!this.readonly) {
         this.selectedCord.description = value;
@@ -893,7 +911,7 @@ export default {
     },
 
     updateDiscussion() {
-      if (this.discussion.length >= 10) {
+      if (this.discussion.length >= 2) {
         this.selectedCord.discussion.push({
           time: new Date().toISOString(),
           user: { _id: this.user._id, username: this.user.username },
@@ -932,7 +950,7 @@ export default {
     },
     addingToComment: function() {
       if (this.addingToComment === false) {
-        this.comment = "";
+        this.discussion = "";
       }
     },
 
@@ -1001,6 +1019,13 @@ function convertStringToDate(item) {
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.animated.fast {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
@@ -1084,5 +1109,86 @@ function convertStringToDate(item) {
 .contentFadeInDown {
   -webkit-animation-name: contentFadeInDown;
   animation-name: contentFadeInDown;
+}
+
+@-webkit-keyframes contentFadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+
+@keyframes contentFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contentFadeInUp {
+  -webkit-animation-name: contentFadeInUp;
+  animation-name: contentFadeInUp;
+}
+
+@-webkit-keyframes contentFadeOutUp {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(-20px);
+  }
+}
+
+@keyframes contentFadeOutUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.contentFadeOutUp {
+  -webkit-animation-name: contentFadeOutUp;
+  animation-name: contentFadeOutUp;
+}
+
+@-webkit-keyframes contentFadeOutDown {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+  }
+}
+
+@keyframes contentFadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.contentFadeOutDown {
+  -webkit-animation-name: contentFadeOutDown;
+  animation-name: contentFadeOutDown;
 }
 </style>
