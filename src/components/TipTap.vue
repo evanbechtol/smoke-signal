@@ -14,7 +14,7 @@
           >
             <v-layout row wrap align-start justify-start pt-1>
               <v-flex shrink px-1 mx-0 py-0>
-                <v-btn-toggle v-model="styling" class="transparent">
+                <v-btn-toggle v-model="styling" multiple class="transparent">
                   <v-tooltip bottom>
                     <template #activator="data">
                       <v-btn
@@ -364,7 +364,7 @@ export default {
           new History()
         ]
       }),
-      styling: undefined,
+      styling: [],
       headings: undefined,
       formatting: undefined,
       editorActions: undefined
