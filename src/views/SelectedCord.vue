@@ -367,8 +367,9 @@
                           <p v-html="content.data"></p>
                         </v-flex>
                       </v-layout>
+                      
                       <!-- Thread Reply -->
-                      <div class="comments_div">
+                     <!-- <div class="comments_div">
                         <v-timeline
                           v-if="shouldShowComments"
                           class="pt-0"
@@ -421,7 +422,57 @@
                         <v-flex v-if="selectedIsOpen" grow>
                           <v-layout column fill-height>
                             <v-flex xs12 sm4>
-                              <v-text-field
+                              <v-btn
+                                v-if="!addingReply[index]"
+                                class="mx-0"
+                                :color="`info ${darken}`"
+                                flat
+                                small
+                                depressed
+                                tag="a"
+                                @click="addingReply[index] = true"
+                              >
+                                Reply to comment
+                              </v-btn>
+
+                              <template v-else>
+                                <v-layout row wrap align-start justify-start>
+                                  <v-flex xs12>
+                                    <tip-tap
+                                      :editable="addingReply"
+                                      :content="reply"
+                                      v-on:contentChanged="updateComment"
+                                    ></tip-tap>
+                                  </v-flex>
+
+                                  <v-flex shrink px-0>
+                                    <v-btn
+                                      small
+                                      depressed
+                                      outline
+                                      flat
+                                      @click="cancelAddingReply"
+                                      :dark="isDark"
+                                    >
+                                      Cancel
+                                    </v-btn>
+                                  </v-flex>
+                                  
+                                  <v-flex shrink>
+                                    <v-btn
+                                      small
+                                      depressed
+                                      :disabled="discussion.length < 2"
+                                      @click="addReply(index)"
+                                      :color="`info ${darken}`"
+                                    >
+                                      Add comment
+                                    </v-btn>
+                                  </v-flex>
+                                </v-layout>
+                              </template>
+                              
+                              &lt;!&ndash;<v-text-field
                                 v-model="comment[index]"
                                 class="mt-0"
                                 outline
@@ -435,11 +486,11 @@
                                 hint="Must be at least 2 characters"
                                 placeholder="Reply..."
                                 @click:append="addReply(index)"
-                              ></v-text-field>
+                              ></v-text-field>&ndash;&gt;
                             </v-flex>
                           </v-layout>
                         </v-flex>
-                      </div>
+                      </div>-->
                     </v-timeline-item>
                   </v-timeline>
                 </div>
@@ -678,18 +729,20 @@ export default {
   data: function() {
     return {
       addingComment: false,
+      addingReply: [],
+      addingToComment: false,
+      addingToDiscussion: false,
       appDirty: false,
       categoryDirty: false,
-      descriptionDirty: false,
-      titleDirty: false,
-      addingToDiscussion: false,
-      addingToComment: false,
-      confirmCloseDialog: false,
-      formData: new FormData(),
-      discussion: "",
       comment: [],
+      confirmCloseDialog: false,
+      descriptionDirty: false,
+      discussion: "",
+      formData: new FormData(),
       loading: false,
-      readonly: true
+      readonly: true,
+      reply: "",
+      titleDirty: false
     };
   },
 
@@ -729,6 +782,11 @@ export default {
       this.addingComment = false;
     },
 
+    cancelAddingReply() {
+      this.reply = "";
+      this.addingReply = false;
+    },
+    
     categoryChanged() {
       this.categoryDirty = true;
     },
