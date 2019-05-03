@@ -367,9 +367,9 @@
                           <p v-html="content.data"></p>
                         </v-flex>
                       </v-layout>
-                      
+
                       <!-- Thread Reply -->
-                     <!-- <div class="comments_div">
+                      <!-- <div class="comments_div">
                         <v-timeline
                           v-if="shouldShowComments"
                           class="pt-0"
@@ -786,7 +786,7 @@ export default {
       this.reply = "";
       this.addingReply = false;
     },
-    
+
     categoryChanged() {
       this.categoryDirty = true;
     },
