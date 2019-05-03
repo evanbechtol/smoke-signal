@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height mt-5 class="home page">
+  <v-container fluid fill-height mt-5 class="home page" id="home">
     <v-layout
       v-if="isAuthenticated && user"
       mt-5
@@ -57,6 +57,22 @@
                 </v-tooltip>
               </v-flex>
 
+              <v-flex shrink align-self-center mt-3>
+                <v-tooltip bottom offset-y>
+                  <template #activator="data">
+                    <v-btn
+                      icon
+                      :dark="isDark"
+                      v-on="data.on"
+                      @click="csvExport(filteredGridItems)"
+                    >
+                      <v-icon>cloud_download</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Export Data to CSV</span>
+                </v-tooltip>
+              </v-flex>
+
               <v-flex shrink mt-3 mr-3>
                 <v-tooltip bottom class="ml-3">
                   <template #activator="data">
@@ -78,7 +94,7 @@
             <v-flex xs12 class="hidden-xs-only">
               <v-layout row wrap justify-space-between align-center fill-height>
                 <!-- CORD FILTER CHIPS -->
-                <v-flex xs12 ml-3 pl-1>
+                <v-flex grow ml-3 pl-1>
                   <v-chip
                     :color="chipBg"
                     :dark="isDark"
@@ -234,9 +250,9 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import { gridMixin } from "../mixins/gridMixin";
 import { TimeService } from "../services/timeService";
-import CircleCard from "../components/CircleCard";
 import Grid from "../components/Grid";
 import PullCordDialog from "../components/PullCordDialog";
+import { DataExportService } from "../services/dataExportService";
 
 export default {
   name: "home",
@@ -249,7 +265,6 @@ export default {
     themeMixin
   ],
   components: {
-    CircleCard,
     Grid,
     PullCordDialog
   },
@@ -294,7 +309,16 @@ export default {
     } else if (this.appToken) {
       this.getCordGridItems("Open");
     } else if (!this.appToken) {
-      this.authenticateApp();
+      this.authenticateApp()
+        .then(response => {
+          if (response && response.data && response.data.success === true) {
+            this.$store.commit("appToken", response.data.token || null);
+          }
+        })
+        .catch(err => {
+          this.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
+          return err;
+        });
     }
   },
   mounted() {
@@ -304,6 +328,9 @@ export default {
   },
   methods: {
     computeDuration: TimeService.computeDuration,
+    csvExport(data) {
+      DataExportService.csvExport(data);
+    },
     refreshMyGrid() {
       this.refreshGridOne();
     },

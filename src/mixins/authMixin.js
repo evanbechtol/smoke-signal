@@ -30,7 +30,7 @@ export const authMixin = {
      * @description Authenticate the application, and store the returned JWT if provided
      */
     authenticateApp() {
-      AuthService.authenticateApp();
+      return AuthService.authenticateApp();
     },
     eAuthForgotPassword(body = null) {
       return AuthService.eAuthForgotPassword(body);

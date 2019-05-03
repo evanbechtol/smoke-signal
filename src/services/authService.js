@@ -17,19 +17,11 @@ const AuthService = {
     const options = {
       method: "POST",
       headers: { Authorization: `Bearer ${appCode}` },
-      url: `${base}/${route}`
+      url: `${base}/${route}`,
+      data: { tokenLife: "999999s" }
     };
 
-    ApiService.customRequest(options)
-      .then(response => {
-        if (response && response.data && response.data.success === true) {
-          store.commit("appToken", response.data.token || null);
-        }
-      })
-      .catch(err => {
-        AlertService.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
-        return err;
-      });
+    return ApiService.customRequest(options);
   },
   eAuthForgotPassword(body = null) {
     return new Promise((resolve, reject) => {
@@ -104,7 +96,7 @@ const AuthService = {
           data: {
             username: body.username,
             password: body.password,
-            tokenLife: body.tokenLife || 900
+            tokenLife: body.tokenLife || "999999s"
           },
           url: `${base}/${route}`
         };
@@ -242,8 +234,21 @@ const AuthService = {
         })
         .catch(err => {
           if (err && err.response && err.response.status === 403) {
-            this.authenticateApp();
+            return this.authenticateApp();
           }
+        })
+        .then(response => {
+          if (response && response.data && response.data.success === true) {
+            store.commit("appToken", response.data.token || null);
+          }
+        })
+        .catch(err => {
+          AlertService.setAlert(
+            `Error authenticating app: ${err}`,
+            "#DC2D37",
+            0
+          );
+          return err;
         });
     });
   },

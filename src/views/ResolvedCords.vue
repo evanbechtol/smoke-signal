@@ -203,8 +203,8 @@ import { socketMixin } from "../mixins/socketMixin";
 import { authMixin } from "../mixins/authMixin";
 import { gridMixin } from "../mixins/gridMixin";
 import { TimeService } from "../services/timeService";
-import Grid from "../components/Grid";
 import PullCordDialog from "../components/PullCordDialog";
+import Grid from "../components/Grid";
 
 export default {
   name: "resolvedCords",
@@ -250,7 +250,16 @@ export default {
     } else if (this.appToken) {
       this.getCordGridItems("Resolved");
     } else if (!this.appToken) {
-      this.authenticateApp();
+      this.authenticateApp()
+        .then(response => {
+          if (response && response.data && response.data.success === true) {
+            this.$store.commit("appToken", response.data.token || null);
+          }
+        })
+        .catch(err => {
+          this.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
+          return err;
+        });
     }
   },
   mounted() {

@@ -1,30 +1,42 @@
 <template>
-  <v-container fluid :class="isSmall ? 'pa-0' : 'mt-4'">
+  <v-container fill-height :class="isSmall ? 'pa-0' : 'mt-4'">
     <v-layout
       row
-      fill-height
+      align-start
+      justify-center
       v-touch="{
         right: () => goBack()
       }"
     >
-      <v-flex xs12>
-        <v-card
-          :dark="isDark"
-          :color="`accent ${darken}`"
-          :class="isSmall ? 'mt-0' : 'mt-5'"
-          :style="isSmall ? 'z-index: 99' : 'z-index: default'"
+      <v-flex xs12 sm10 lg8 xl8>
+        <!-- Cord Title -->
+        <v-card-title
+          primary-title
+          class="hildaLight space-small mx-0 mb-0 mt-5 px-0"
         >
-          <v-card-title primary-title class="hildaLight space-small ma-0">
-            <div v-if="selectedCord && !loading">
+          <v-layout row wrap justify-center>
+            <!-- Loading text -->
+            <v-flex v-if="loading" xs12 pa-0 ma-0>
+              <div style="z-index: 9; width: 100%;" class="text-xs-center">
+                <small>Loading Data</small>
+                <v-progress-linear
+                  :indeterminate="true"
+                  color="info"
+                ></v-progress-linear>
+              </div>
+            </v-flex>
+
+            <!-- Go Back Button -->
+            <v-flex shrink mr-2 align-self-center v-if="readonly">
               <v-tooltip bottom v-if="isSmall">
                 <template #activator="data">
                   <v-btn
+                    left
                     fab
-                    outline
-                    color="accent"
+                    small
+                    :color="`info $[darken}`"
                     v-on="data.on"
-                    dark
-                    class="mb-2 mr-4"
+                    :dark="isDark"
                     @click="goBack"
                   >
                     <v-icon size="30">arrow_back</v-icon>
@@ -32,204 +44,131 @@
                 </template>
                 <span>Go back</span>
               </v-tooltip>
-              <span class="ml-3">{{ selectedCord.title }}</span>
-              <v-spacer></v-spacer>
-            </div>
-            <div
-              v-else
-              style="z-index: 99; width: 100%;"
-              class="text-xs-center"
-            >
-              <p>Please wait! Loading Data</p>
-              <v-progress-linear
-                :indeterminate="true"
-                color="primary"
-              ></v-progress-linear>
-            </div>
-          </v-card-title>
+            </v-flex>
 
-          <v-card-text v-if="selectedCord">
-            <v-container grid-list-md fluid>
-              <v-layout wrap row>
-                <v-flex xs12 sm6 d-flex>
-                  <v-layout column justify-center>
-                    <v-flex xs12 sm4>
-                      <p class="mb-0">Rescuers</p>
-                      <div class="mb-3">
-                        <v-item-group multiple>
-                          <v-item
-                            v-for="(rescuer, index) in selectedCord.rescuers"
-                            class="animated faster fadeIn"
-                            :key="`rescuer-${index}`"
-                          >
-                            <v-tooltip bottom offset-x>
-                              <template #activator="data">
-                                <v-chip
-                                  v-on="data.on"
-                                  :close="canRemoveRescuer(rescuer)"
-                                  :color="genColor()"
-                                  @input="removeRescuer(rescuer)"
-                                  dark
-                                >
-                                  {{ getInitials(rescuer.username) }}
-                                </v-chip>
-                              </template>
-                              <span>{{
-                                canRemoveRescuer(rescuer)
-                                  ? "Stop rescuing?"
-                                  : rescuer.username
-                              }}</span>
-                            </v-tooltip>
-                          </v-item>
+            <!-- Cord Title Text -->
+            <v-flex v-if="selectedCord" xs12>
+              <div class="animated titleFadeInLeft">
+                <span class="ml-3 pt-5 header" v-if="readonly">
+                  {{ selectedCord.title }}
+                </span>
+                <br />
 
-                          <v-item class="pulse" v-if="showRescueButton">
-                            <v-chip
-                              @click="rescue"
-                              outline
-                              :color="isDark ? 'accent' : 'primary'"
-                              :dark="isDark"
-                              slot-scope="{ active, toggle }"
-                              :selected="active"
-                            >
-                              <v-avatar>
-                                <v-icon alt="add">add</v-icon>
-                              </v-avatar>
-                              I'll Be A Hero!
-                            </v-chip>
-                          </v-item>
-                        </v-item-group>
-                      </div>
-                      <v-divider></v-divider>
-                    </v-flex>
+                <!-- Application & Category -->
+                <span class="ml-3">
+                  <small v-if="readonly">
+                    {{ selectedCord.app }} {{ selectedCord.category }}
+                  </small>
 
-                    <v-flex xs12 sm4>
+                  <v-layout row wrap v-else ml-3 pl-0>
+                    <v-flex xs12>
                       <v-text-field
-                        box
-                        label="Status"
-                        type="text"
-                        v-model="selectedCord.status"
-                        readonly
-                        dark
-                        :background-color="!isResolved ? 'success' : 'purple'"
-                        color="primary"
-                      ></v-text-field>
+                        v-model="selectedCord.title"
+                        label="Title"
+                        outline
+                        :dark="isDark"
+                        :color="`info ${darken}`"
+                        @change="titleChanged"
+                      >
+                        {{ selectedCord.title }}
+                      </v-text-field>
                     </v-flex>
-
-                    <v-flex xs12 sm4>
+                    <v-flex shrink mr-2>
                       <v-text-field
-                        box
-                        label="Needs Rescuing"
-                        type="text"
-                        v-model="selectedCord.puller.username"
-                        readonly
-                        color="info"
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm4>
-                      <v-combobox
-                        :box="readonly"
-                        :outline="!readonly"
-                        label="Application"
-                        type="text"
                         v-model="selectedCord.app"
-                        color="info"
-                        :items="appOptions"
+                        label="Application"
+                        outline
+                        :dark="isDark"
+                        :color="`info ${darken}`"
                         @change="appChanged"
                       >
-                      </v-combobox>
+                        {{ selectedCord.app }}
+                      </v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm4>
+                    <v-flex shrink>
                       <v-text-field
-                        box
-                        :label="isResolved ? 'Resolved On' : 'Duration'"
-                        type="text"
-                        :value="
-                          isResolved
-                            ? new Date(
-                                selectedCord.resolvedOn
-                              ).toLocaleDateString('en-US')
-                            : computeDuration(selectedCord.openedOn)
-                        "
-                        readonly
-                        :background-color="
-                          isResolved
-                            ? ''
-                            : computeDurationBg(selectedCord.openedOn)
-                        "
-                        :dark="!isResolved"
-                        color="primary"
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex xs12 sm4>
-                      <v-combobox
-                        :box="readonly"
-                        :outline="!readonly"
                         v-model="selectedCord.category"
-                        :items="categoryList"
                         label="Category"
-                        :readonly="readonly"
-                        color="info"
+                        outline
+                        :dark="isDark"
+                        :color="`info ${darken}`"
+                        @change="categoryChanged"
                       >
-                      </v-combobox>
+                        {{ selectedCord.category }}
+                      </v-text-field>
                     </v-flex>
                   </v-layout>
-                </v-flex>
+                </span>
+              </div>
+            </v-flex>
+          </v-layout>
+        </v-card-title>
 
-                <v-flex xs12 sm6 align-self-center grow>
-                  <transition
-                    name="auth-animation"
-                    mode="out-in"
-                    enter-active-class="animated faster fadeIn"
-                    leave-active-class="animated faster fadeOut"
+        <v-divider class="mx-3"></v-divider>
+
+        <!-- Cord Content -->
+        <v-card-text
+          v-if="selectedCord"
+          class="px-0 animated contentFadeInDown"
+        >
+          <v-container grid-list-md fluid fill-height pt-0>
+            <v-layout wrap row>
+              <!-- Description -->
+              <v-flex xs12 mb-0>
+                <div v-html="selectedCord.description" v-if="readonly"></div>
+                <tip-tap
+                  v-else
+                  :editable="!readonly"
+                  :content="selectedCord.description"
+                  v-on:contentChanged="updateDescription"
+                ></tip-tap>
+              </v-flex>
+
+              <!-- File -->
+              <v-flex xs12 align-self-center grow v-if="files.length > 0">
+                <transition
+                  name="auth-animation"
+                  mode="out-in"
+                  enter-active-class="animated faster fadeIn"
+                  leave-active-class="animated faster fadeOut"
+                >
+                  <v-img
+                    contain
+                    v-if="readonly && files.length > 0"
+                    max-height="700"
+                    :src="
+                      `${$apiBase}/uploads/${
+                        this.selectedCord.files
+                      }?appToken=${appToken}`
+                    "
+                  ></v-img>
+
+                  <v-layout
+                    v-else
+                    fill-height
+                    column
+                    align-center
+                    justify-center
                   >
-                    <v-img
-                      contain
-                      v-if="readonly && files.length > 0"
-                      max-height="700"
-                      :src="
-                        `${$apiBase}/uploads/${
-                          this.selectedCord.files
-                        }?appToken=${appToken}`
-                      "
-                    ></v-img>
-                    <v-layout
-                      v-else
-                      fill-height
-                      column
-                      align-center
-                      justify-center
-                    >
-                      <v-flex xs12 sm6 align-self-center grow>
-                        <v-img v-if="readonly" height="240">
-                          <v-icon size="240">image</v-icon>
-                        </v-img>
-                        <upload-file
-                          v-else
-                          v-on:fileAttached="setFile"
-                        ></upload-file>
-                      </v-flex>
-                    </v-layout>
-                  </transition>
-                </v-flex>
+                    <!-- File Uploader -->
+                    <v-flex xs12 sm6 align-self-center grow>
+                      <v-img v-if="readonly" height="240">
+                        <v-icon size="240">image</v-icon>
+                      </v-img>
+                      <upload-file
+                        v-else
+                        v-on:fileAttached="setFile"
+                      ></upload-file>
+                    </v-flex>
+                  </v-layout>
+                </transition>
+              </v-flex>
 
-                <v-flex xs12>
-                  <div v-if="readonly" v-html="selectedCord.description"></div>
-                  <v-textarea
-                    v-if="!readonly"
-                    color="info"
-                    :box="readonly"
-                    :outline="!readonly"
-                    label="Issue Description"
-                    :readonly="readonly"
-                    v-model="selectedCord.description"
-                    @change="descriptionChanged"
-                  >
-                  </v-textarea>
-                  <v-divider></v-divider>
-                </v-flex>
-
-                <v-flex xs12>
-                  <v-flex xs12>
+              <!-- Cord Information -->
+              <v-flex xs12>
+                <v-layout column justify-center mt-2>
+                  <!-- Tags -->
+                  <v-flex xs12 px-0>
                     <v-combobox
                       v-if="!readonly"
                       v-model="selectedCord.tags"
@@ -238,7 +177,6 @@
                       :dark="isDark"
                       :readonly="readonly"
                       hide-selected
-                      hint="Add some tags/keywords"
                       label="Tags"
                       multiple
                       persistent-hint
@@ -269,14 +207,7 @@
                       </template>
                     </v-combobox>
 
-                    <v-layout
-                      v-else
-                      row
-                      wrap
-                      justify-start
-                      align-center
-                      fill-height
-                    >
+                    <v-layout v-else row justify-start align-center fill-height>
                       <v-flex
                         shrink
                         v-for="(item, index) in selectedCord.tags"
@@ -291,181 +222,372 @@
                           </v-icon>
                         </v-chip>
                       </v-flex>
+
+                      <v-spacer></v-spacer>
+
+                      <v-flex shrink mx-0>
+                        <v-btn
+                          v-if="readonly"
+                          class="mx-0 px-0"
+                          :block="isSmall"
+                          small
+                          flat
+                          :color="`info ${darken}`"
+                          :disabled="unpullDisabled"
+                          :dark="isDark"
+                          @click="readonly = !readonly"
+                        >
+                          Edit
+                        </v-btn>
+                      </v-flex>
                     </v-layout>
                   </v-flex>
-                </v-flex>
 
-                <v-flex xs12>
-                  <div class="hildaLight space-small">
-                    Discussion
-                  </div>
-
-                  <v-divider></v-divider>
-
-                  <div
-                    style="max-height: 1000px; overflow-y: auto; overflow-x: hidden;"
-                  >
-                    <v-timeline align-top dense v-if="shouldShowDiscussion">
-                      <v-timeline-item
-                        color="pink"
-                        small
-                        v-for="(content, index) in selectedCord.discussion"
-                        :key="`discussion-${index}`"
-                      >
-                        <v-avatar slot="icon" size="40">
-                          <v-tooltip bottom offset-x>
-                            <template #activator="data">
-                              <v-chip v-on="data.on" :color="genColor()" dark>
-                                {{ getInitials(content.user.username) }}
-                              </v-chip>
-                            </template>
-                            <span>{{ content.user.username }}</span
-                            ><br />
-                            <span>{{ content.user.email }}</span>
-                          </v-tooltip>
-                        </v-avatar>
-                        <v-layout pt-3 wrap row fill-height>
-                          <v-flex xs12 sm2>
-                            <strong>
-                              <!--eslint-disable-next-line-->
-                              {{ convertStringToDate(content.time).toLocaleDateString("en-us") }} -
-                              <!--eslint-disable-next-line-->
-                              {{ convertStringToDate(content.time).toLocaleTimeString("en-us") }}
-                            </strong>
-                          </v-flex>
-                          <v-flex grow>
-                            <p v-html="content.data"></p>
-                          </v-flex>
-                        </v-layout>
-                        <!-- Thread Reply -->
-                        <div class="comments_div">
-                          <v-timeline
-                            v-if="shouldShowComments"
-                            class="pt-0"
-                            align-top
-                            dense
-                          >
-                            <v-timeline-item
-                              v-for="(comment, cIndex) in content.comments"
-                              :key="`discussion-${cIndex}`"
-                              class="pb-0"
-                              color="pink"
-                              small
+                  <!-- Rescuers -->
+                  <v-flex xs12>
+                    <v-layout row>
+                      <v-flex grow>
+                        <p class="mb-0">Rescuers</p>
+                        <div class="mb-3">
+                          <v-item-group multiple>
+                            <v-item
+                              v-for="(rescuer, index) in selectedCord.rescuers"
+                              class="animated faster fadeIn"
+                              :key="`rescuer-${index}`"
                             >
-                              <v-avatar slot="icon" size="40">
-                                <v-tooltip bottom offset-x>
-                                  <template #activator="data">
-                                    <v-chip
-                                      :color="genColor()"
-                                      dark
-                                      v-on="data.on"
-                                    >
-                                      {{ getInitials(comment.user.username) }}
-                                    </v-chip>
-                                  </template>
-                                  <span>{{ comment.user.username }}</span>
-                                </v-tooltip>
-                              </v-avatar>
-                              <v-layout pt-3 wrap row fill-height>
-                                <v-flex xs12 sm2>
-                                  <strong>
-                                    {{
-                                      convertStringToDate(
-                                        comment.time
-                                      ).toLocaleDateString("en-us")
-                                    }}
-                                    -
-                                    {{
-                                      convertStringToDate(
-                                        comment.time
-                                      ).toLocaleTimeString("en-us")
-                                    }}
-                                  </strong>
-                                </v-flex>
-                                <v-flex grow>
-                                  <p v-html="comment.data"></p>
-                                </v-flex>
-                              </v-layout>
-                            </v-timeline-item>
-                          </v-timeline>
-                          <v-flex v-if="selectedIsOpen" grow>
-                            <v-layout column fill-height>
-                              <v-flex xs12 sm4>
-                                <v-text-field
-                                  v-model="comment[index]"
-                                  class="mt-0"
-                                  outline
-                                  counter
-                                  color="info"
-                                  :append-icon="
-                                    comment[index] && comment[index].length >= 2
-                                      ? 'send'
-                                      : undefined
-                                  "
-                                  hint="Must be at least 2 characters"
-                                  placeholder="Reply..."
-                                  @click:append="addReply(index)"
-                                ></v-text-field>
+                              <v-tooltip bottom offset-x>
+                                <template #activator="data">
+                                  <v-chip
+                                    v-on="data.on"
+                                    :close="canRemoveRescuer(rescuer)"
+                                    :color="COLORS[index % 4]"
+                                    @input="removeRescuer(rescuer)"
+                                    dark
+                                  >
+                                    {{ getInitials(rescuer.username) }}
+                                  </v-chip>
+                                </template>
+                                <span>{{
+                                  canRemoveRescuer(rescuer)
+                                    ? "Stop rescuing?"
+                                    : rescuer.username
+                                }}</span>
+                              </v-tooltip>
+                            </v-item>
+
+                            <v-item class="pulse" v-if="showRescueButton">
+                              <v-chip
+                                @click="rescue"
+                                outline
+                                :color="isDark ? 'accent' : 'primary'"
+                                :dark="isDark"
+                                small
+                                slot-scope="{ active }"
+                                :selected="active"
+                              >
+                                <v-avatar>
+                                  <v-icon alt="add">add</v-icon>
+                                </v-avatar>
+                                I'll Be A Hero!
+                              </v-chip>
+                            </v-item>
+                          </v-item-group>
+                        </div>
+                      </v-flex>
+
+                      <v-spacer></v-spacer>
+
+                      <!-- Puller -->
+                      <v-flex shrink>
+                        <v-card
+                          elevation="0"
+                          :color="`accent ${darken}`"
+                          class="px-3 py-2"
+                          max-width="150px"
+                          :dark="isDark"
+                        >
+                          <span>
+                            Pulled
+                            {{ computeDuration(selectedCord.openedOn) }}
+                            ago
+                          </span>
+
+                          <br />
+
+                          <v-avatar class="mr-2" size="26" tile>
+                            <v-img
+                              :src="getImagePath('evanbechtolHeadshot.png')"
+                            />
+                          </v-avatar>
+                          {{ user.username }}
+                        </v-card>
+                      </v-flex>
+                    </v-layout>
+                  </v-flex>
+                </v-layout>
+              </v-flex>
+
+              <!-- Discussion -->
+              <v-flex xs12>
+                <v-divider></v-divider>
+
+                <div class="timeline">
+                  <v-timeline align-top dense v-if="shouldShowDiscussion">
+                    <v-timeline-item
+                      color="pink"
+                      small
+                      v-for="(content, index) in selectedCord.discussion"
+                      :key="`discussion-${index}`"
+                    >
+                      <v-avatar slot="icon" size="40">
+                        <v-tooltip bottom offset-x>
+                          <template #activator="data">
+                            <v-chip
+                              v-on="data.on"
+                              :color="COLORS[index % 4]"
+                              dark
+                            >
+                              {{ getInitials(content.user.username) }}
+                            </v-chip>
+                          </template>
+                          <span>{{ content.user.username }}</span>
+                        </v-tooltip>
+                      </v-avatar>
+                      <v-layout pt-3 wrap row fill-height>
+                        <v-flex xs12 sm2>
+                          <strong>
+                            <!--eslint-disable-next-line-->
+                            {{ convertStringToDate(content.time).toLocaleDateString("en-us") }}
+                            -
+                            <!--eslint-disable-next-line-->
+                            {{ convertStringToDate(content.time).toLocaleTimeString("en-us") }}
+                          </strong>
+                        </v-flex>
+                        <v-flex grow>
+                          <p v-html="content.data"></p>
+                        </v-flex>
+                      </v-layout>
+
+                      <!-- Thread Reply -->
+                      <!-- <div class="comments_div">
+                        <v-timeline
+                          v-if="shouldShowComments"
+                          class="pt-0"
+                          align-top
+                          dense
+                        >
+                          <v-timeline-item
+                            v-for="(comment, cIndex) in content.comments"
+                            :key="`discussion-${cIndex}`"
+                            class="pb-0"
+                            color="pink"
+                            small
+                          >
+                            <v-avatar slot="icon" size="40">
+                              <v-tooltip bottom offset-x>
+                                <template #activator="data">
+                                  <v-chip
+                                    :color="COLORS[index % 4]"
+                                    dark
+                                    v-on="data.on"
+                                  >
+                                    {{ getInitials(comment.user.username) }}
+                                  </v-chip>
+                                </template>
+                                <span>{{ comment.user.username }}</span>
+                              </v-tooltip>
+                            </v-avatar>
+                            <v-layout pt-3 wrap row fill-height>
+                              <v-flex xs12 sm2>
+                                <strong>
+                                  {{
+                                    convertStringToDate(
+                                      comment.time
+                                    ).toLocaleDateString("en-us")
+                                  }}
+                                  -
+                                  {{
+                                    convertStringToDate(
+                                      comment.time
+                                    ).toLocaleTimeString("en-us")
+                                  }}
+                                </strong>
+                              </v-flex>
+                              <v-flex grow>
+                                <p v-html="comment.data"></p>
                               </v-flex>
                             </v-layout>
-                          </v-flex>
-                        </div>
-                      </v-timeline-item>
-                    </v-timeline>
-                  </div>
-                </v-flex>
-                <v-flex grow v-if="selectedIsOpen">
-                  <v-layout column fill-height>
-                    <v-flex xs12 sm4>
-                      <v-text-field
-                        v-model="discussion"
+                          </v-timeline-item>
+                        </v-timeline>
+                        <v-flex v-if="selectedIsOpen" grow>
+                          <v-layout column fill-height>
+                            <v-flex xs12 sm4>
+                              <v-btn
+                                v-if="!addingReply[index]"
+                                class="mx-0"
+                                :color="`info ${darken}`"
+                                flat
+                                small
+                                depressed
+                                tag="a"
+                                @click="addingReply[index] = true"
+                              >
+                                Reply to comment
+                              </v-btn>
+
+                              <template v-else>
+                                <v-layout row wrap align-start justify-start>
+                                  <v-flex xs12>
+                                    <tip-tap
+                                      :editable="addingReply"
+                                      :content="reply"
+                                      v-on:contentChanged="updateComment"
+                                    ></tip-tap>
+                                  </v-flex>
+
+                                  <v-flex shrink px-0>
+                                    <v-btn
+                                      small
+                                      depressed
+                                      outline
+                                      flat
+                                      @click="cancelAddingReply"
+                                      :dark="isDark"
+                                    >
+                                      Cancel
+                                    </v-btn>
+                                  </v-flex>
+                                  
+                                  <v-flex shrink>
+                                    <v-btn
+                                      small
+                                      depressed
+                                      :disabled="discussion.length < 2"
+                                      @click="addReply(index)"
+                                      :color="`info ${darken}`"
+                                    >
+                                      Add comment
+                                    </v-btn>
+                                  </v-flex>
+                                </v-layout>
+                              </template>
+                              
+                              &lt;!&ndash;<v-text-field
+                                v-model="comment[index]"
+                                class="mt-0"
+                                outline
+                                counter
+                                color="info"
+                                :append-icon="
+                                  comment[index] && comment[index].length >= 2
+                                    ? 'send'
+                                    : undefined
+                                "
+                                hint="Must be at least 2 characters"
+                                placeholder="Reply..."
+                                @click:append="addReply(index)"
+                              ></v-text-field>&ndash;&gt;
+                            </v-flex>
+                          </v-layout>
+                        </v-flex>
+                      </div>-->
+                    </v-timeline-item>
+                  </v-timeline>
+                </div>
+              </v-flex>
+
+              <!-- Add to discussion -->
+              <v-flex shrink v-if="!addingComment" my-0 align-self-start>
+                <v-btn
+                  class="mx-0"
+                  :color="`info ${darken}`"
+                  flat
+                  small
+                  depressed
+                  tag="a"
+                  @click="addingComment = true"
+                >
+                  Add a comment
+                </v-btn>
+              </v-flex>
+
+              <v-flex grow v-if="shouldShowAddComment">
+                <v-layout column fill-height>
+                  <v-flex xs12 sm4>
+                    <tip-tap
+                      :editable="addingComment"
+                      :content="discussion"
+                      v-on:contentChanged="updateComment"
+                    ></tip-tap>
+                  </v-flex>
+
+                  <v-layout row wrap align-center justify-start>
+                    <v-flex shrink>
+                      <v-btn
+                        small
+                        depressed
                         outline
-                        counter
-                        color="info"
-                        :append-icon="
-                          discussion.length >= 10 ? 'send' : undefined
-                        "
-                        @click:append="updateDiscussion"
-                        hint="Must be at least 10 characters"
-                        placeholder="Start a discussion!!!"
-                      ></v-text-field>
+                        flat
+                        @click="cancelAddingDiscussion"
+                        :dark="isDark"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-flex>
+
+                    <v-flex shrink>
+                      <v-btn
+                        small
+                        depressed
+                        :disabled="discussion.length < 2"
+                        @click="updateDiscussion"
+                        :color="`info ${darken}`"
+                      >
+                        Add comment
+                      </v-btn>
                     </v-flex>
                   </v-layout>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
+                </v-layout>
+              </v-flex>
 
-          <v-card-actions v-if="selectedCord && isMine && !isResolved">
-            <v-tooltip right>
-              <template #activator="data">
-                <v-btn
-                  v-on="data.on"
-                  :block="isSmall"
-                  color="purple darken-1"
-                  :disabled="unpullDisabled"
-                  depressed
-                  dark
-                  @click="confirmCloseDialog = true"
-                  >Unpull Cord</v-btn
-                >
-              </template>
-              <span>My blocker is resolved!</span>
-            </v-tooltip>
+              <!-- Actions -->
+              <v-flex xs12 mt-4 v-if="isMine">
+                <v-divider></v-divider>
 
-            <v-btn
-              :class="isSmall ? 'ml-0' : 'ml-3'"
-              :block="isSmall"
-              :outline="readonly"
-              :color="readonly ? 'info darken-1' : 'success darken-1'"
-              :disabled="unpullDisabled"
-              dark
-              @click="readonly = !readonly"
-            >
-              {{ readonly ? "Edit Cord" : "Save Cord" }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+                <v-card-actions v-if="showUnpullButton" class="px-0">
+                  <v-tooltip right>
+                    <template #activator="data">
+                      <v-btn
+                        v-if="readonly"
+                        v-on="data.on"
+                        :block="isSmall"
+                        color="purple darken-1"
+                        :disabled="unpullDisabled"
+                        depressed
+                        dark
+                        @click="confirmCloseDialog = true"
+                        >Unpull Cord
+                      </v-btn>
+                    </template>
+                    <span>My blocker is resolved!</span>
+                  </v-tooltip>
+
+                  <v-btn
+                    v-if="!readonly"
+                    :block="isSmall"
+                    :outline="readonly"
+                    :color="readonly ? 'info darken-1' : 'success darken-1'"
+                    :disabled="unpullDisabled"
+                    dark
+                    @click="readonly = !readonly"
+                  >
+                    Save Changes
+                  </v-btn>
+                </v-card-actions>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
       </v-flex>
     </v-layout>
 
@@ -521,28 +643,44 @@ import { cordMixin } from "../mixins/cordMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
-import { appsMixin } from "../mixins/appsMixin";
-import UploadFile from "../components/Upload.vue";
 import { TimeService } from "../services/timeService";
 
 export default {
   name: "SelectedCord",
+
   mixins: [
     themeMixin,
     assetMixin,
     cordMixin,
     alertMixin,
     authMixin,
-    socketMixin,
-    appsMixin
+    socketMixin
   ],
-  components: { UploadFile },
+
+  components: {
+    UploadFile: () => import("../components/Upload.vue"),
+    TipTap: () => import("../components/TipTap.vue")
+  },
+
   computed: {
-    files: function() {
+    descriptionBgColor() {
+      return this.readonly ? "transparent" : `accent ${this.darken}`;
+    },
+
+    discussionAppendIcon() {
+      return this.discussion.length >= 2 ? "send" : undefined;
+    },
+
+    files() {
       return this.selectedCord.files && this.selectedCord.files.length > 0
         ? this.selectedCord.files
         : "";
     },
+
+    showUnpullButton() {
+      return this.selectedCord && this.isMine && !this.isResolved;
+    },
+
     showRescueButton() {
       const user = this.user;
       return this.selectedCord &&
@@ -553,15 +691,24 @@ export default {
           }).length === 0
         : false;
     },
-    selectedIsOpen: function() {
+
+    shouldShowAddComment() {
+      return this.selectedIsOpen && this.addingComment;
+    },
+
+    selectedIsOpen() {
       return this.selectedCord.status === "Open";
     },
-    shouldShowDiscussion: function() {
+
+    shouldShowDiscussion() {
       return this.selectedCord.discussion.length > 0;
     },
-    shouldShowComments: function() {
-      return this.selectedCord.discussion[0].comments.length > 0;
+
+    shouldShowComments() {
+      const comments = this.selectedCord.discussion[0].comments;
+      return comments && comments.length > 0;
     },
+
     unpullDisabled() {
       return !(
         this.user.username === this.selectedCord.puller.username &&
@@ -569,34 +716,103 @@ export default {
         this.selectedCord.status === "Open"
       );
     },
-    isResolved: function() {
+
+    isResolved() {
       return this.selectedCord.status === "Resolved";
     },
-    isMine: function() {
+
+    isMine() {
       return this.selectedCord.puller.username === this.user.username;
     }
   },
+
   data: function() {
     return {
-      appDirty: false,
-      appOptions: [],
-      categoryDirty: false,
-      descriptionDirty: false,
-      addingToDiscussion: false,
+      addingComment: false,
+      addingReply: [],
       addingToComment: false,
-      confirmCloseDialog: false,
-      formData: new FormData(),
-      discussion: "",
+      addingToDiscussion: false,
+      appDirty: false,
+      categoryDirty: false,
       comment: [],
+      confirmCloseDialog: false,
+      descriptionDirty: false,
+      discussion: "",
+      formData: new FormData(),
       loading: false,
-      readonly: true
+      readonly: true,
+      reply: "",
+      titleDirty: false
     };
   },
+
   created() {
     if (!this.appToken) {
-      this.authenticateApp();
+      this.authenticateApp()
+        .then(response => {
+          if (response && response.data && response.data.success === true) {
+            this.$store.commit("appToken", response.data.token || null);
+            this.getSelectedCord();
+          }
+        })
+        .catch(err => {
+          this.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
+          return err;
+        });
+    } else if (!this.selectedCord) {
+      this.getSelectedCord();
     }
-    if (!this.selectedCord) {
+  },
+
+  methods: {
+    computeDuration: TimeService.computeDuration,
+
+    msToTime: TimeService.msToTime,
+
+    addToDiscussion() {
+      this.updateDiscussion();
+    },
+
+    appChanged() {
+      this.appDirty = true;
+    },
+
+    cancelAddingDiscussion() {
+      this.discussion = "";
+      this.addingComment = false;
+    },
+
+    cancelAddingReply() {
+      this.reply = "";
+      this.addingReply = false;
+    },
+
+    categoryChanged() {
+      this.categoryDirty = true;
+    },
+
+    titleChanged() {
+      this.titleDirty = true;
+    },
+
+    canRemoveRescuer(rescuer) {
+      return (
+        this.selectedCord.status === "Open" &&
+        rescuer.username === this.user.username
+      );
+    },
+
+    convertStringToDate(item) {
+      return new Date(item);
+    },
+
+    getInitials(item) {
+      return item && typeof item === "string"
+        ? item.slice(0, 2).toLocaleUpperCase()
+        : "";
+    },
+
+    getSelectedCord() {
       this.loading = true;
       this.getCordById(this.id)
         .then(response => {
@@ -614,67 +830,12 @@ export default {
           this.setAlert(err.message, "#DC2D37", 0);
           this.loading = false;
         });
-    }
-  },
-  mounted() {
-    this.getApps().then(response => {
-      const data =
-        response.data && response.data.data ? response.data.data : [];
-      const options = [];
-      data.forEach(function(elem) {
-        options.push(elem.name);
-      });
-      this.appOptions = options;
-    });
+    },
 
-    if (!this.categoryList.length) {
-      this.getCategoryList()
-        .then(response => {
-          const data =
-            response && response.data && response.data.data
-              ? response.data.data
-              : [];
-          const list = [];
-          data.forEach(function(elem) {
-            list.push(elem.name);
-          });
-
-          this.$store.commit("categoryList", list);
-        })
-        .catch(err => {
-          this.setAlert(err, "#DC2D37", 0);
-        });
-    }
-  },
-  methods: {
-    computeDuration: TimeService.computeDuration,
-    msToTime: TimeService.msToTime,
-    appChanged() {
-      this.appDirty = true;
-    },
-    categoryChanged() {
-      this.categoryDirty = true;
-    },
-    descriptionChanged() {
-      this.descriptionDirty = true;
-    },
-    canRemoveRescuer(rescuer) {
-      return (
-        this.selectedCord.status === "Open" &&
-        rescuer.username === this.user.username
-      );
-    },
-    convertStringToDate(item) {
-      return new Date(item);
-    },
-    getInitials(item) {
-      return item && typeof item === "string"
-        ? item.slice(0, 2).toLocaleUpperCase()
-        : "";
-    },
     goBack() {
       window.history.back();
     },
+
     removeRescuer(rescuer) {
       // eslint-disable-next-line
       this.selectedCord.rescuers = this.selectedCord.rescuers.filter(function(
@@ -687,6 +848,7 @@ export default {
         this.save();
       }
     },
+
     rescue() {
       const data = {
         rescuers: [{ _id: this.user._id, username: this.user.username }]
@@ -703,9 +865,18 @@ export default {
           this.loading = false;
         })
         .catch(err => {
-          this.setAlert(err.response.data.error, "#DC2D37", 0);
+          this.setAlert(
+            (err &&
+              err.response &&
+              err.response.data &&
+              err.response.data.error) ||
+              "Error Occurred updating rescuers",
+            "#DC2D37",
+            0
+          );
         });
     },
+
     save(refreshGrid = false) {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
@@ -731,6 +902,7 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
+
     saveComment(index, refreshGrid = false) {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
@@ -756,9 +928,22 @@ export default {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
+
     setFile(data) {
       this.formData = data;
     },
+
+    updateComment(value) {
+      this.discussion = value;
+    },
+
+    updateDescription(value) {
+      if (!this.readonly) {
+        this.selectedCord.description = value;
+        this.descriptionDirty = true;
+      }
+    },
+
     updateFile() {
       if (this.formData && this.formData.get("cordFile") !== null) {
         this.uploadFileByCordId(this.selectedCord._id, this.formData)
@@ -777,21 +962,19 @@ export default {
           });
       }
     },
+
     unpullCord() {
       this.selectedCord.status = "Resolved";
       this.selectedCord.resolvedOn = new Date().toISOString();
       this.save(true);
       this.confirmCloseDialog = false;
     },
+
     updateDiscussion() {
-      if (this.discussion.length >= 10) {
+      if (this.discussion.length >= 2) {
         this.selectedCord.discussion.push({
           time: new Date().toISOString(),
-          user: {
-            _id: this.user._id,
-            username: this.user.username,
-            email: this.user.email
-          },
+          user: { _id: this.user._id, username: this.user.username },
           data: this.discussion
         });
 
@@ -799,6 +982,7 @@ export default {
         this.discussion = "";
       }
     },
+
     addReply(index) {
       const content = this.comment[index];
       if (content && content.length >= 2) {
@@ -815,7 +999,9 @@ export default {
       }
     }
   },
+
   props: ["id"],
+
   watch: {
     addingToDiscussion: function() {
       if (this.addingToDiscussion === false) {
@@ -824,7 +1010,7 @@ export default {
     },
     addingToComment: function() {
       if (this.addingToComment === false) {
-        this.comment = "";
+        this.discussion = "";
       }
     },
 
@@ -849,7 +1035,11 @@ export default {
       }
 
       const dataChanged =
-        this.appDirty || this.categoryDirty || this.descriptionDirty;
+        this.appDirty ||
+        this.categoryDirty ||
+        this.descriptionDirty ||
+        this.titleDirty;
+
       if (this.readonly && dataChanged) {
         this.save();
       }
@@ -863,9 +1053,20 @@ function convertStringToDate(item) {
 </script>
 
 <style scoped>
+.timeline {
+  max-height: 1000px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.header {
+  font-size: 2rem;
+}
+
 .pulse:hover {
   animation: pulse 1s infinite;
 }
+
 .comments_div {
   max-height: 500px;
   overflow-y: auto;
@@ -873,5 +1074,181 @@ function convertStringToDate(item) {
   padding-left: 2%;
   padding-top: 2%;
   border-radius: 20px;
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.animated.fast {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes titleFadeInLeft {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+  }
+}
+
+@keyframes titleFadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.titleFadeInLeft {
+  -webkit-animation-name: titleFadeInLeft;
+  animation-name: titleFadeInLeft;
+}
+
+@-webkit-keyframes titleFadeOutLeft {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateX(-20px);
+  }
+}
+
+@keyframes titleFadeOutLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.titleFadeOutLeft {
+  -webkit-animation-name: titleFadeOutLeft;
+  animation-name: titleFadeOutLeft;
+}
+
+@-webkit-keyframes contentFadeInDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+
+@keyframes contentFadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contentFadeInDown {
+  -webkit-animation-name: contentFadeInDown;
+  animation-name: contentFadeInDown;
+}
+
+@-webkit-keyframes contentFadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+
+@keyframes contentFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contentFadeInUp {
+  -webkit-animation-name: contentFadeInUp;
+  animation-name: contentFadeInUp;
+}
+
+@-webkit-keyframes contentFadeOutUp {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(-20px);
+  }
+}
+
+@keyframes contentFadeOutUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.contentFadeOutUp {
+  -webkit-animation-name: contentFadeOutUp;
+  animation-name: contentFadeOutUp;
+}
+
+@-webkit-keyframes contentFadeOutDown {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+  }
+}
+
+@keyframes contentFadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.contentFadeOutDown {
+  -webkit-animation-name: contentFadeOutDown;
+  animation-name: contentFadeOutDown;
 }
 </style>

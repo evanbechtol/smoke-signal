@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar v-bind:color="color" dark app>
+    <v-toolbar v-bind:color="color" dark app flat>
       <v-toolbar-side-icon
         @click.stop="drawer = !drawer"
         style="margin: 8px;"
@@ -10,7 +10,11 @@
           AnA Hero
         </router-link>
       </v-toolbar-title>
+
       <v-spacer></v-spacer>
+
+      <slot name="installer"></slot>
+
 
       <!--Tool Notification-->
       <tool-notification> </tool-notification>
@@ -22,7 +26,10 @@
         style="margin: 8px;"
         class="mr-2 px-3"
       >
-        <v-icon class="mr-3">perm_identity</v-icon>
+        <!--<v-icon class="mr-3">perm_identity</v-icon>-->
+        <v-avatar class="mr-3" size="36">
+          <v-img :src="getImagePath('evanbechtolHeadshot.png')" />
+        </v-avatar>
         {{ user.username }}
       </v-btn>
     </v-toolbar>
@@ -70,15 +77,17 @@
       <v-layout column fill-height align-space-around justify-center>
         <v-flex xs12 mt-5 shrink>
           <v-layout column align-space-around justify-center mt-4>
-            <v-flex xs12 text-xs-center>
-              <v-icon size="100">perm_identity</v-icon>
+            <v-flex xs12 text-xs-center mb-2>
+              <v-avatar size="150">
+                <v-img :src="getImagePath('evanbechtolHeadshot.png')"></v-img>
+              </v-avatar>
             </v-flex>
-            <v-flex xs12 class="hildaLight white--text" text-xs-center>
+            <v-flex xs12 class="hildaLight white--text" text-xs-center mb-2>
               {{ user.username }}
             </v-flex>
             <v-flex xs12>
               <jwt-expiry
-                v-if="isAuthenticated && token"
+                v-if="shouldShowExpiryDetails"
                 :expiry-details="expiryDetails"
               ></jwt-expiry>
             </v-flex>
@@ -108,7 +117,7 @@
             <p class="hildaLight white--text mb-4">User Details</p>
             <v-layout column align-start justify-start>
               <v-flex xs12 mb-0 shrink>
-                <p class="subheading">
+                <p class="subheading white--text">
                   Signum
                 </p>
               </v-flex>
@@ -117,7 +126,7 @@
               </v-flex>
 
               <v-flex xs12 mb-0 shrink>
-                <p class="subheading">
+                <p class="subheading white--text">
                   Name
                 </p>
               </v-flex>
@@ -128,7 +137,7 @@
               </v-flex>
 
               <v-flex xs12 mb-0 shrink>
-                <p class="subheading">
+                <p class="subheading white--text">
                   Email
                 </p>
               </v-flex>
@@ -154,15 +163,21 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { authMixin } from "../mixins/authMixin.js";
 import JwtExpiry from "./JWTExpiry";
 import ToolNotification from "./ToolNotification.vue";
+import { assetMixin } from "../mixins/assetMixin";
 
 export default {
   name: "toolbar",
   components: { JwtExpiry, ToolNotification },
-  mixins: [authMixin, themeMixin],
+  mixins: [authMixin, assetMixin, themeMixin],
   props: {
     color: String
   },
   computed: {
+    shouldShowExpiryDetails: function() {
+      return (
+        this.isAuthenticated && this.token && this.expiryDetails.minutes <= 15
+      );
+    },
     switchLabel: function() {
       return this.isDark ? "Dark" : "Light";
     }

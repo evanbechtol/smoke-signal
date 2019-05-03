@@ -25,9 +25,9 @@ export const cordMixin = {
   },
   methods: {
     computeDurationBg(duration) {
-      return TimeService.computeDuration(duration).includes("Days")
+      return TimeService.computeDuration(duration).includes("days")
         ? "error"
-        : TimeService.computeDuration(duration).includes("Hrs")
+        : TimeService.computeDuration(duration).includes("hrs")
         ? "orangeWarning"
         : "success";
     },
@@ -37,7 +37,7 @@ export const cordMixin = {
      * @returns {Promise} Returns promise for request being generated
      */
     createCord(data) {
-      const route = `cords/create`;
+      const route = `cords/`;
       const options = {
         method: "POST",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
@@ -68,7 +68,7 @@ export const cordMixin = {
      * @returns {Promise} Returns promise for request being generated
      */
     getCords(limit = 100, skip = 0, query = null) {
-      const route = `cords/get?limit=${limit}&skip=${skip}&query=${
+      const route = `cords/?limit=${limit}&skip=${skip}&query=${
         query === null ? "" : query
       }`;
       const options = {

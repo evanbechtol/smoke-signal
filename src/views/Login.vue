@@ -19,6 +19,7 @@
             xs12
             sm8
             md6
+            grow
             :class="isSmall ? 'mt-5' : 'mt-0'"
             :style="isSmall ? 'width: 100%;' : 'width: 30%'"
             align-self-center
@@ -31,6 +32,7 @@
             >
               <v-text-field
                 dark
+                full-width
                 outline
                 name="username"
                 color="info darken-1"
@@ -42,6 +44,7 @@
               </v-text-field>
               <v-text-field
                 dark
+                full-width
                 outline
                 name="password"
                 color="info darken-1"
@@ -165,11 +168,10 @@ import { alertMixin } from "../mixins/alertMixin";
 import { assetMixin } from "../mixins/assetMixin";
 import { authMixin } from "../mixins/authMixin";
 import { themeMixin } from "../mixins/themeMixin";
-import Register from "../components/Register";
 
 export default {
   name: "login",
-  components: { Register },
+  components: { Register: () => import("../components/Register") },
   mixins: [themeMixin, alertMixin, assetMixin, authMixin],
   data: () => ({
     checkbox: false,
@@ -258,13 +260,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.forgotPwBtn {
-  position: relative;
-  left: 20px;
-}
-.darkCard {
-  background: var(--e-light-layer-0);
-  color: var(--e-dark-text);
-}
-</style>
+<style scoped></style>

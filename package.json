@@ -1,73 +1,55 @@
 {
-  "name": "hero",
-  "version": "1.1.0",
+  "name": "ana-hero",
   "author": "Evan Bechtol <evan.bechtol@ericsson.com>",
-  "description": "",
+  "description": "Ask others for help resolving blocking issues, and rescue your colleagues",
+  "version": "1.1.4",
+  "repository": {
+    "type": "git",
+    "url": "git+https://scmgr.eams.ericsson.net/incubation/smoke-signal.git"
+  },
+  "bugs": {
+    "url": "https://scmgr.eams.ericsson.net/incubation/smoke-signal/issues"
+  },
+  "homepage": "https://scmgr.eams.ericsson.net/incubation/smoke-signal#readme",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --mode development",
-    "start": "vue-cli-service serve --mode production",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "deployFirebase": "npm run build && firebase deploy --only hosting",
-    "buildAndDeploy": "npm run build && vue-cli-service serve --mode production",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e"
+    "serveBuild": "serve dist/"
   },
   "dependencies": {
-    "@mdi/font": "^2.6.95",
-    "apexcharts": "^2.2.1",
+    "@mdi/font": "^3.5.95",
+    "alertify.js": "^1.0.12",
     "axios": "^0.18.0",
-    "register-service-worker": "^1.0.0",
-    "socket.io-client": "latest",
-    "v-tooltip": "^2.0.0-rc.33",
-    "vee-validate": "^2.1.0-beta.8",
-    "vue": "^2.6.2",
-    "vue-apexcharts": "^1.2.6",
-    "vue-clipboards": "^1.2.4",
-    "vue-notification-bell": "^0.8.11",
+    "core-js": "^2.6.5",
+    "register-service-worker": "^1.6.2",
+    "roboto-fontface": "*",
+    "socket.io-client": "^2.2.0",
+    "sw-precache-webpack-plugin": "^0.11.5",
+    "tiptap": "^1.17.0",
+    "tiptap-extensions": "^1.17.0",
+    "v-tooltip": "^2.0.1",
+    "vee-validate": "^2.2.2",
+    "vue": "^2.6.6",
     "vue-router": "^3.0.1",
-    "vue-socket.io": "^3.0.5",
-    "vuetify": "^1.4.1",
+    "vue-socket.io": "^3.0.7",
+    "vuetify": "^1.5.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.4.0",
-    "@vue/cli-plugin-e2e-cypress": "^3.4.0",
-    "@vue/cli-plugin-eslint": "^3.4.0",
-    "@vue/cli-plugin-pwa": "^3.0.1",
-    "@vue/cli-plugin-unit-mocha": "^3.4.0",
-    "@vue/cli-service": "^3.4.0",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "chai": "^4.1.2",
-    "eslint": "^5.14.1",
-    "eslint-config-prettier": "^3.1.0",
-    "eslint-plugin-prettier": "^3.0.0",
-    "vue-template-compiler": "^2.6.2"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "plugin:prettier/recommended",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-plugin-pwa": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "@vue/eslint-config-prettier": "^4.0.1",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "vue-cli-plugin-vuetify": "^0.5.0",
+    "vue-template-compiler": "^2.5.21",
+    "vuetify-loader": "^1.0.5"
+  }
 }

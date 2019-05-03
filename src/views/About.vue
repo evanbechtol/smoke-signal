@@ -77,7 +77,16 @@ export default {
     } else if (this.appToken) {
       // Do something once your app is ready
     } else if (!this.appToken) {
-      this.authenticateApp();
+      this.authenticateApp()
+        .then(response => {
+          if (response && response.data && response.data.success === true) {
+            this.$store.commit("appToken", response.data.token || null);
+          }
+        })
+        .catch(err => {
+          this.setAlert(`Error authenticating app: ${err}`, "#DC2D37", 0);
+          return err;
+        });
     }
   },
   methods: {}

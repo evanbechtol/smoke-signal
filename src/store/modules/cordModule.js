@@ -1,4 +1,5 @@
 import { TimeService } from "../../services/timeService";
+import { UserService } from "../../services/userService";
 
 export default {
   state: {
@@ -62,9 +63,10 @@ export default {
     },
     // eslint-disable-next-line
     myCords: (state, getters) => {
+      const user = JSON.parse(UserService.getUser());
       return state.gridItems.filter(function(elem) {
-        return state.user && state.username
-          ? elem.puller.username === state.user.username
+        return user && user.username
+          ? elem.puller.username === user.username
           : false;
       });
     },
