@@ -9,7 +9,7 @@ const AppsService = {
       const isValid = body && !!body.project;
 
       if (isValid) {
-        const routeApp = "user";
+        const routeApp = "users";
         const options = {
           method: "POST",
           headers: { Authorization: `Bearer ${appCode}` },
