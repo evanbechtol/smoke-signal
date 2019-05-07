@@ -9,7 +9,7 @@ export const appsMixin = {
      * @returns {Promise} Returns promise for request being generated
      */
     getApps(query = null) {
-      const route = `apps/?${query === null ? "" : "query=" + query}`;
+      const route = `apps${query === null ? "" : "?query=" + query}`;
       const options = {
         method: "GET",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },

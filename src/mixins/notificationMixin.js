@@ -11,8 +11,10 @@ export const notificationMixin = {
      * @returns {Promise} Returns promise for request being generated
      */
     getNotifications(limit = 5, skip = 0, query = null) {
-      const route = `notifications/list?limit=${limit}&skip=${skip}${query === null ? "" : "&query=" + query}`;
-	  const options = {
+      const route = `notifications/list?limit=${limit}&skip=${skip}${
+        query === null ? "" : "&query=" + query
+      }`;
+      const options = {
         method: "GET",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
         url: `${baseUrl}/${route}`
@@ -22,8 +24,10 @@ export const notificationMixin = {
     /**
      * @description Attempts to update the read timestamp for the tool notification matching the provided Object ID
      * @param id {string} Body to use after updating the tool notification to re-generate the data
-     * @param limit {string} Used to control and implement pagination on returned data set
-     * @param skip {string} Used to control and implement pagination on returned data set
+     * @param limit {number} Used to control and implement pagination on returned
+     * data set
+     * @param skip {number} Used to control and implement pagination on returned
+     * data set
      * @param query {object} MongoDB Query to be executed on the collection
      * @returns {Promise} Returns promise for request being generated
      */
