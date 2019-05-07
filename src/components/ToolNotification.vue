@@ -111,15 +111,17 @@ export default {
           notifyReceiver: { _id: this.user._id, username: this.user.username },
           readTimeStamp: null
         };
-        this.getNotifications(this.limit, this.skip, JSON.stringify(query))
-          .then(response => {
-            this.notifications = response.data.data;
-            this.notificationCount = this.notifications.length;
-            this.notifications.unshift({ header: true });
-          })
-          .catch(err => {
-            this.setAlert(err, "#DC2D37", 0);
-          });
+        if (this.appToken) {
+          this.getNotifications(this.limit, this.skip, JSON.stringify(query))
+            .then(response => {
+              this.notifications = response.data.data;
+              this.notificationCount = this.notifications.length;
+              this.notifications.unshift({ header: true });
+            })
+            .catch(err => {
+              this.setAlert(err, "#DC2D37", 0);
+            });
+        }
       }
     },
     callOpenItem(item) {
