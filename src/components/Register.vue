@@ -249,17 +249,6 @@ export default {
       return this.user.username;
     }
   },
-  created() {
-    this.getApps().then(response => {
-      const data =
-        response.data && response.data.data ? response.data.data : [];
-      const options = [];
-      data.forEach(function(elem) {
-        options.push(elem.name);
-      });
-      this.appOptions = options;
-    });
-  },
   data: () => ({
     backDisabled: false,
     appOptions: [],
@@ -335,6 +324,18 @@ export default {
       this.form.step2.valid = false;
       this.form.step3.valid = false;
     });
+
+    if (this.appToken) {
+      this.getApps().then(response => {
+        const data =
+          response.data && response.data.data ? response.data.data : [];
+        const options = [];
+        data.forEach(function(elem) {
+          options.push(elem.name);
+        });
+        this.appOptions = options;
+      });
+    }
   },
   methods: {
     cancel() {

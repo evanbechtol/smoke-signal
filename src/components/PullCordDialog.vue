@@ -206,15 +206,17 @@ export default {
     }
   },
   mounted() {
-    this.getApps().then(response => {
-      const data =
-        response.data && response.data.data ? response.data.data : [];
-      const options = [];
-      data.forEach(function(elem) {
-        options.push(elem.name);
+    if (this.appToken) {
+      this.getApps().then(response => {
+        const data =
+          response.data && response.data.data ? response.data.data : [];
+        const options = [];
+        data.forEach(function(elem) {
+          options.push(elem.name);
+        });
+        this.appOptions = options;
       });
-      this.appOptions = options;
-    });
+    }
 
     if (!this.categoryList.length) {
       this.getCategoryList()
