@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y v-if="user && user.username && notifications.length">
+  <v-menu offset-y v-if="shouldShowNotifications">
     <template v-slot:activator="{ on }">
       <v-btn color="primary" dark v-on="on">
         <v-badge right color="red" overlap>
@@ -83,12 +83,17 @@ export default {
   computed: {
     hasMultipleNotifications() {
       return this.notifications.length > 1;
+    },
+
+    shouldShowNotifications() {
+      return this.user && this.user.username && this.notifications.length;
     }
   },
   data() {
     return {
       notify_user: {},
       notifications: [],
+      notificationsSet: new Set(),
       notificationCount: 0,
       limit: 50,
       skip: 0
@@ -112,12 +117,14 @@ export default {
                 elem.header = true;
                 return elem;
               });
-
               data.forEach(elem => {
-                _this.notifications.push(elem);
+                if (!_this.notificationsSet.has(elem._id)) {
+                  _this.notificationsSet.add(elem);
+                }
               });
 
-              _this.notificationCount = _this.notifications.length;
+              _this.notificationCount = [_this.notificationsSet].length;
+              _this.notifications = [..._this.notificationsSet];
               _this.$store.commit("cordPullNotification", false);
             })
             .catch(err => {
