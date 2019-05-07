@@ -26,18 +26,20 @@
                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm4>
-                    <v-text-field
+                    <v-combobox
                       box
                       label="Application"
                       type="text"
+                      item-text="name"
+                      item-value="name"
                       v-model="cord.app"
+                      text-color="info"
                       color="info"
-                      hint="What application is this related to?"
-                      required
-                      max="20"
-                      :rules="[rules.required, rules.maximum]"
+                      :items="appOptions"
+                      hint="Select a application"
+                      :rules="[rules.required]"
                     >
-                    </v-text-field>
+                    </v-combobox>
                   </v-flex>
                   <v-flex xs12 sm4>
                     <v-combobox
@@ -132,15 +134,24 @@ import { alertMixin } from "../mixins/alertMixin.js";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
+import { appsMixin } from "../mixins/appsMixin";
 import UploadFile from "./Upload.vue";
 
 export default {
   name: "PullCordDialog",
-  mixins: [themeMixin, alertMixin, cordMixin, authMixin, socketMixin],
+  mixins: [
+    themeMixin,
+    alertMixin,
+    cordMixin,
+    authMixin,
+    socketMixin,
+    appsMixin
+  ],
   components: { UploadFile },
   data: function() {
     return {
       cord: {},
+      appOptions: [],
       dialog: this.initialDialog,
       formData: new FormData(),
       formValid: false,
@@ -154,6 +165,7 @@ export default {
       search: ""
     };
   },
+
   methods: {
     cancel() {
       this.$refs.form.reset();
@@ -194,23 +206,35 @@ export default {
     }
   },
   mounted() {
-    if (!this.categoryList.length) {
-      this.getCategoryList()
-        .then(response => {
-          const data =
-            response && response.data && response.data.data
-              ? response.data.data
-              : [];
-          const list = [];
-          data.forEach(function(elem) {
-            list.push(elem.name);
-          });
-
-          this.$store.commit("categoryList", list);
-        })
-        .catch(err => {
-          this.setAlert(err, "#DC2D37", 0);
+    if (this.appToken) {
+      this.getApps().then(response => {
+        const data =
+          response.data && response.data.data ? response.data.data : [];
+        const options = [];
+        data.forEach(function(elem) {
+          options.push(elem.name);
         });
+        this.appOptions = options;
+      });
+
+      if (!this.categoryList.length) {
+        this.getCategoryList()
+          .then(response => {
+            const data =
+              response && response.data && response.data.data
+                ? response.data.data
+                : [];
+            const list = [];
+            data.forEach(function(elem) {
+              list.push(elem.name);
+            });
+
+            this.$store.commit("categoryList", list);
+          })
+          .catch(err => {
+            this.setAlert(err, "#DC2D37", 0);
+          });
+      }
     }
   },
   props: ["initialDialog"],

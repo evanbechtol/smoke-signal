@@ -267,7 +267,7 @@ export default {
       this.leaveSelectedCordRoom(this.selectedCord._id);
     }
 
-    if (!this.categoryList.length) {
+    if (this.appToken && !this.categoryList.length) {
       this.getCategoryList()
         .then(response => {
           const data =

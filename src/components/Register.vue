@@ -107,6 +107,19 @@
                 required
               >
               </v-text-field>
+              <v-combobox
+                multiple
+                name="project"
+                label="Applications"
+                prepend-icon="application"
+                :items="appOptions"
+                color="info darken-1"
+                id="appSelect"
+                v-model="registerUser.project"
+                :rules="appRules"
+                required
+              >
+              </v-combobox>
             </v-form>
 
             <span class="caption grey--text text--darken-1">
@@ -212,13 +225,16 @@ import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { assetMixin } from "../mixins/assetMixin";
 import { themeMixin } from "../mixins/themeMixin";
+import { cordMixin } from "../mixins/cordMixin.js";
+import { appsMixin } from "../mixins/appsMixin.js";
 
 export default {
   name: "register",
+
   $_veeValidate: {
     validator: "new"
   },
-  mixins: [authMixin, assetMixin, alertMixin, themeMixin],
+  mixins: [authMixin, assetMixin, alertMixin, themeMixin, cordMixin, appsMixin],
   computed: {
     cancelLabel() {
       return this.step < 4 ? "Cancel" : "Close";
@@ -235,6 +251,7 @@ export default {
   },
   data: () => ({
     backDisabled: false,
+    appOptions: [],
     dictionary: {
       custom: {
         password: {
@@ -269,6 +286,7 @@ export default {
       lastName: "",
       email: "",
       username: "",
+      project: "",
       password: "",
       confirmPassword: ""
     },
@@ -280,6 +298,10 @@ export default {
     usernameRules: [
       v => !!v || "Username is required",
       v => (v && v.length > 4) || "Username must at least 4 characters"
+    ],
+    appRules: [
+      v => !!v || "Application is required",
+      v => (v && v.length !== 0) || "Application is required"
     ],
     passwordRules: [
       v => !!v || "Password is required",
@@ -302,6 +324,18 @@ export default {
       this.form.step2.valid = false;
       this.form.step3.valid = false;
     });
+
+    if (this.appToken) {
+      this.getApps().then(response => {
+        const data =
+          response.data && response.data.data ? response.data.data : [];
+        const options = [];
+        data.forEach(function(elem) {
+          options.push(elem.name);
+        });
+        this.appOptions = options;
+      });
+    }
   },
   methods: {
     cancel() {
@@ -324,10 +358,14 @@ export default {
             firstName: this.registerUser.firstName,
             lastName: this.registerUser.lastName,
             username: this.registerUser.username,
+            project: this.registerUser.project,
             email: this.registerUser.email,
             password: this.registerUser.password
           };
           this.eAuthRegister(obj)
+            .then(response => {
+              return this.userAppsRegister(obj, response);
+            })
             .then(() => {
               this.step++;
               this.backDisabled = true;
@@ -367,13 +405,4 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.large {
-  width: 500px;
-}
-
-.fill {
-  width: 100vw;
-}
-</style>
+<style scoped></style>

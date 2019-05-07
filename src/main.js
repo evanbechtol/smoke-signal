@@ -21,7 +21,6 @@ import "./jwt-decode";
 Vue.use(VeeValidate);
 Vue.use(VTooltip);
 Vue.use(Vuetify, { theme });
-
 Vue.prototype.$apiBase = process.env.VUE_APP_API_BASE;
 Vue.prototype.$appUrl = process.env.VUE_APP_URL;
 Vue.prototype.$compareString = compareString;

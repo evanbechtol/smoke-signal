@@ -14,6 +14,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "startServer": "http-server dist -p 8081 --push-state",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "serveBuild": "serve dist/"
@@ -27,6 +28,8 @@
     "roboto-fontface": "*",
     "socket.io-client": "^2.2.0",
     "sw-precache-webpack-plugin": "^0.11.5",
+    "tiptap": "^1.17.0",
+    "tiptap-extensions": "^1.17.0",
     "v-tooltip": "^2.0.1",
     "vee-validate": "^2.2.2",
     "vue": "^2.6.6",

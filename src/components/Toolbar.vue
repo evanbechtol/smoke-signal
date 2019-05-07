@@ -15,6 +15,10 @@
 
       <slot name="installer"></slot>
 
+
+      <!--Tool Notification-->
+      <tool-notification> </tool-notification>
+
       <v-btn
         v-if="user && user.username"
         flat
@@ -158,11 +162,12 @@
 import { themeMixin } from "../mixins/themeMixin.js";
 import { authMixin } from "../mixins/authMixin.js";
 import JwtExpiry from "./JWTExpiry";
+import ToolNotification from "./ToolNotification.vue";
 import { assetMixin } from "../mixins/assetMixin";
 
 export default {
   name: "toolbar",
-  components: { JwtExpiry },
+  components: { JwtExpiry, ToolNotification },
   mixins: [authMixin, assetMixin, themeMixin],
   props: {
     color: String
@@ -199,6 +204,7 @@ export default {
         { title: "My Profile", icon: "settings", path: "/profile" },
         { title: "About", icon: "settings", path: "/about" }
       ],
+      notifications: [],
       themes: [
         { label: "Dark", value: "dark" },
         { label: "Light", value: "light" }

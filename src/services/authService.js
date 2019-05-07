@@ -128,7 +128,8 @@ const AuthService = {
         !!body.username &&
         !!body.email &&
         !!body.firstName &&
-        !!body.lastName;
+        !!body.lastName &&
+        !!body.project;
 
       if (isValid) {
         const route = "e_auth/users";

@@ -100,24 +100,6 @@ export default {
       return item && typeof item === "string"
         ? item.slice(0, 2).toLocaleUpperCase()
         : "";
-    },
-    openItem(item) {
-      this.getCordById(item._id)
-        .then(response => {
-          const cord = response.data.data;
-          this.$store.commit("selectedCord", cord);
-          this.$router.push({ path: `/cord/${cord._id}`, props: cord });
-          this.joinSelectedCordRoom(cord._id);
-          return this.validateUser();
-        })
-        .then(validationResponse => {
-          this.$store.commit("token", validationResponse.data.token || null);
-          this.setExpiry();
-          this.loading = false;
-        })
-        .catch(err => {
-          this.setAlert(err.message, "#DC2D37", 0);
-        });
     }
   },
   watch: {

@@ -14,7 +14,18 @@
           primary-title
           class="hildaLight space-small mx-0 mb-0 mt-5 px-0"
         >
-          <v-layout row justify-center>
+          <v-layout row wrap justify-center>
+            <!-- Loading text -->
+            <v-flex v-if="loading" xs12 pa-0 ma-0>
+              <div style="z-index: 9; width: 100%;" class="text-xs-center">
+                <small>Loading Data</small>
+                <v-progress-linear
+                  :indeterminate="true"
+                  color="info"
+                ></v-progress-linear>
+              </div>
+            </v-flex>
+
             <!-- Go Back Button -->
             <v-flex shrink mr-2 align-self-center v-if="readonly">
               <v-tooltip bottom v-if="isSmall">
@@ -36,7 +47,7 @@
             </v-flex>
 
             <!-- Cord Title Text -->
-            <v-flex v-if="selectedCord && !loading" grow>
+            <v-flex v-if="selectedCord" xs12>
               <div class="animated titleFadeInLeft">
                 <span class="ml-3 pt-5 header" v-if="readonly">
                   {{ selectedCord.title }}
@@ -90,17 +101,6 @@
                 </span>
               </div>
             </v-flex>
-
-            <!-- Loading text -->
-            <v-flex v-else grow>
-              <div style="z-index: 9; width: 100%;" class="text-xs-center">
-                <p>Please wait! Loading Data</p>
-                <v-progress-linear
-                  :indeterminate="true"
-                  color="primary"
-                ></v-progress-linear>
-              </div>
-            </v-flex>
           </v-layout>
         </v-card-title>
 
@@ -115,19 +115,13 @@
             <v-layout wrap row>
               <!-- Description -->
               <v-flex xs12 mb-0>
-                <v-textarea
-                  color="info"
-                  :background-color="descriptionBgColor"
-                  :flat="readonly"
-                  :solo="readonly"
-                  auto-grow
-                  :outline="!readonly"
-                  label="Description"
-                  :readonly="readonly"
-                  v-model="selectedCord.description"
-                  @change="descriptionChanged"
-                >
-                </v-textarea>
+                <div v-html="selectedCord.description" v-if="readonly"></div>
+                <tip-tap
+                  v-else
+                  :editable="!readonly"
+                  :content="selectedCord.description"
+                  v-on:contentChanged="updateDescription"
+                ></tip-tap>
               </v-flex>
 
               <!-- File -->
@@ -335,10 +329,6 @@
 
               <!-- Discussion -->
               <v-flex xs12>
-                <div class="hildaLight space-small">
-                  Discussion
-                </div>
-
                 <v-divider></v-divider>
 
                 <div class="timeline">
@@ -377,103 +367,69 @@
                           <p v-html="content.data"></p>
                         </v-flex>
                       </v-layout>
-                      <!-- Thread Reply -->
-                      <div class="comments_div">
-                        <v-timeline
-                          v-if="shouldShowComments"
-                          class="pt-0"
-                          align-top
-                          dense
-                        >
-                          <v-timeline-item
-                            v-for="(comment, cIndex) in content.comments"
-                            :key="`discussion-${cIndex}`"
-                            class="pb-0"
-                            color="pink"
-                            small
-                          >
-                            <v-avatar slot="icon" size="40">
-                              <v-tooltip bottom offset-x>
-                                <template #activator="data">
-                                  <v-chip
-                                    :color="COLORS[index % 4]"
-                                    dark
-                                    v-on="data.on"
-                                  >
-                                    {{ getInitials(comment.user.username) }}
-                                  </v-chip>
-                                </template>
-                                <span>{{ comment.user.username }}</span>
-                              </v-tooltip>
-                            </v-avatar>
-                            <v-layout pt-3 wrap row fill-height>
-                              <v-flex xs12 sm2>
-                                <strong>
-                                  {{
-                                    convertStringToDate(
-                                      comment.time
-                                    ).toLocaleDateString("en-us")
-                                  }}
-                                  -
-                                  {{
-                                    convertStringToDate(
-                                      comment.time
-                                    ).toLocaleTimeString("en-us")
-                                  }}
-                                </strong>
-                              </v-flex>
-                              <v-flex grow>
-                                <p v-html="comment.data"></p>
-                              </v-flex>
-                            </v-layout>
-                          </v-timeline-item>
-                        </v-timeline>
-                        <v-flex v-if="selectedIsOpen" grow>
-                          <v-layout column fill-height>
-                            <v-flex xs12 sm4>
-                              <v-text-field
-                                v-model="comment[index]"
-                                class="mt-0"
-                                outline
-                                counter
-                                color="info"
-                                :append-icon="
-                                  comment[index] && comment[index].length >= 2
-                                    ? 'send'
-                                    : undefined
-                                "
-                                hint="Must be at least 2 characters"
-                                placeholder="Reply..."
-                                @click:append="addReply(index)"
-                              ></v-text-field>
-                            </v-flex>
-                          </v-layout>
-                        </v-flex>
-                      </div>
                     </v-timeline-item>
                   </v-timeline>
                 </div>
               </v-flex>
-              <v-flex grow v-if="selectedIsOpen">
+
+              <!-- Add to discussion -->
+              <v-flex shrink v-if="!addingComment" my-0 align-self-start>
+                <v-btn
+                  class="mx-0"
+                  :color="`info ${darken}`"
+                  flat
+                  small
+                  depressed
+                  tag="a"
+                  @click="addingComment = true"
+                >
+                  Add a comment
+                </v-btn>
+              </v-flex>
+
+              <v-flex grow v-if="shouldShowAddComment">
                 <v-layout column fill-height>
                   <v-flex xs12 sm4>
-                    <v-text-field
-                      v-model="discussion"
-                      outline
-                      small
-                      counter
-                      color="info"
-                      :append-icon="discussionAppendIcon"
-                      @click:append="updateDiscussion"
-                      hint="Must be at least 2 characters"
-                      placeholder="Discuss this issue"
-                    ></v-text-field>
+                    <tip-tap
+                      :editable="addingComment"
+                      :content="discussion"
+                      v-on:contentChanged="updateComment"
+                    ></tip-tap>
                   </v-flex>
+
+                  <v-layout row wrap align-center justify-start>
+                    <v-flex shrink>
+                      <v-btn
+                        small
+                        depressed
+                        outline
+                        flat
+                        @click="cancelAddingDiscussion"
+                        :dark="isDark"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-flex>
+
+                    <v-flex shrink>
+                      <v-btn
+                        small
+                        depressed
+                        :disabled="discussion.length < 2"
+                        @click="updateDiscussion"
+                        :color="`info ${darken}`"
+                      >
+                        Add comment
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
                 </v-layout>
               </v-flex>
 
               <!-- Actions -->
-              <v-flex xs12>
+              <v-flex xs12 mt-4 v-if="isMine">
+                <v-divider></v-divider>
+
                 <v-card-actions v-if="showUnpullButton" class="px-0">
                   <v-tooltip right>
                     <template #activator="data">
@@ -577,7 +533,10 @@ export default {
     socketMixin
   ],
 
-  components: { UploadFile: () => import("../components/Upload.vue") },
+  components: {
+    UploadFile: () => import("../components/Upload.vue"),
+    TipTap: () => import("../components/TipTap.vue")
+  },
 
   computed: {
     descriptionBgColor() {
@@ -607,6 +566,10 @@ export default {
             return elem.username === user.username;
           }).length === 0
         : false;
+    },
+
+    shouldShowAddComment() {
+      return this.selectedIsOpen && this.addingComment;
     },
 
     selectedIsOpen() {
@@ -641,18 +604,21 @@ export default {
 
   data: function() {
     return {
+      addingComment: false,
+      addingReply: [],
+      addingToComment: false,
+      addingToDiscussion: false,
       appDirty: false,
       categoryDirty: false,
-      descriptionDirty: false,
-      titleDirty: false,
-      addingToDiscussion: false,
-      addingToComment: false,
-      confirmCloseDialog: false,
-      formData: new FormData(),
-      discussion: "",
       comment: [],
+      confirmCloseDialog: false,
+      descriptionDirty: false,
+      discussion: "",
+      formData: new FormData(),
       loading: false,
-      readonly: true
+      readonly: true,
+      reply: "",
+      titleDirty: false
     };
   },
 
@@ -679,16 +645,26 @@ export default {
 
     msToTime: TimeService.msToTime,
 
+    addToDiscussion() {
+      this.updateDiscussion();
+    },
+
     appChanged() {
       this.appDirty = true;
     },
 
-    categoryChanged() {
-      this.categoryDirty = true;
+    cancelAddingDiscussion() {
+      this.discussion = "";
+      this.addingComment = false;
     },
 
-    descriptionChanged() {
-      this.descriptionDirty = true;
+    cancelAddingReply() {
+      this.reply = "";
+      this.addingReply = false;
+    },
+
+    categoryChanged() {
+      this.categoryDirty = true;
     },
 
     titleChanged() {
@@ -833,6 +809,17 @@ export default {
       this.formData = data;
     },
 
+    updateComment(value) {
+      this.discussion = value;
+    },
+
+    updateDescription(value) {
+      if (!this.readonly) {
+        this.selectedCord.description = value;
+        this.descriptionDirty = true;
+      }
+    },
+
     updateFile() {
       if (this.formData && this.formData.get("cordFile") !== null) {
         this.uploadFileByCordId(this.selectedCord._id, this.formData)
@@ -860,7 +847,7 @@ export default {
     },
 
     updateDiscussion() {
-      if (this.discussion.length >= 10) {
+      if (this.discussion.length >= 2) {
         this.selectedCord.discussion.push({
           time: new Date().toISOString(),
           user: { _id: this.user._id, username: this.user.username },
@@ -899,7 +886,7 @@ export default {
     },
     addingToComment: function() {
       if (this.addingToComment === false) {
-        this.comment = "";
+        this.discussion = "";
       }
     },
 
@@ -968,6 +955,13 @@ function convertStringToDate(item) {
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.animated.fast {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
@@ -1051,5 +1045,86 @@ function convertStringToDate(item) {
 .contentFadeInDown {
   -webkit-animation-name: contentFadeInDown;
   animation-name: contentFadeInDown;
+}
+
+@-webkit-keyframes contentFadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+
+@keyframes contentFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contentFadeInUp {
+  -webkit-animation-name: contentFadeInUp;
+  animation-name: contentFadeInUp;
+}
+
+@-webkit-keyframes contentFadeOutUp {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(-20px);
+  }
+}
+
+@keyframes contentFadeOutUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.contentFadeOutUp {
+  -webkit-animation-name: contentFadeOutUp;
+  animation-name: contentFadeOutUp;
+}
+
+@-webkit-keyframes contentFadeOutDown {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+  }
+}
+
+@keyframes contentFadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.contentFadeOutDown {
+  -webkit-animation-name: contentFadeOutDown;
+  animation-name: contentFadeOutDown;
 }
 </style>
