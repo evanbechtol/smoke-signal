@@ -42,12 +42,6 @@
       </v-btn>
     </v-snackbar>
 
-    <!-- Cord Notification Card -->
-    <cord-notification-card
-      :show-notification-card="showNotificationCard"
-      v-on:closeCordPullNotification="closeCordPullNotification"
-    ></cord-notification-card>
-
     <!--<badge-card></badge-card>-->
   </v-app>
 </template>
@@ -62,13 +56,12 @@ import { TokenService } from "./services/tokenService";
 import { ThemeService } from "./services/themeService";
 import { UserService } from "./services/userService";
 import { cordMixin } from "./mixins/cordMixin";
-import CordNotificationCard from "./components/CordNotificationCard";
 //import BadgeCard from "./components/BadgeCard";
 
 export default {
   name: "app",
   mixins: [alertMixin, authMixin, cordMixin, themeMixin, socketMixin],
-  components: { CordNotificationCard, /*BadgeCard, Footer,*/ Toolbar },
+  components: { /*BadgeCard,*/ Toolbar },
   created() {
     this.init();
     const theme = ThemeService.getTheme();
@@ -102,11 +95,6 @@ export default {
       this.installBtn = "block";
     });
   },
-  computed: {
-    showNotificationCard: function() {
-      return !!(this.user && this.isAuthenticated && this.cordPullNotification);
-    }
-  },
   data() {
     return {
       installBtn: "none", // Controls displaying A2HS button
@@ -118,13 +106,6 @@ export default {
     };
   },
   methods: {
-    closeCordPullNotification() {
-      this.$store.commit("cordPullNotification", false);
-    },
-    goToCord() {
-      this.$store.commit("cordPullNotification", false);
-      this.$router.push({ path: this.notificationLink });
-    },
     init() {
       const token = TokenService.getToken();
       const user = UserService.getUser();

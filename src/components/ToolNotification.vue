@@ -1,9 +1,9 @@
 <template>
-  <v-menu offset-y v-if="user && user.username">
+  <v-menu offset-y v-if="user && user.username && notifications.length">
     <template v-slot:activator="{ on }">
       <v-btn color="primary" dark v-on="on">
         <v-badge right color="red" overlap>
-          <template v-if="notifications.length > 1" v-slot:badge>
+          <template v-slot:badge>
             <span>{{ notificationCount }}</span>
           </template>
           <v-icon color="white lighten-1">
@@ -16,23 +16,12 @@
       <v-layout row>
         <v-flex xs12>
           <v-list two-line class="list-width">
+            <v-subheader v-if="!notifications.length">
+              No notifications
+            </v-subheader>
+
             <template v-for="(item, index) in notifications">
-              <v-subheader
-                v-if="item.header && notifications.length > 1"
-                :key="`subheader-${index}`"
-              >
-                Recent notifications
-              </v-subheader>
-
-              <v-subheader
-                v-else-if="notifications.length == 1"
-                :key="`sub-header-${index}`"
-              >
-                No notifications
-              </v-subheader>
-
               <v-list-tile
-                v-else
                 :key="`tile-${index}`"
                 avatar
                 @click="callOpenItem(item)"
@@ -82,7 +71,6 @@ import { TimeService } from "../services/timeService";
 
 export default {
   name: "ToolNotification",
-  components: {},
   mixins: [
     authMixin,
     themeMixin,
@@ -92,6 +80,11 @@ export default {
     socketMixin,
     TimeService
   ],
+  computed: {
+    hasMultipleNotifications() {
+      return this.notifications.length > 1;
+    }
+  },
   data() {
     return {
       notify_user: {},
@@ -112,11 +105,20 @@ export default {
           readTimeStamp: null
         };
         if (this.appToken) {
+          const _this = this;
           this.getNotifications(this.limit, this.skip, JSON.stringify(query))
             .then(response => {
-              this.notifications = response.data.data;
-              this.notificationCount = this.notifications.length;
-              this.notifications.unshift({ header: true });
+              const data = response.data.data.map(elem => {
+                elem.header = true;
+                return elem;
+              });
+
+              data.forEach(elem => {
+                _this.notifications.push(elem);
+              });
+
+              _this.notificationCount = _this.notifications.length;
+              _this.$store.commit("cordPullNotification", false);
             })
             .catch(err => {
               this.setAlert(err, "#DC2D37", 0);
@@ -145,6 +147,9 @@ export default {
         .catch(err => {
           this.setAlert(err, "#DC2D37", 0);
         });
+    },
+    _shouldShowItem(item) {
+      return item.app && item.createdBy && item.cord && item.createdTimeStamp;
     }
   },
   watch: {
@@ -152,6 +157,12 @@ export default {
       if (value) {
         const _this = this;
         window.setTimeout(_this.getNotifyList, 1000);
+      }
+    },
+
+    cordPullNotification: function(value) {
+      if (value) {
+        this.getNotifyList();
       }
     }
   }
