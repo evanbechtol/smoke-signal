@@ -228,7 +228,6 @@ export default {
           email: this.username,
           password: this.password
         };
-        // Todo: login against hero db 1st, then eAuth
         this.validateApp()
           .then(() => {
             return this.heroLogin({ username: obj.username });
