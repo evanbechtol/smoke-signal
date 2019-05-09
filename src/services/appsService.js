@@ -10,14 +10,19 @@ const AppsService = {
 
       if (isValid) {
         const routeApp = "users";
+        const data = response.data;
+        // Todo: add teams to request body under "data"
         const options = {
           method: "POST",
           headers: { Authorization: `Bearer ${appCode}` },
           data: {
             user: {
-              _id: response.data.user._id,
-              username: response.data.user.username
+              _id: data.user._id,
+              username: data.user.username
             },
+            firstName: data.user.firstname,
+            lastName: data.user.lastname,
+            email: data.user.email,
             apps: body.project
           },
           url: `${serviceUrl}/${routeApp}`
