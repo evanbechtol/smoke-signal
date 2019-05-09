@@ -15,7 +15,6 @@
 
       <slot name="installer"></slot>
 
-
       <!--Tool Notification-->
       <tool-notification> </tool-notification>
 

@@ -44,6 +44,9 @@ export const authMixin = {
     getUnixTime() {
       return (new Date().getTime() / 1000) | 0;
     },
+    heroLogin(user) {
+      return AuthService.heroLogin(user);
+    },
     logout() {
       AuthService.logout();
     },

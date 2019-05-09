@@ -228,7 +228,11 @@ export default {
           email: this.username,
           password: this.password
         };
+        // Todo: login against hero db 1st, then eAuth
         this.validateApp()
+          .then(() => {
+            return this.heroLogin({ username: obj.username });
+          })
           .then(() => {
             return this.eAuthLogin(obj);
           })
@@ -236,7 +240,14 @@ export default {
             this.$router.push(this.$route.params.nextUrl || "/");
           })
           .catch(err => {
-            this.setAlert(err, "#DC2D37", 5000);
+            const errMessage =
+              err &&
+              err.response &&
+              err.response.data &&
+              err.response.data.error
+                ? err.response.data.error
+                : err;
+            this.setAlert(errMessage, "#DC2D37", 5000);
           });
       }
     },

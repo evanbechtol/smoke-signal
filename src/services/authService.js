@@ -5,6 +5,7 @@ import { TimeService } from "./timeService";
 import { AlertService } from "./alertService";
 
 const base = process.env.VUE_APP_EAUTH;
+const apiBase = process.env.VUE_APP_API_BASE;
 const appCode = process.env.VUE_APP_EAUTH_APP_CODE;
 const appUrl = process.env.VUE_APP_URL;
 
@@ -156,6 +157,35 @@ const AuthService = {
             return reject(err);
           });
       }
+    });
+  },
+  heroLogin(user) {
+    return new Promise((resolve, reject) => {
+      const route = "auth";
+      const options = {
+        method: "POST",
+        headers: { Authorization: `Bearer ${appCode}` },
+        data: user,
+        url: `${apiBase}/${route}`
+      };
+
+      ApiService.customRequest(options)
+        .then(response => {
+          const userRetrieved =
+            response &&
+            response.data &&
+            response.data.data &&
+            response.data.data.user;
+
+          if (userRetrieved) {
+            return resolve(response.data.data);
+          } else {
+            return reject(response.data.error);
+          }
+        })
+        .catch(err => {
+          return reject(err);
+        });
     });
   },
   logout() {
