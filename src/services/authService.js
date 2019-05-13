@@ -24,6 +24,14 @@ const AuthService = {
 
     return ApiService.customRequest(options);
   },
+
+  /**
+   * @description Generate a password reset request for the user matching
+   * the provided email address
+   * @param body {object} Body to send with request, must contain property
+   * "email"
+   * @returns {Promise<any>}
+   */
   eAuthForgotPassword(body = null) {
     return new Promise((resolve, reject) => {
       if (body && body.email) {
@@ -87,6 +95,13 @@ const AuthService = {
       }
     });
   },
+
+  /**
+   * @description Authenticate with E-Auth. If successful, a JWT will be
+   * included in the response, along with user data
+   * @param body {object} User information to authenticate with
+   * @returns {Promise<any>}
+   */
   eAuthLogin(body = null) {
     return new Promise((resolve, reject) => {
       if (body && body.username && body.password) {
@@ -122,6 +137,14 @@ const AuthService = {
       }
     });
   },
+
+  /**
+   * @description Register with E-Auth. If successful, user will be created
+   * and associated to this application. Otherwise, an error message will be
+   * included in the response
+   * @param body {object} User information to register with
+   * @returns {Promise<any>}
+   */
   eAuthRegister(body = null) {
     return new Promise((resolve, reject) => {
       const isValid =
@@ -159,6 +182,44 @@ const AuthService = {
       }
     });
   },
+
+  /**
+   * @description Updates the user information for the authenticated user
+   * @param body {object} User data to user in the update
+   */
+  eAuthUpdateUserData(body = null) {
+    return new Promise((resolve, reject) => {
+      if (body) {
+        const route = `e_auth/users/${body._id}`;
+        const options = {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${appCode}` },
+          data: body,
+          url: `${base}/${route}`
+        };
+
+        return ApiService.customRequest(options)
+          .then(response => {
+            if (response && response.data && response.data.user) {
+              return resolve(response);
+            }
+          })
+          .catch(err => {
+            return reject(err);
+          });
+      } else {
+        return reject();
+      }
+    });
+  },
+
+  /**
+   * @description Login against the Hero MongoDB. Only checks to make sure
+   * that the user exists in the DB, and doesn't authenticate with password.
+   * That is the responsibility of E-Auth
+   * @param user {object} User information to login with
+   * @returns {Promise<any>}
+   */
   heroLogin(user) {
     return new Promise((resolve, reject) => {
       const route = "auth";
@@ -188,11 +249,23 @@ const AuthService = {
         });
     });
   },
+
+  /**
+   * @description Destroy the user and token data in localstorage, redirect
+   * to login page
+   */
   logout() {
     router.push({ path: "/login", name: "login" });
     store.commit("user", null);
     store.commit("token", null);
   },
+
+  /**
+   * @description Generates the color for the snackbar that displays
+   * remaining session time in the right drawer in Toolbar.vue
+   * @param minutes {number} Number of minutes remaining in the session
+   * @returns {string}
+   */
   setColor(minutes) {
     return minutes <= 1
       ? "error"
@@ -202,8 +275,16 @@ const AuthService = {
       ? "info"
       : "info";
   },
+
+  /**
+   * @description Sets all session expiration information
+   * @param token {string} JWT for the current session
+   * @param whenToWarn {number} Controls when the snackbar, indicating
+   * session expiration, is to be shown in the right drawer in Toolbar.vue
+   * @param isAuthenticated
+   */
   setExpiry(token, whenToWarn, isAuthenticated) {
-    if (token !== null && token.length) {
+    if (token && token.length) {
       const decoded = window.jwt_decode(token);
       const expires = decoded.exp;
       const rightNow = TimeService.getUnixTime();
@@ -245,6 +326,13 @@ const AuthService = {
       }
     }
   },
+
+  /**
+   * @description Generates the color for the snackbar that displays
+   * remaining session time in the right drawer in Toolbar.vue
+   * @param minutes {number} Number of minutes remaining in the current session
+   * @returns {string}
+   */
   setSeverity(minutes) {
     return minutes <= 1
       ? "error"
@@ -252,6 +340,13 @@ const AuthService = {
       ? "warning"
       : "info";
   },
+
+  /**
+   * @description Validates the application against E-Auth. If the token has
+   * expired, it will generate a new token and set it
+   * @param appToken {string} JWT to use for E-Auth verification
+   * @returns {Promise<any>}
+   */
   validateApp(appToken) {
     const route = "e_auth/validate/apps";
     return new Promise(resolve => {
@@ -282,6 +377,12 @@ const AuthService = {
         });
     });
   },
+
+  /**
+   * @description Validates the user against E-Auth.
+   * @param token {string} JWT to use for E-Auth verification
+   * @returns {Promise<any>}
+   */
   validateUser(token) {
     const route = "e_auth/validate";
     return new Promise((resolve, reject) => {

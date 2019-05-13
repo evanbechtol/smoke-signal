@@ -6,10 +6,89 @@
     class="light-l1 profile"
     :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
-    <v-layout column justify-start v-if="!loading">
+    <v-layout row wrap align-start justify-start v-if="!loading">
+      <!-- User Information -->
+      <v-flex xs12 sm6 md4 lg2>
+        <v-card :dark="isDark" :color="`accent ${darken}}`" flat tile>
+          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
+            User Info
+            <v-tooltip bottom class="ml-3">
+              <template #activator="data">
+                <v-btn
+                  icon
+                  @click="editingUserInfo = !editingUserInfo"
+                  v-on="data.on"
+                >
+                  <v-icon>{{ userInfoEditIcon }}</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ editUserInfoTooltip }}</span>
+            </v-tooltip>
+          </v-card-title>
+          <v-card-text class="py-0">
+            <v-layout row align-center justify-center>
+              <v-flex xs12 text-xs-center mb-2>
+                <v-avatar size="150">
+                  <v-img :src="getImagePath('evanbechtolHeadshot.png')"></v-img>
+                </v-avatar>
+              </v-flex>
+            </v-layout>
+            <v-layout row wrap align-start justify-start>
+              <!-- Username -->
+              <v-flex xs12>
+                <v-text-field
+                  label="Username"
+                  full-width
+                  :outline="editingUserInfo"
+                  :readonly="!editingUserInfo"
+                  v-model="user.username"
+                  @change="userInfoChanged"
+                ></v-text-field>
+              </v-flex>
+
+              <!-- Email -->
+              <v-flex xs12>
+                <v-text-field
+                  label="Email"
+                  full-width
+                  :outline="editingUserInfo"
+                  :readonly="!editingUserInfo"
+                  v-model="user.email"
+                  @change="userInfoChanged"
+                ></v-text-field>
+              </v-flex>
+
+              <!-- First Name -->
+              <v-flex xs12>
+                <v-text-field
+                  label="First Name"
+                  full-width
+                  :outline="editingUserInfo"
+                  :readonly="!editingUserInfo"
+                  v-model="user.firstname"
+                  @change="userInfoChanged"
+                ></v-text-field>
+              </v-flex>
+
+              <!-- Last Name -->
+              <v-flex xs12>
+                <v-text-field
+                  label="Last Name"
+                  full-width
+                  :outline="editingUserInfo"
+                  :readonly="!editingUserInfo"
+                  v-model="user.lastname"
+                  @change="userInfoChanged"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+
       <!-- Statistics Section -->
-      <v-flex xs12 mt-4 class="animated fast slideInLeft">
-        <v-card :dark="isDark" :color="`accent ${darken}`">
+      <v-flex grow>
+        <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             Statistics
           </v-card-title>
@@ -56,11 +135,12 @@
       </v-flex>
 
       <!-- History Section -->
-      <v-flex xs12 class="mb-3" :class="{ isSmall: 'mt-0' }">
+      <v-flex xs12>
         <v-card
-          class="animated fast slideInRight"
           :dark="isDark"
           :color="`accent ${darken}`"
+          flat
+          tile
           max-height="85vh"
         >
           <v-card-title class="hildaLight space-small big mx-0 mt-0 pa-0">
@@ -159,13 +239,26 @@ import { themeMixin } from "../mixins/themeMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { cordMixin } from "../mixins/cordMixin";
+import { assetMixin } from "../mixins/assetMixin";
 
 export default {
   name: "Profile",
-  mixins: [themeMixin, alertMixin, authMixin, cordMixin],
+  mixins: [themeMixin, alertMixin, authMixin, assetMixin, cordMixin],
   computed: {
+    editUserInfoTooltip() {
+      return this.editingUserInfo ? "Save Changes" : "Edit";
+    },
+
     loading() {
       return this.validateLoading || this.statsLoading || this.cordsLoading;
+    },
+
+    userInfoEditIcon() {
+      return this.editingUserInfo ? "save" : "edit";
+    },
+
+    userInfoInputIcon() {
+      return this.editingUserInfo ? "lock_open" : "lock";
     },
 
     userString() {
@@ -184,6 +277,8 @@ export default {
     }
   },
   data: () => ({
+    userDataDirty: false,
+    editingUserInfo: false,
     validateLoading: false,
     statsLoading: false,
     cordsLoading: false,
@@ -222,6 +317,7 @@ export default {
       this.$store.commit("selectedCord", cord);
       this.$router.push({ path: `/cord/${cord._id}`, props: cord });
     },
+
     initPage() {
       this.validateLoading = true;
       this.statsLoading = true;
@@ -284,6 +380,7 @@ export default {
           this.cordsLoading = false;
         });
     },
+
     updateSelectItemType(value) {
       this.activeTab = value;
       this.selectItemType =
@@ -292,12 +389,37 @@ export default {
           : value === 1
           ? "myRescueCords"
           : "myResolvedCords";
+    },
+
+    userInfoChanged() {
+      this.userDataDirty = true;
+    },
+
+    saveUserData() {
+      this.eAuthUpdateUserData(this.user)
+        .then(response => {
+          if (response && response.data && response.data.user) {
+            this.$store.commit("user", response.data.user);
+            this.setAlert("User updated successfully", "#288964", 1000);
+            this.userDataDirty = false;
+          }
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
     }
   },
   watch: {
     appToken: function() {
       this.initPage();
     },
+
+    editingUserInfo: function(value) {
+      if (!value && this.userDataDirty) {
+        this.saveUserData();
+      }
+    },
+
     selectItemType: function(value) {
       if (value === "myResolvedCords" && this.cords[2].value.length === 0) {
         this.getCordsByUser(this.userString, "Resolved")
