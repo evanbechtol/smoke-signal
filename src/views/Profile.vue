@@ -8,7 +8,7 @@
   >
     <v-layout row wrap align-start justify-start v-if="!loading">
       <!-- User Information -->
-      <v-flex xs12 sm6 md4 mx-1>
+      <v-flex xs12 sm6 md4 mt-2 mx-1>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             User Info
@@ -91,7 +91,7 @@
       </v-flex>
 
       <!-- Notifications -->
-      <v-flex xs12 sm6 md4 mx-1>
+      <v-flex xs12 sm6 md4 mt-2 mx-1>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             Notifications
@@ -120,7 +120,7 @@
       </v-flex>
 
       <!-- Statistics Section -->
-      <v-flex grow mx-1>
+      <v-flex xs12 sm6 md4 mt-2 mx-1>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             Statistics
