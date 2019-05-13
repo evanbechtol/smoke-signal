@@ -89,7 +89,7 @@
       <!-- Statistics Section -->
       <v-flex grow>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
-          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
+          <v-card-title class="hildaLight space-small big">
             Statistics
           </v-card-title>
           <v-card-text>
@@ -356,7 +356,7 @@ export default {
             },
             {
               label: "Most Active App",
-              value: data.mostActiveApp._id
+              value: data.mostActiveApp[0]._id
             }
           );
           this.userStatsInitialized = true;
