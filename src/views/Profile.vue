@@ -8,8 +8,8 @@
   >
     <v-layout row wrap align-start justify-start v-if="!loading">
       <!-- User Information -->
-      <v-flex xs12 sm6 md4 lg2>
-        <v-card :dark="isDark" :color="`accent ${darken}}`" flat tile>
+      <v-flex xs12 sm6 md4 mx-1>
+        <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             User Info
             <v-tooltip bottom class="ml-3">
@@ -33,63 +33,96 @@
                 </v-avatar>
               </v-flex>
             </v-layout>
-            <v-layout row wrap align-start justify-start>
-              <!-- Username -->
-              <v-flex xs12>
-                <v-text-field
-                  label="Username"
-                  full-width
-                  :outline="editingUserInfo"
-                  :readonly="!editingUserInfo"
-                  v-model="user.username"
-                  @change="userInfoChanged"
-                ></v-text-field>
-              </v-flex>
+            <v-layout column align-start>
+              <v-flex shrink>
+                <v-layout row wrap align-start justify-start>
+                  <!-- Username -->
+                  <v-flex xs12>
+                    <v-text-field
+                      label="Username"
+                      full-width
+                      :outline="editingUserInfo"
+                      :readonly="!editingUserInfo"
+                      v-model="user.username"
+                      @change="userInfoChanged"
+                    ></v-text-field>
+                  </v-flex>
 
-              <!-- Email -->
-              <v-flex xs12>
-                <v-text-field
-                  label="Email"
-                  full-width
-                  :outline="editingUserInfo"
-                  :readonly="!editingUserInfo"
-                  v-model="user.email"
-                  @change="userInfoChanged"
-                ></v-text-field>
-              </v-flex>
+                  <!-- Email -->
+                  <v-flex xs12>
+                    <v-text-field
+                      label="Email"
+                      full-width
+                      :outline="editingUserInfo"
+                      :readonly="!editingUserInfo"
+                      v-model="user.email"
+                      @change="userInfoChanged"
+                    ></v-text-field>
+                  </v-flex>
 
-              <!-- First Name -->
-              <v-flex xs12>
-                <v-text-field
-                  label="First Name"
-                  full-width
-                  :outline="editingUserInfo"
-                  :readonly="!editingUserInfo"
-                  v-model="user.firstname"
-                  @change="userInfoChanged"
-                ></v-text-field>
-              </v-flex>
+                  <!-- First Name -->
+                  <v-flex xs12>
+                    <v-text-field
+                      label="First Name"
+                      full-width
+                      :outline="editingUserInfo"
+                      :readonly="!editingUserInfo"
+                      v-model="user.firstname"
+                      @change="userInfoChanged"
+                    ></v-text-field>
+                  </v-flex>
 
-              <!-- Last Name -->
-              <v-flex xs12>
-                <v-text-field
-                  label="Last Name"
-                  full-width
-                  :outline="editingUserInfo"
-                  :readonly="!editingUserInfo"
-                  v-model="user.lastname"
-                  @change="userInfoChanged"
-                ></v-text-field>
+                  <!-- Last Name -->
+                  <v-flex xs12>
+                    <v-text-field
+                      label="Last Name"
+                      full-width
+                      :outline="editingUserInfo"
+                      :readonly="!editingUserInfo"
+                      v-model="user.lastname"
+                      @change="userInfoChanged"
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
               </v-flex>
             </v-layout>
           </v-card-text>
         </v-card>
       </v-flex>
 
-      <!-- Statistics Section -->
-      <v-flex grow>
+      <!-- Notifications -->
+      <v-flex xs12 sm6 md4 mx-1>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
-          <v-card-title class="hildaLight space-small big">
+          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
+            Notifications
+          </v-card-title>
+          <v-card-text>
+            <!-- Apps List -->
+            <v-list subheader>
+              <v-subheader>Apps</v-subheader>
+              <v-list-tile
+                v-for="(app, index) in heroUser.apps"
+                :key="`app-tile-${index}`"
+              >
+                <v-list-tile-action>
+                  <v-btn icon :dark="isDark" @click="">
+                    <v-icon>close</v-icon>
+                  </v-btn>
+                </v-list-tile-action>
+
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ app }}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+
+      <!-- Statistics Section -->
+      <v-flex grow mx-1>
+        <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
+          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             Statistics
           </v-card-title>
           <v-card-text>
@@ -135,7 +168,7 @@
       </v-flex>
 
       <!-- History Section -->
-      <v-flex xs12>
+      <v-flex xs12 mx-1 mt-2>
         <v-card
           :dark="isDark"
           :color="`accent ${darken}`"
@@ -277,6 +310,7 @@ export default {
     }
   },
   data: () => ({
+    heroUser: null,
     userDataDirty: false,
     editingUserInfo: false,
     validateLoading: false,
@@ -378,6 +412,16 @@ export default {
         })
         .finally(() => {
           this.cordsLoading = false;
+        });
+
+      this.heroGetUserById(this.user._id)
+        .then(response => {
+          if (response && response.apps) {
+            this.heroUser = response;
+          }
+        })
+        .catch(err => {
+          debugger;
         });
     },
 

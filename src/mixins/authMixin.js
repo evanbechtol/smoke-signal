@@ -57,6 +57,10 @@ export const authMixin = {
       return (new Date().getTime() / 1000) | 0;
     },
 
+    heroGetUserById(id) {
+      return AuthService.heroGetUserById(id);
+    },
+
     heroLogin(user) {
       return AuthService.heroLogin(user);
     },

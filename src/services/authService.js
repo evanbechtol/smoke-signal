@@ -11,7 +11,8 @@ const appUrl = process.env.VUE_APP_URL;
 
 const AuthService = {
   /**
-   * @description Authenticate the application, and store the returned JWT if provided
+   * @description Authenticate the application, and store the returned JWT if
+   *   provided
    */
   authenticateApp() {
     const route = "e_auth/auth/apps";
@@ -210,6 +211,41 @@ const AuthService = {
       } else {
         return reject();
       }
+    });
+  },
+
+  /**
+   * @description Retrieve the user from the application MongoDB
+   * @param id {string} MongoDB Object Id for user to retrieve
+   * @returns {Promise<any>}
+   */
+  heroGetUserById(id) {
+    return new Promise((resolve, reject) => {
+      const query = JSON.stringify({ "user._id": id });
+      const route = `users?query=${query}`;
+      const options = {
+        method: "GET",
+        headers: { Authorization: `Bearer ${appCode}` },
+        url: `${apiBase}/${route}`
+      };
+
+      ApiService.customRequest(options)
+        .then(response => {
+          const userRetrieved =
+            response &&
+            response.data &&
+            response.data.data &&
+            response.data.data.user;
+
+          if (userRetrieved) {
+            return resolve(response.data.data);
+          } else {
+            return reject(response.data.error);
+          }
+        })
+        .catch(err => {
+          return reject(err);
+        });
     });
   },
 
