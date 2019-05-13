@@ -3,12 +3,13 @@
     fluid
     align-center
     mt-5
+    grid-list-md
     class="light-l1 profile"
     :class="isSmall ? 'px-1 mx-0' : 'px-4'"
   >
     <v-layout row wrap align-start justify-start v-if="!loading">
       <!-- User Information -->
-      <v-flex xs12 sm6 md4 mt-2 mx-1>
+      <v-flex xs12 sm6 md4>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             User Info
@@ -91,7 +92,7 @@
       </v-flex>
 
       <!-- Notifications -->
-      <v-flex xs12 sm6 md4 mt-2 mx-1>
+      <v-flex xs12 sm6 md4>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             Notifications
@@ -120,7 +121,7 @@
       </v-flex>
 
       <!-- Statistics Section -->
-      <v-flex xs12 sm6 md4 mt-2 mx-1>
+      <v-flex xs12 sm6 md4>
         <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
           <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
             Statistics
@@ -168,7 +169,7 @@
       </v-flex>
 
       <!-- History Section -->
-      <v-flex xs12 mx-1 mt-2>
+      <v-flex xs12>
         <v-card
           :dark="isDark"
           :color="`accent ${darken}`"
@@ -253,7 +254,7 @@
       </v-flex>
     </v-layout>
 
-    <v-layout v-else align-center justify-center fill-height>
+    <v-layout v-else align-center justify-center fill-height mt-5>
       <v-flex xs12 align-self-center text-xs-center>
         <div>
           <p>Hang tight, we're crunching numbers!</p>
