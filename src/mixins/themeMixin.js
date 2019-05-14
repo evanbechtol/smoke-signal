@@ -15,6 +15,10 @@ export const themeMixin = {
 
     ...mapGetters(["darken"]),
 
+    contentCardColor() {
+      return `accent ${this.darken}`;
+    },
+
     isSmall: function() {
       return this.$vuetify.breakpoint.name === "xs";
     },
