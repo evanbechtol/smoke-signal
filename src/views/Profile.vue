@@ -268,7 +268,7 @@
                 </template>
               </v-toolbar>
             </v-card-title>
-            <v-card-text class="ma-0 pa-2" style="overflow-y: scroll;">
+            <v-card-text class="ma-0 pa-0" style="overflow-y: auto;">
               <v-tabs-items v-model="activeTab">
                 <v-tab-item
                   lazy
