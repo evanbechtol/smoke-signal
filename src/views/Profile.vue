@@ -1,325 +1,391 @@
 <template>
-  <v-container
-    fluid
-    align-center
-    mt-5
-    grid-list-md
-    class="light-l1 profile"
-    :class="isSmall ? 'px-1 mx-0' : 'px-4'"
-  >
-    <v-layout row wrap align-start justify-start v-if="!loading">
-      <!-- User Information -->
-      <v-flex xs12 sm6 md4>
-        <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
-          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
-            User Info
-            <v-tooltip bottom class="ml-3">
-              <template #activator="data">
-                <v-btn
-                  icon
-                  @click="editingUserInfo = !editingUserInfo"
-                  v-on="data.on"
-                >
-                  <v-icon>{{ userInfoEditIcon }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ editUserInfoTooltip }}</span>
-            </v-tooltip>
-          </v-card-title>
-          <v-card-text class="py-0">
-            <!-- Profile Image -->
-            <v-layout row align-center justify-center>
-              <v-flex xs12 text-xs-center mb-2>
-                <v-avatar size="150">
-                  <v-img :src="getImagePath('evanbechtolHeadshot.png')"></v-img>
-                </v-avatar>
-              </v-flex>
-            </v-layout>
+  <v-container fluid mt-4 px-0 class="light-l1 profile" id="profileContainer">
+    <v-flex xs12 ma-0 pa-0 id="parallaxFlex">
+      <v-parallax
+        height="250"
+        :src="getImagePath('profileBanner.png')"
+      ></v-parallax>
+    </v-flex>
 
-            <!-- User Info Fields -->
-            <v-layout column align-start>
-              <v-flex shrink>
-                <v-layout row wrap align-start justify-start>
-                  <!-- Username -->
-                  <v-flex xs12>
-                    <v-text-field
-                      label="Username"
-                      full-width
-                      :outline="editingUserInfo"
-                      :readonly="!editingUserInfo"
-                      v-model="user.username"
-                      @change="userInfoChanged"
-                    ></v-text-field>
-                  </v-flex>
-
-                  <!-- Email -->
-                  <v-flex xs12>
-                    <v-text-field
-                      label="Email"
-                      full-width
-                      :outline="editingUserInfo"
-                      :readonly="!editingUserInfo"
-                      v-model="user.email"
-                      @change="userInfoChanged"
-                    ></v-text-field>
-                  </v-flex>
-
-                  <!-- First Name -->
-                  <v-flex xs12>
-                    <v-text-field
-                      label="First Name"
-                      full-width
-                      :outline="editingUserInfo"
-                      :readonly="!editingUserInfo"
-                      v-model="user.firstname"
-                      @change="userInfoChanged"
-                    ></v-text-field>
-                  </v-flex>
-
-                  <!-- Last Name -->
-                  <v-flex xs12>
-                    <v-text-field
-                      label="Last Name"
-                      full-width
-                      :outline="editingUserInfo"
-                      :readonly="!editingUserInfo"
-                      v-model="user.lastname"
-                      @change="userInfoChanged"
-                    ></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-        </v-card>
+    <!-- Profile Picture -->
+    <v-layout
+      row
+      align-start
+      justify-start
+      class="profileImg"
+      id="profilePicLayout"
+    >
+      <v-flex xs12 :class="layout">
+        <v-avatar size="150">
+          <v-img :src="getImagePath('evanbechtolHeadshot.png')"></v-img>
+        </v-avatar>
       </v-flex>
+    </v-layout>
 
-      <!-- Notifications -->
-      <v-flex xs12 sm6 md4>
-        <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
-          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
-            Notifications
-          </v-card-title>
-          <v-card-text>
-            <!-- Apps List -->
-            <v-list subheader>
-              <v-subheader>
-                Apps
-                <v-tooltip right class="ml-3">
-                  <template #activator="data">
-                    <v-btn small icon @click="addApp" v-on="data.on">
-                      <v-icon>add</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Add an application</span>
-                </v-tooltip>
-              </v-subheader>
-              <div v-if="shouldShowApps">
-                <v-list-tile
-                  v-for="(app, index) in heroUser.apps"
-                  :key="`app-tile-${index}`"
-                >
-                  <v-list-tile-action>
-                    <v-btn icon :dark="isDark" @click="">
-                      <v-icon>close</v-icon>
-                    </v-btn>
-                  </v-list-tile-action>
-
-                  <v-list-tile-content>
-                    <v-list-tile-title>{{ app }}</v-list-tile-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-              </div>
-
-              <div v-else class="text-xs-center">
-                You aren't watching any apps
-              </div>
-            </v-list>
-
-            <!-- Teams List -->
-            <v-list subheader>
-              <v-subheader>
-                Teams
-                <v-tooltip right class="ml-3">
-                  <template #activator="data">
-                    <v-btn small icon @click="addTeam" v-on="data.on">
-                      <v-icon>add</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Add a team</span>
-                </v-tooltip>
-              </v-subheader>
-              <div v-if="shouldShowTeams">
-                <v-list-tile
-                  v-for="(app, index) in heroUser.teams"
-                  :key="`app-tile-${index}`"
-                >
-                  <v-list-tile-action>
-                    <v-btn icon :dark="isDark" @click="">
-                      <v-icon>close</v-icon>
-                    </v-btn>
-                  </v-list-tile-action>
-
-                  <v-list-tile-content>
-                    <v-list-tile-title>{{ app }}</v-list-tile-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-              </div>
-
-              <div v-else class="text-xs-center">
-                You aren't a part of any teams
-              </div>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-
-      <!-- Statistics Section -->
-      <v-flex xs12 sm6 md4>
-        <v-card :dark="isDark" :color="`accent ${darken}`" flat tile>
-          <v-card-title class="hildaLight space-small big mx-0 mt-0 ml-2">
-            Statistics
-          </v-card-title>
-          <v-card-text>
-            <v-layout
-              row
-              wrap
-              align-center
-              justify-center
-              fill-height
-              v-if="shouldShowStats"
+    <!-- Section Container -->
+    <v-container
+      id="sectionContainer"
+      fluid
+      align-center
+      grid-list-md
+      pt-0
+      :class="{ 'px-0': isSmall }"
+    >
+      <v-layout
+        row
+        wrap
+        align-start
+        justify-center
+        v-if="!loading"
+        class="contentSection"
+        id="contentSection"
+        :class="{ largeScreenMargin: !isNotLarge, smallScreenMargin: isSmall }"
+      >
+        <!-- User Information -->
+        <v-flex xs12 mb-4 id="userInfoFlex" :class="userNameSection">
+          <div>
+            <span id="username" class="hildaLight userName">
+              {{ user.username }}
+            </span>
+            <br />
+            <span id="name">{{ user.firstname }} {{ user.lastname }}</span>
+            <br />
+            <span id="email">{{ user.email }}</span>
+          </div>
+          <!--<v-card
+            :dark="isDark"
+            color="transparent"
+            flat
+            tile
+            class="contentCardHeight"
+          >
+            <v-card-title
+              class="hildaLight space-small big mx-0 mt-0 ml-2"
+              style="padding-top: 5em;"
             >
-              <v-flex
-                xs12
-                sm4
-                text-xs-center
-                self-
-                v-for="(item, index) in userStats"
-                :key="`stat-flex-${index}`"
+              User Info
+              <v-tooltip bottom class="ml-3">
+                <template #activator="data">
+                  <v-btn
+                    icon
+                    @click="editingUserInfo = !editingUserInfo"
+                    v-on="data.on"
+                  >
+                    <v-icon>{{ userInfoEditIcon }}</v-icon>
+                  </v-btn>
+                </template>
+                <span>{{ editUserInfoTooltip }}</span>
+              </v-tooltip>
+            </v-card-title>
+            <v-card-text class="py-0">
+              &lt;!&ndash; User Info Fields &ndash;&gt;
+              <v-layout column align-start>
+                <v-flex shrink>
+                  <v-layout row wrap align-start justify-start>
+                    &lt;!&ndash; Username &ndash;&gt;
+                    <v-flex xs12>
+                      <v-text-field
+                        label="Username"
+                        full-width
+                        :outline="editingUserInfo"
+                        :readonly="!editingUserInfo"
+                        v-model="user.username"
+                        @change="userInfoChanged"
+                      ></v-text-field>
+                    </v-flex>
+
+                    &lt;!&ndash; Email &ndash;&gt;
+                    <v-flex xs12>
+                      <v-text-field
+                        label="Email"
+                        full-width
+                        :outline="editingUserInfo"
+                        :readonly="!editingUserInfo"
+                        v-model="user.email"
+                        @change="userInfoChanged"
+                      ></v-text-field>
+                    </v-flex>
+
+                    &lt;!&ndash; First Name &ndash;&gt;
+                    <v-flex xs12>
+                      <v-text-field
+                        label="First Name"
+                        full-width
+                        :outline="editingUserInfo"
+                        :readonly="!editingUserInfo"
+                        v-model="user.firstname"
+                        @change="userInfoChanged"
+                      ></v-text-field>
+                    </v-flex>
+
+                    &lt;!&ndash; Last Name &ndash;&gt;
+                    <v-flex xs12>
+                      <v-text-field
+                        label="Last Name"
+                        full-width
+                        :outline="editingUserInfo"
+                        :readonly="!editingUserInfo"
+                        v-model="user.lastname"
+                        @change="userInfoChanged"
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+          </v-card>-->
+        </v-flex>
+
+        <!-- Notifications -->
+        <v-flex xs12 md6 lg5 id="notificationFlex">
+          <v-card
+            :dark="isDark"
+            :color="contentCardColor"
+            flat
+            tile
+            class="contentCardHeight"
+          >
+            <v-card-title
+              class="hildaLight space-small big pt-5 mx-0 mt-0 ml-2"
+            >
+              Notifications
+            </v-card-title>
+            <v-card-text>
+              <!-- Apps List -->
+              <v-list subheader>
+                <v-subheader>
+                  Apps
+                  <v-tooltip right class="ml-3">
+                    <template #activator="data">
+                      <v-btn small icon @click="" v-on="data.on">
+                        <v-icon>add</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Add an application</span>
+                  </v-tooltip>
+                </v-subheader>
+                <div v-if="shouldShowApps">
+                  <v-list-tile
+                    v-for="(app, index) in heroUser.apps"
+                    :key="`app-tile-${index}`"
+                  >
+                    <v-list-tile-action>
+                      <v-btn icon :dark="isDark" @click="">
+                        <v-icon>close</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+
+                    <v-list-tile-content>
+                      <v-list-tile-title>{{ app }}</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </div>
+
+                <div v-else class="text-xs-center">
+                  You aren't watching any apps
+                </div>
+              </v-list>
+
+              <!-- Teams List -->
+              <v-list subheader>
+                <v-subheader>
+                  Teams
+                  <v-tooltip right class="ml-3">
+                    <template #activator="data">
+                      <v-btn small icon @click="" v-on="data.on">
+                        <v-icon>add</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Add a team</span>
+                  </v-tooltip>
+                </v-subheader>
+                <div v-if="shouldShowTeams">
+                  <v-list-tile
+                    v-for="(app, index) in heroUser.teams"
+                    :key="`app-tile-${index}`"
+                  >
+                    <v-list-tile-action>
+                      <v-btn icon :dark="isDark" @click="">
+                        <v-icon>close</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+
+                    <v-list-tile-content>
+                      <v-list-tile-title>{{ app }}</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </div>
+
+                <div v-else class="text-xs-center">
+                  You aren't a part of any teams
+                </div>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+
+        <!-- Statistics Section -->
+        <v-flex xs12 md6 lg5 id="statisticsFlex">
+          <v-card
+            :dark="isDark"
+            :color="contentCardColor"
+            flat
+            tile
+            class="contentCardHeight"
+          >
+            <v-card-title
+              class="hildaLight space-small big pt-5 mx-0 mt-0 ml-2"
+            >
+              Statistics
+            </v-card-title>
+            <v-card-text>
+              <v-layout
+                row
+                wrap
+                align-center
+                justify-center
+                fill-height
+                v-if="shouldShowStats"
               >
-                <v-layout row align-center justify-start ml-2>
-                  <v-flex shrink>
-                    <p
-                      class="hildaLight"
-                      style="font-size: 3em;"
-                      :class="textColor"
-                    >
-                      {{ item.value }}
-                    </p>
-                  </v-flex>
-                  <v-flex shrink ml-4>
-                    <div
-                      class="ma-0 hildaLight text-xs-center subheading"
-                      :class="textColor"
-                    >
-                      {{ item.label }}
-                    </div>
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-
-      <!-- History Section -->
-      <v-flex xs12>
-        <v-card
-          :dark="isDark"
-          :color="`accent ${darken}`"
-          flat
-          tile
-          max-height="85vh"
-        >
-          <v-card-title class="hildaLight space-small big mx-0 mt-0 pa-0">
-            <v-toolbar :color="`accent ${darken}`" :dark="isDark" tabs flat>
-              <v-toolbar-title>History</v-toolbar-title>
-
-              <template v-slot:extension>
-                <v-tabs
-                  v-model="activeTab"
-                  :color="`accent ${darken}`"
-                  :dark="isDark"
-                  slider-color="info"
-                  @change="updateSelectItemType"
+                <v-flex
+                  xs12
+                  sm4
+                  text-xs-center
+                  self-
+                  v-for="(item, index) in userStats"
+                  :key="`stat-flex-${index}`"
                 >
-                  <v-tab v-for="(item, index) in cords" :key="index">
-                    {{ item.label }}
-                  </v-tab>
-                </v-tabs>
-              </template>
-            </v-toolbar>
-          </v-card-title>
-          <v-card-text class="ma-0 pa-0" style="overflow-y: scroll;">
-            <v-tabs-items v-model="activeTab">
-              <v-tab-item
-                lazy
-                v-for="(item, index) in cords"
-                :key="`tab-item-${index}`"
-              >
-                <v-card flat>
-                  <v-card-text class="pa-0 mt-0" style="max-height: 68.4vh;">
-                    <v-list three-line class="py-0">
-                      <template v-for="(item, index) in filteredCords">
-                        <v-list-tile
-                          :style="{ backgroundColor: `accent ${darken}` }"
-                          :key="`tile-${index}`"
-                          @click="goToSelectedCord(item)"
-                        >
-                          <v-list-tile-content>
-                            <v-list-tile-title>
-                              {{ item.title }}
-                            </v-list-tile-title>
-                            <div class="ml-3">
-                              <v-list-tile-sub-title>
-                                <strong>Application:</strong>
-                                {{ item.app }}
-                              </v-list-tile-sub-title>
-                              <v-list-tile-sub-title>
-                                <strong>Category:</strong>
-                                {{ item.category }}
-                              </v-list-tile-sub-title>
-                              <v-list-tile-sub-title>
-                                <strong>Opened on:</strong>
-                                {{
-                                  new Date(item.openedOn).toLocaleDateString(
-                                    "en-US"
-                                  )
-                                }}
-                              </v-list-tile-sub-title>
-                            </div>
-                          </v-list-tile-content>
-                          <v-list-tile-action>
-                            <v-icon>navigate_next</v-icon>
-                          </v-list-tile-action>
-                        </v-list-tile>
-                        <v-divider
-                          v-if="index !== filteredCords.length - 1"
-                          :key="`divider-${index}`"
-                        ></v-divider>
-                      </template>
-                    </v-list>
-                  </v-card-text>
-                </v-card>
-              </v-tab-item>
-            </v-tabs-items>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
+                  <v-layout row align-center justify-start ml-2>
+                    <v-flex shrink>
+                      <p
+                        class="hildaLight"
+                        style="font-size: 3em;"
+                        :class="textColor"
+                      >
+                        {{ item.value }}
+                      </p>
+                    </v-flex>
+                    <v-flex shrink ml-4>
+                      <div
+                        class="ma-0 hildaLight text-xs-center subheading"
+                        :class="textColor"
+                      >
+                        {{ item.label }}
+                      </div>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+          </v-card>
+        </v-flex>
 
-    <!-- Loading Placeholder -->
-    <v-layout v-else align-center justify-center fill-height mt-5>
-      <v-flex xs12 align-self-center text-xs-center>
-        <div>
-          <p>Hang tight, we're crunching numbers!</p>
-          <v-progress-linear
-            :indeterminate="true"
-            color="info"
-          ></v-progress-linear>
-        </div>
-      </v-flex>
-    </v-layout>
+        <!-- History Section -->
+        <v-flex xs12 md12 lg10 id="historyFlex">
+          <v-card
+            :dark="isDark"
+            :color="contentCardColor"
+            flat
+            tile
+            max-height="85vh"
+          >
+            <v-card-title class="hildaLight space-small big mx-0 mt-0 pa-0">
+              <v-toolbar :color="contentCardColor" :dark="isDark" tabs flat>
+                <v-toolbar-title>History</v-toolbar-title>
+
+                <template v-slot:extension>
+                  <v-tabs
+                    v-model="activeTab"
+                    :color="contentCardColor"
+                    :dark="isDark"
+                    slider-color="info"
+                    @change="updateSelectItemType"
+                  >
+                    <v-tab v-for="(item, index) in cords" :key="index">
+                      {{ item.label }}
+                    </v-tab>
+                  </v-tabs>
+                </template>
+              </v-toolbar>
+            </v-card-title>
+            <v-card-text class="ma-0 pa-2" style="overflow-y: scroll;">
+              <v-tabs-items v-model="activeTab">
+                <v-tab-item
+                  lazy
+                  v-for="(item, index) in cords"
+                  :key="`tab-item-${index}`"
+                >
+                  <v-card flat>
+                    <v-card-text class="pa-0 mt-0 historyCardTextMaxHeight">
+                      <v-list three-line class="py-0">
+                        <template v-for="(item, index) in filteredCords">
+                          <v-list-tile
+                            :style="{ backgroundColor: `accent ${darken}` }"
+                            :key="`tile-${index}`"
+                            @click="goToSelectedCord(item)"
+                          >
+                            <v-list-tile-content>
+                              <v-list-tile-title>
+                                {{ item.title }}
+                              </v-list-tile-title>
+                              <div class="ml-3">
+                                <v-list-tile-sub-title>
+                                  <strong>Application:</strong>
+                                  {{ item.app }}
+                                </v-list-tile-sub-title>
+                                <v-list-tile-sub-title>
+                                  <strong>Category:</strong>
+                                  {{ item.category }}
+                                </v-list-tile-sub-title>
+                                <v-list-tile-sub-title>
+                                  <strong>Opened on:</strong>
+                                  {{
+                                    new Date(item.openedOn).toLocaleDateString(
+                                      "en-US"
+                                    )
+                                  }}
+                                </v-list-tile-sub-title>
+                              </div>
+                            </v-list-tile-content>
+                            <v-list-tile-action>
+                              <v-icon>navigate_next</v-icon>
+                            </v-list-tile-action>
+                          </v-list-tile>
+                          <v-divider
+                            v-if="index !== filteredCords.length - 1"
+                            :key="`divider-${index}`"
+                          ></v-divider>
+                        </template>
+                      </v-list>
+                    </v-card-text>
+                  </v-card>
+                </v-tab-item>
+              </v-tabs-items>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+
+      <!-- Loading Placeholder -->
+      <v-layout
+        v-else
+        align-center
+        justify-center
+        fill-height
+        mt-5
+        id="loadingLayout"
+      >
+        <v-flex xs12 align-self-center text-xs-center>
+          <div>
+            <p>Hang tight, we're crunching numbers!</p>
+            <v-progress-linear
+              :indeterminate="true"
+              color="info"
+            ></v-progress-linear>
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-container>
 </template>
 
@@ -334,8 +400,20 @@ export default {
   name: "Profile",
   mixins: [themeMixin, alertMixin, authMixin, assetMixin, cordMixin],
   computed: {
+    contentSectionMargin() {
+      return this.isSmall ? "smallScreenMargin" : "largeScreenMargin";
+    },
+
     editUserInfoTooltip() {
       return this.editingUserInfo ? "Save Changes" : "Edit";
+    },
+
+    layout() {
+      const layout =
+        this.$vuetify.breakpoint.name === "xs" ||
+        this.$vuetify.breakpoint.name === "sm";
+
+      return layout ? "text-xs-center" : "offset-sm2";
     },
 
     loading() {
@@ -364,6 +442,17 @@ export default {
 
     userInfoInputIcon() {
       return this.editingUserInfo ? "lock_open" : "lock";
+    },
+
+    userNameSection() {
+      const layout =
+        this.$vuetify.breakpoint.name === "xs" ||
+        this.$vuetify.breakpoint.name === "sm";
+      return layout
+        ? "text-xs-center userNameLargeMargin"
+        : this.$vuetify.breakpoint.name === "md"
+        ? "offset-xs4"
+        : "offset-xs3";
     },
 
     userString() {
@@ -566,4 +655,39 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.contentCardHeight {
+  min-height: 560px;
+}
+
+.contentSection {
+  position: relative;
+  bottom: 150px;
+}
+
+.historyCardTextMaxHeight {
+  max-height: 68.4vh;
+}
+
+.largeScreenMargin {
+  margin: 0 6em !important;
+}
+
+.profileImg {
+  position: relative;
+  bottom: 50px;
+  z-index: 2;
+}
+
+.smallScreenMargin {
+  margin: 0 !important;
+}
+
+.userName {
+  font-size: 2em;
+}
+
+.userNameLargeMargin {
+  margin-top: 8em;
+}
+</style>
