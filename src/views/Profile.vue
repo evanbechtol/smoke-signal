@@ -184,15 +184,6 @@
                       </template>
                       <span>Edit application notifications</span>
                     </v-tooltip>
-
-                    <v-tooltip right class="mr-3" v-else>
-                      <template #activator="data">
-                        <v-btn icon @click="saveHeroUserData" v-on="data.on">
-                          <v-icon>save</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Save changes</span>
-                    </v-tooltip>
                   </v-subheader>
                 </v-flex>
 
@@ -212,13 +203,34 @@
                         label="Subscribed Applications"
                         :items="appOptions"
                         :readonly="!editingApps"
+                        deletable-chips
+                        clearable
                         placeholder="You aren't subscribed to any applications"
                         color="info darken-1"
                         id="appSelect"
-                        v-model="heroUser.apps"
+                        v-model="userApps"
                         required
                       >
                       </v-combobox>
+                    </v-flex>
+                    <v-flex xs12 v-if="editingApps">
+                      <v-btn
+                        depressed
+                        outline
+                        small
+                        :dark="isDark"
+                        @click="revertUserApps"
+                      >
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        depressed
+                        small
+                        :color="`info ${darken - 1}`"
+                        @click="saveHeroUserData"
+                      >
+                        Save
+                      </v-btn>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -245,15 +257,6 @@
                       </template>
                       <span>Edit team notifications</span>
                     </v-tooltip>
-
-                    <v-tooltip right class="mr-3" v-else>
-                      <template #activator="data">
-                        <v-btn icon @click="saveHeroUserData" v-on="data.on">
-                          <v-icon>save</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Save changes</span>
-                    </v-tooltip>
                   </v-subheader>
                 </v-flex>
 
@@ -273,13 +276,35 @@
                         label="Subscribed Teams"
                         :items="teamOptions"
                         :readonly="!editingTeams"
+                        deletable-chips
+                        clearable
                         placeholder="You aren't subscribed to any teams"
                         color="info darken-1"
                         id="teamSelect"
-                        v-model="heroUser.teams"
+                        v-model="userTeams"
                         required
                       >
                       </v-combobox>
+                    </v-flex>
+
+                    <v-flex xs12 v-if="editingTeams">
+                      <v-btn
+                        depressed
+                        outline
+                        small
+                        :dark="isDark"
+                        @click="revertUserTeams"
+                      >
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        depressed
+                        small
+                        :color="`info ${darken - 1}`"
+                        @click="saveHeroUserData"
+                      >
+                        Save
+                      </v-btn>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -519,6 +544,8 @@ export default {
     statsLoading: false,
     teamOptions: [],
     userDataDirty: false,
+    userApps: [],
+    userTeams: [],
     userStats: [],
     userStatsInitialized: false,
     validateLoading: false
@@ -608,6 +635,10 @@ export default {
     },
 
     saveHeroUserData() {
+      let updatedUser = Object.assign({}, this.heroUser);
+      updatedUser.apps = this.userApps;
+      updatedUser.teams = this.userTeams;
+
       this.heroUpdateUser(this.heroUser)
         .then(response => {
           if (response) {
@@ -621,6 +652,18 @@ export default {
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
+    },
+
+    revertUserApps() {
+      this.userApps = [];
+      this.userApps = this.heroUser.apps || [];
+      this.editingApps = false;
+    },
+
+    revertUserTeams() {
+      this.userTeams = [];
+      this.userTeams = this.heroUser.teams || [];
+      this.editingTeams = false;
     },
 
     saveUserData() {
@@ -660,6 +703,10 @@ export default {
     }
   },
   watch: {
+    appToken: function() {
+      this.initPage();
+    },
+
     editingApps: function(value) {
       if (value && this.appOptions.length < 1) {
         this.getApps().then(response => {
@@ -687,14 +734,18 @@ export default {
         });
       }
     },
-    
-    appToken: function() {
-      this.initPage();
-    },
 
     editingUserInfo: function(value) {
       if (!value && this.userDataDirty) {
         this.saveUserData();
+      }
+    },
+
+    heroUser: {
+      deep: true,
+      handler: function(value) {
+        this.userApps = value.apps || [];
+        this.userTeams = value.teams || [];
       }
     },
 
