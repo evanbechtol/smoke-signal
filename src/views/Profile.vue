@@ -27,6 +27,7 @@
             </v-tooltip>
           </v-card-title>
           <v-card-text class="py-0">
+            <!-- Profile Image -->
             <v-layout row align-center justify-center>
               <v-flex xs12 text-xs-center mb-2>
                 <v-avatar size="150">
@@ -34,6 +35,8 @@
                 </v-avatar>
               </v-flex>
             </v-layout>
+
+            <!-- User Info Fields -->
             <v-layout column align-start>
               <v-flex shrink>
                 <v-layout row wrap align-start justify-start>
@@ -100,21 +103,72 @@
           <v-card-text>
             <!-- Apps List -->
             <v-list subheader>
-              <v-subheader>Apps</v-subheader>
-              <v-list-tile
-                v-for="(app, index) in heroUser.apps"
-                :key="`app-tile-${index}`"
-              >
-                <v-list-tile-action>
-                  <v-btn icon :dark="isDark" @click="">
-                    <v-icon>close</v-icon>
-                  </v-btn>
-                </v-list-tile-action>
+              <v-subheader>
+                Apps
+                <v-tooltip right class="ml-3">
+                  <template #activator="data">
+                    <v-btn small icon @click="addApp" v-on="data.on">
+                      <v-icon>add</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Add an application</span>
+                </v-tooltip>
+              </v-subheader>
+              <div v-if="shouldShowApps">
+                <v-list-tile
+                  v-for="(app, index) in heroUser.apps"
+                  :key="`app-tile-${index}`"
+                >
+                  <v-list-tile-action>
+                    <v-btn icon :dark="isDark" @click="">
+                      <v-icon>close</v-icon>
+                    </v-btn>
+                  </v-list-tile-action>
 
-                <v-list-tile-content>
-                  <v-list-tile-title>{{ app }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>{{ app }}</v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </div>
+
+              <div v-else class="text-xs-center">
+                You aren't watching any apps
+              </div>
+            </v-list>
+
+            <!-- Teams List -->
+            <v-list subheader>
+              <v-subheader>
+                Teams
+                <v-tooltip right class="ml-3">
+                  <template #activator="data">
+                    <v-btn small icon @click="addTeam" v-on="data.on">
+                      <v-icon>add</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Add a team</span>
+                </v-tooltip>
+              </v-subheader>
+              <div v-if="shouldShowTeams">
+                <v-list-tile
+                  v-for="(app, index) in heroUser.teams"
+                  :key="`app-tile-${index}`"
+                >
+                  <v-list-tile-action>
+                    <v-btn icon :dark="isDark" @click="">
+                      <v-icon>close</v-icon>
+                    </v-btn>
+                  </v-list-tile-action>
+
+                  <v-list-tile-content>
+                    <v-list-tile-title>{{ app }}</v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </div>
+
+              <div v-else class="text-xs-center">
+                You aren't a part of any teams
+              </div>
             </v-list>
           </v-card-text>
         </v-card>
@@ -133,7 +187,7 @@
               align-center
               justify-center
               fill-height
-              v-if="userStatsInitialized && userStats.length > 0"
+              v-if="shouldShowStats"
             >
               <v-flex
                 xs12
@@ -148,7 +202,7 @@
                     <p
                       class="hildaLight"
                       style="font-size: 3em;"
-                      :class="isDark ? 'white--text' : 'dark--text'"
+                      :class="textColor"
                     >
                       {{ item.value }}
                     </p>
@@ -156,7 +210,7 @@
                   <v-flex shrink ml-4>
                     <div
                       class="ma-0 hildaLight text-xs-center subheading"
-                      :class="isDark ? 'white--text' : 'dark--text'"
+                      :class="textColor"
                     >
                       {{ item.label }}
                     </div>
@@ -254,6 +308,7 @@
       </v-flex>
     </v-layout>
 
+    <!-- Loading Placeholder -->
     <v-layout v-else align-center justify-center fill-height mt-5>
       <v-flex xs12 align-self-center text-xs-center>
         <div>
@@ -285,6 +340,22 @@ export default {
 
     loading() {
       return this.validateLoading || this.statsLoading || this.cordsLoading;
+    },
+
+    shouldShowApps() {
+      return this.heroUser.apps && this.heroUser.apps.length;
+    },
+
+    shouldShowStats() {
+      return this.userStatsInitialized && this.userStats.length > 0;
+    },
+
+    shouldShowTeams() {
+      return this.heroUser.teams && this.heroUser.teams.length;
+    },
+
+    textColor() {
+      return this.isDark ? "white--text" : "dark--text";
     },
 
     userInfoEditIcon() {
@@ -422,7 +493,7 @@ export default {
           }
         })
         .catch(err => {
-          debugger;
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
     },
 
