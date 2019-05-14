@@ -12,9 +12,9 @@
         <!-- Cord Title -->
         <v-card-title
           primary-title
-          class="hildaLight space-small mx-0 mb-0 mt-5 px-0"
+          class="hildaLight space-small mx-0 mb-0 mt-5 px-2"
         >
-          <v-layout row wrap justify-center>
+          <v-layout row wrap>
             <!-- Loading text -->
             <v-flex v-if="loading" xs12 pa-0 ma-0>
               <div style="z-index: 9; width: 100%;" class="text-xs-center">
@@ -27,17 +27,19 @@
             </v-flex>
 
             <!-- Go Back Button -->
-            <v-flex shrink mr-2 align-self-center v-if="readonly">
+            <v-flex shrink mr-2 align-self-start v-if="readonly">
               <v-tooltip bottom v-if="isSmall">
                 <template #activator="data">
                   <v-btn
                     left
+                    bottom
                     fab
                     small
                     :color="`info $[darken}`"
                     v-on="data.on"
                     :dark="isDark"
                     @click="goBack"
+                    style="position: relative; left: 8px; bottom: 32px; z-index: 4;"
                   >
                     <v-icon size="30">arrow_back</v-icon>
                   </v-btn>
