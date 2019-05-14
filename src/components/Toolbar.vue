@@ -6,7 +6,7 @@
         style="margin: 8px;"
       ></v-toolbar-side-icon>
       <v-toolbar-title class="space-base" style="margin: 8px;">
-        <router-link class="link white--text" to="/">
+        <router-link class="link white--text" to="/" v-if="!isSmall">
           AnA Hero
         </router-link>
       </v-toolbar-title>
@@ -15,22 +15,22 @@
 
       <slot name="installer"></slot>
 
-      <!--Tool Notification-->
-      <tool-notification> </tool-notification>
+      <v-toolbar-items>
+        <!--Tool Notification-->
+        <tool-notification></tool-notification>
 
-      <v-btn
-        v-if="user && user.username"
-        flat
-        @click.stop="rightDrawer = !rightDrawer"
-        style="margin: 8px;"
-        class="mr-2 px-3"
-      >
-        <!--<v-icon class="mr-3">perm_identity</v-icon>-->
-        <v-avatar class="mr-3" size="36">
-          <v-img :src="getImagePath('evanbechtolHeadshot.png')" />
-        </v-avatar>
-        {{ user.username }}
-      </v-btn>
+        <v-btn
+          v-if="user && user.username"
+          flat
+          @click.stop="rightDrawer = !rightDrawer"
+        >
+          <!--<v-icon class="mr-3">perm_identity</v-icon>-->
+          <v-avatar class="mr-3" size="36">
+            <v-img :src="getImagePath('evanbechtolHeadshot.png')" />
+          </v-avatar>
+          <span v-if="!isSmall">{{ user.username }}</span>
+        </v-btn>
+      </v-toolbar-items>
     </v-toolbar>
 
     <!-- LEFT DRAWER -->
