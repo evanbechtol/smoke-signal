@@ -166,76 +166,124 @@
             </v-card-title>
             <v-card-text>
               <!-- Apps List -->
-              <v-list subheader id="appsList" class="notificationList">
-                <v-subheader>
-                  Apps
-                  <v-tooltip right class="ml-3">
-                    <template #activator="data">
-                      <v-btn small icon @click="" v-on="data.on">
-                        <v-icon>add</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Add an application</span>
-                  </v-tooltip>
-                </v-subheader>
-                <div v-if="shouldShowApps">
-                  <v-list-tile
-                    v-for="(app, index) in heroUser.apps"
-                    :key="`app-tile-${index}`"
+              <v-layout row wrap align-center justify-start>
+                <v-flex shrink>
+                  <v-subheader>
+                    Apps
+                    <v-tooltip right class="ml-3" v-if="!editingApps">
+                      <template #activator="data">
+                        <v-btn
+                          small
+                          icon
+                          @click="toggleAddingApp"
+                          v-on="data.on"
+                          v-if="!editingApps"
+                        >
+                          <v-icon>edit</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Edit application notifications</span>
+                    </v-tooltip>
+
+                    <v-tooltip right class="mr-3" v-else>
+                      <template #activator="data">
+                        <v-btn icon @click="saveHeroUserData" v-on="data.on">
+                          <v-icon>save</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Save changes</span>
+                    </v-tooltip>
+                  </v-subheader>
+                </v-flex>
+
+                <v-flex xs12 ml-3>
+                  <v-layout
+                    row
+                    wrap
+                    align-center
+                    justify-start
+                    id="appComboboxLayout"
                   >
-                    <v-list-tile-action>
-                      <v-btn icon :dark="isDark" @click="">
-                        <v-icon>close</v-icon>
-                      </v-btn>
-                    </v-list-tile-action>
-
-                    <v-list-tile-content>
-                      <v-list-tile-title>{{ app }}</v-list-tile-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                </div>
-
-                <div v-else class="text-xs-center">
-                  You aren't watching any apps
-                </div>
-              </v-list>
+                    <v-flex id="appCombobox" xs12>
+                      <v-combobox
+                        multiple
+                        small-chips
+                        name="applications"
+                        label="Subscribed Applications"
+                        :items="appOptions"
+                        :readonly="!editingApps"
+                        placeholder="You aren't subscribed to any applications"
+                        color="info darken-1"
+                        id="appSelect"
+                        v-model="heroUser.apps"
+                        required
+                      >
+                      </v-combobox>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
 
               <v-divider></v-divider>
 
               <!-- Teams List -->
-              <v-list subheader id="teamsList" class="notificationList">
-                <v-subheader>
-                  Teams
-                  <v-tooltip right class="ml-3">
-                    <template #activator="data">
-                      <v-btn small icon @click="" v-on="data.on">
-                        <v-icon>add</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Add a team</span>
-                  </v-tooltip>
-                </v-subheader>
-                <div v-if="shouldShowTeams">
-                  <v-list-tile
-                    v-for="(app, index) in heroUser.teams"
-                    :key="`app-tile-${index}`"
+              <v-layout row wrap align-center justify-start>
+                <v-flex shrink>
+                  <v-subheader>
+                    Teams
+                    <v-tooltip right class="ml-3" v-if="!editingTeams">
+                      <template #activator="data">
+                        <v-btn
+                          small
+                          icon
+                          @click="toggleAddingTeam"
+                          v-on="data.on"
+                          v-if="!editingTeams"
+                        >
+                          <v-icon>edit</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Edit team notifications</span>
+                    </v-tooltip>
+
+                    <v-tooltip right class="mr-3" v-else>
+                      <template #activator="data">
+                        <v-btn icon @click="saveHeroUserData" v-on="data.on">
+                          <v-icon>save</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Save changes</span>
+                    </v-tooltip>
+                  </v-subheader>
+                </v-flex>
+
+                <v-flex xs12 ml-3>
+                  <v-layout
+                    row
+                    wrap
+                    align-center
+                    justify-start
+                    id="teamComboboxLayout"
                   >
-                    <v-list-tile-action>
-                      <v-btn icon :dark="isDark" @click="">
-                        <v-icon>close</v-icon>
-                      </v-btn>
-                    </v-list-tile-action>
-
-                    <v-list-tile-content>
-                      <v-list-tile-title>{{ app }}</v-list-tile-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                </div>
-
-                <div v-else class="text-xs-center">
-                  You aren't a part of any teams
-                </div>
-              </v-list>
+                    <v-flex id="teamCombobox" xs12>
+                      <v-combobox
+                        multiple
+                        small-chips
+                        name="applications"
+                        label="Subscribed Teams"
+                        :items="teamOptions"
+                        :readonly="!editingTeams"
+                        placeholder="You aren't subscribed to any teams"
+                        color="info darken-1"
+                        id="teamSelect"
+                        v-model="heroUser.teams"
+                        required
+                      >
+                      </v-combobox>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -355,10 +403,11 @@ import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { cordMixin } from "../mixins/cordMixin";
 import { assetMixin } from "../mixins/assetMixin";
+import { appsMixin } from "../mixins/appsMixin";
 
 export default {
   name: "Profile",
-  mixins: [themeMixin, alertMixin, authMixin, assetMixin, cordMixin],
+  mixins: [themeMixin, alertMixin, authMixin, assetMixin, appsMixin, cordMixin],
   computed: {
     contentSectionMargin() {
       return this.isSmall ? "smallScreenMargin" : "largeScreenMargin";
@@ -381,7 +430,7 @@ export default {
     },
 
     shouldShowApps() {
-      return this.heroUser.apps && this.heroUser.apps.length;
+      return this.heroUser && this.heroUser.apps && this.heroUser.apps.length;
     },
 
     shouldShowStats() {
@@ -439,15 +488,8 @@ export default {
     }
   },
   data: () => ({
-    heroUser: null,
-    userDataDirty: false,
-    editingUserInfo: false,
-    validateLoading: false,
-    statsLoading: false,
-    cordsLoading: false,
     activeTab: null,
-    initialized: false,
-    userStatsInitialized: false,
+    appOptions: [],
     cords: [
       {
         label: "Active Cords",
@@ -462,13 +504,24 @@ export default {
         value: []
       }
     ],
-    selectItemType: "myActiveCords",
+    cordsLoading: false,
+    editingApps: false,
+    editingTeams: false,
+    editingUserInfo: false,
+    heroUser: null,
+    initialized: false,
     selectItems: [
       { label: "My Active Cords", value: "myActiveCords" },
       { label: "My Resolved Cords", value: "myResolvedCords" },
       { label: "Rescues", value: "myRescueCords" }
     ],
-    userStats: []
+    selectItemType: "myActiveCords",
+    statsLoading: false,
+    teamOptions: [],
+    userDataDirty: false,
+    userStats: [],
+    userStatsInitialized: false,
+    validateLoading: false
   }),
   created() {
     if (this.appToken && !this.initialized) {
@@ -554,18 +607,20 @@ export default {
         });
     },
 
-    updateSelectItemType(value) {
-      this.activeTab = value;
-      this.selectItemType =
-        value === 0
-          ? "myActiveCords"
-          : value === 1
-          ? "myRescueCords"
-          : "myResolvedCords";
-    },
-
-    userInfoChanged() {
-      this.userDataDirty = true;
+    saveHeroUserData() {
+      this.heroUpdateUser(this.heroUser)
+        .then(response => {
+          if (response) {
+            this.setAlert("User updated successfully", "#288964", 1000);
+            this.userDataDirty = false;
+            this.heroUser = response;
+            this.editingApps = false;
+            this.editingTeams = false;
+          }
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
     },
 
     saveUserData() {
@@ -580,9 +635,59 @@ export default {
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
+    },
+
+    toggleAddingApp() {
+      this.editingApps = !this.editingApps;
+    },
+
+    toggleAddingTeam() {
+      this.editingTeams = !this.editingTeams;
+    },
+
+    userInfoChanged() {
+      this.userDataDirty = true;
+    },
+
+    updateSelectItemType(value) {
+      this.activeTab = value;
+      this.selectItemType =
+        value === 0
+          ? "myActiveCords"
+          : value === 1
+          ? "myRescueCords"
+          : "myResolvedCords";
     }
   },
   watch: {
+    editingApps: function(value) {
+      if (value && this.appOptions.length < 1) {
+        this.getApps().then(response => {
+          const data =
+            response.data && response.data.data ? response.data.data : [];
+          const options = [];
+          data.forEach(function(elem) {
+            options.push(elem.name);
+          });
+          this.appOptions = options;
+        });
+      }
+    },
+
+    editingTeams: function(value) {
+      if (value && this.teamOptions.length < 1) {
+        this.getTeams().then(response => {
+          const data =
+            response.data && response.data.data ? response.data.data : [];
+          const options = [];
+          data.forEach(function(elem) {
+            options.push(elem.name);
+          });
+          this.teamOptions = options;
+        });
+      }
+    },
+    
     appToken: function() {
       this.initPage();
     },

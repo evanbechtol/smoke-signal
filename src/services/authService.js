@@ -250,6 +250,41 @@ const AuthService = {
   },
 
   /**
+   * @description Updates hero user data in MongoDB
+   * @param user {object} User information to update
+   * @returns {Promise<any>}
+   */
+  heroUpdateUser(user) {
+    return new Promise((resolve, reject) => {
+      const route = `users/${user._id}`;
+      const options = {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${appCode}` },
+        data: user,
+        url: `${apiBase}/${route}`
+      };
+
+      ApiService.customRequest(options)
+        .then(response => {
+          const userRetrieved =
+            response &&
+            response.data &&
+            response.data.data &&
+            response.data.data.user;
+
+          if (userRetrieved) {
+            return resolve(response.data.data);
+          } else {
+            return reject(response.data.error);
+          }
+        })
+        .catch(err => {
+          return reject(err);
+        });
+    });
+  },
+
+  /**
    * @description Login against the Hero MongoDB. Only checks to make sure
    * that the user exists in the DB, and doesn't authenticate with password.
    * That is the responsibility of E-Auth

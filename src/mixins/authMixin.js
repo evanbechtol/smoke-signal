@@ -65,6 +65,10 @@ export const authMixin = {
       return AuthService.heroLogin(user);
     },
 
+    heroUpdateUser(user) {
+      return AuthService.heroUpdateUser(user);
+    },
+
     logout() {
       AuthService.logout();
     },
