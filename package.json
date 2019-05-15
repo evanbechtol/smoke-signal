@@ -2,7 +2,7 @@
   "name": "ana-hero",
   "author": "Evan Bechtol <evan.bechtol@ericsson.com>",
   "description": "Ask others for help resolving blocking issues, and rescue your colleagues",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "repository": {
     "type": "git",
     "url": "git+https://scmgr.eams.ericsson.net/incubation/smoke-signal.git"
