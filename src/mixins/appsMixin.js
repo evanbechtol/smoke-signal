@@ -18,21 +18,21 @@ export const appsMixin = {
         url: `${baseUrl}/${route}`
       };
       return ApiService.customRequest(options);
-    }
-  },
+    },
 
-  /**
-   * @description Retrieve list of teams from the Hero MongoDB
-   * @param query [string | object] Optional - Query to be used to retrieve data
-   * @returns {Promise} Returns promise for request being generated
-   */
-  getTeams(query = null) {
-    const route = `teams${query === null ? "" : "?query=" + query}`;
-    const options = {
-      method: "GET",
-      headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
-      url: `${baseUrl}/${route}`
-    };
-    return ApiService.customRequest(options);
+    /**
+     * @description Retrieve list of teams from the Hero MongoDB
+     * @param query [string | object] Optional - Query to be used to retrieve data
+     * @returns {Promise} Returns promise for request being generated
+     */
+    getTeams(query = null) {
+      const route = `teams${query === null ? "" : "?query=" + query}`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return ApiService.customRequest(options);
+    }
   }
 };

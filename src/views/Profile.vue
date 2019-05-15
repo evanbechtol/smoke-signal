@@ -639,7 +639,7 @@ export default {
       updatedUser.apps = this.userApps;
       updatedUser.teams = this.userTeams;
 
-      this.heroUpdateUser(this.heroUser)
+      this.heroUpdateUser(updatedUser)
         .then(response => {
           if (response) {
             this.setAlert("User updated successfully", "#288964", 1000);
