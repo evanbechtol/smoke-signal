@@ -54,88 +54,6 @@
                 <br />
                 <span id="email">{{ user.email }}</span>
               </div>
-              <!--<v-card
-                :dark="isDark"
-                color="transparent"
-                flat
-                tile
-                class="contentCardHeight"
-              >
-                <v-card-title
-                  class="hildaLight space-small big mx-0 mt-0 ml-2"
-                  style="padding-top: 5em;"
-                >
-                  User Info
-                  <v-tooltip bottom class="ml-3">
-                    <template #activator="data">
-                      <v-btn
-                        icon
-                        @click="editingUserInfo = !editingUserInfo"
-                        v-on="data.on"
-                      >
-                        <v-icon>{{ userInfoEditIcon }}</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>{{ editUserInfoTooltip }}</span>
-                  </v-tooltip>
-                </v-card-title>
-                <v-card-text class="py-0">
-                  &lt;!&ndash; User Info Fields &ndash;&gt;
-                  <v-layout column align-start>
-                    <v-flex shrink>
-                      <v-layout row wrap align-start justify-start>
-                        &lt;!&ndash; Username &ndash;&gt;
-                        <v-flex xs12>
-                          <v-text-field
-                            label="Username"
-                            full-width
-                            :outline="editingUserInfo"
-                            :readonly="!editingUserInfo"
-                            v-model="user.username"
-                            @change="userInfoChanged"
-                          ></v-text-field>
-                        </v-flex>
-    
-                        &lt;!&ndash; Email &ndash;&gt;
-                        <v-flex xs12>
-                          <v-text-field
-                            label="Email"
-                            full-width
-                            :outline="editingUserInfo"
-                            :readonly="!editingUserInfo"
-                            v-model="user.email"
-                            @change="userInfoChanged"
-                          ></v-text-field>
-                        </v-flex>
-    
-                        &lt;!&ndash; First Name &ndash;&gt;
-                        <v-flex xs12>
-                          <v-text-field
-                            label="First Name"
-                            full-width
-                            :outline="editingUserInfo"
-                            :readonly="!editingUserInfo"
-                            v-model="user.firstname"
-                            @change="userInfoChanged"
-                          ></v-text-field>
-                        </v-flex>
-    
-                        &lt;!&ndash; Last Name &ndash;&gt;
-                        <v-flex xs12>
-                          <v-text-field
-                            label="Last Name"
-                            full-width
-                            :outline="editingUserInfo"
-                            :readonly="!editingUserInfo"
-                            v-model="user.lastname"
-                            @change="userInfoChanged"
-                          ></v-text-field>
-                        </v-flex>
-                      </v-layout>
-                    </v-flex>
-                  </v-layout>
-                </v-card-text>
-              </v-card>-->
             </v-flex>
 
             <v-flex xs12 mb-4 id="userStats">
@@ -166,7 +84,7 @@
             </v-card-title>
             <v-card-text>
               <!-- Apps List -->
-              <v-layout row wrap align-center justify-start>
+              <v-layout id="appsLayout" row wrap align-center justify-start>
                 <v-flex shrink>
                   <v-subheader>
                     Apps
@@ -204,12 +122,12 @@
                         :items="appOptions"
                         :readonly="!editingApps"
                         deletable-chips
-                        clearable
                         placeholder="You aren't subscribed to any applications"
                         color="info darken-1"
                         id="appSelect"
                         v-model="userApps"
                         required
+                        @change="teamsChanged"
                       >
                       </v-combobox>
                     </v-flex>
@@ -239,8 +157,8 @@
               <v-divider></v-divider>
 
               <!-- Teams List -->
-              <v-layout row wrap align-center justify-start>
-                <v-flex shrink>
+              <v-layout id="teamsLayout" row wrap align-center justify-start>
+                <v-flex id="teamsHeader" shrink>
                   <v-subheader>
                     Teams
                     <v-tooltip right class="ml-3" v-if="!editingTeams">
@@ -255,12 +173,12 @@
                           <v-icon>edit</v-icon>
                         </v-btn>
                       </template>
-                      <span>Edit team notifications</span>
+                      <span>Join and leave teams</span>
                     </v-tooltip>
                   </v-subheader>
                 </v-flex>
 
-                <v-flex xs12 ml-3>
+                <v-flex id="teams" xs12 ml-3>
                   <v-layout
                     row
                     wrap
@@ -275,19 +193,20 @@
                         name="applications"
                         label="Subscribed Teams"
                         :items="teamOptions"
+                        item-text="name"
                         :readonly="!editingTeams"
                         deletable-chips
-                        clearable
                         placeholder="You aren't subscribed to any teams"
                         color="info darken-1"
                         id="teamSelect"
                         v-model="userTeams"
+                        @change="teamsChanged"
                         required
                       >
                       </v-combobox>
                     </v-flex>
 
-                    <v-flex xs12 v-if="editingTeams">
+                    <v-flex id="teamsActions" xs12 v-if="editingTeams">
                       <v-btn
                         depressed
                         outline
@@ -301,7 +220,7 @@
                         depressed
                         small
                         :color="`info ${darken - 1}`"
-                        @click="saveHeroUserData"
+                        @click="saveHeroTeams"
                       >
                         Save
                       </v-btn>
@@ -423,25 +342,28 @@
 </template>
 
 <script>
-import { themeMixin } from "../mixins/themeMixin.js";
 import { alertMixin } from "../mixins/alertMixin";
+import { appsMixin } from "../mixins/appsMixin";
+import { assetMixin } from "../mixins/assetMixin";
 import { authMixin } from "../mixins/authMixin";
 import { cordMixin } from "../mixins/cordMixin";
-import { assetMixin } from "../mixins/assetMixin";
-import { appsMixin } from "../mixins/appsMixin";
+import { heroMixin } from "../mixins/heroMixin";
+import { themeMixin } from "../mixins/themeMixin.js";
 
 export default {
   name: "Profile",
-  mixins: [themeMixin, alertMixin, authMixin, assetMixin, appsMixin, cordMixin],
+
+  mixins: [
+    alertMixin,
+    appsMixin,
+    assetMixin,
+    authMixin,
+    cordMixin,
+    heroMixin,
+    themeMixin
+  ],
+
   computed: {
-    contentSectionMargin() {
-      return this.isSmall ? "smallScreenMargin" : "largeScreenMargin";
-    },
-
-    editUserInfoTooltip() {
-      return this.editingUserInfo ? "Save Changes" : "Edit";
-    },
-
     layout() {
       const layout =
         this.$vuetify.breakpoint.name === "xs" ||
@@ -454,36 +376,12 @@ export default {
       return this.validateLoading || this.statsLoading || this.cordsLoading;
     },
 
-    shouldShowApps() {
-      return this.heroUser && this.heroUser.apps && this.heroUser.apps.length;
-    },
-
-    shouldShowStats() {
-      return this.userStatsInitialized && this.userStats.length > 0;
-    },
-
-    shouldShowTeams() {
-      return this.heroUser.teams && this.heroUser.teams.length;
-    },
-
     statLayout() {
       const layout =
         this.$vuetify.breakpoint.name === "xs" ||
         this.$vuetify.breakpoint.name === "sm";
 
       return layout ? "justify-center" : "justify-start";
-    },
-
-    textColor() {
-      return this.isDark ? "white--text" : "dark--text";
-    },
-
-    userInfoEditIcon() {
-      return this.editingUserInfo ? "save" : "edit";
-    },
-
-    userInfoInputIcon() {
-      return this.editingUserInfo ? "lock_open" : "lock";
     },
 
     userNameSection() {
@@ -512,9 +410,12 @@ export default {
         : this.cords[2].value;
     }
   },
+
   data: () => ({
     activeTab: null,
+    
     appOptions: [],
+    
     cords: [
       {
         label: "Active Cords",
@@ -529,32 +430,52 @@ export default {
         value: []
       }
     ],
+    
     cordsLoading: false,
+    
     editingApps: false,
+    
     editingTeams: false,
+    
     editingUserInfo: false,
+    
     heroUser: null,
+    
     initialized: false,
+    
     selectItems: [
       { label: "My Active Cords", value: "myActiveCords" },
       { label: "My Resolved Cords", value: "myResolvedCords" },
       { label: "Rescues", value: "myRescueCords" }
     ],
+    
     selectItemType: "myActiveCords",
+    
     statsLoading: false,
+    
+    teamsDirty: false,
+    
     teamOptions: [],
+    
     userDataDirty: false,
+    
     userApps: [],
+    
     userTeams: [],
+    
     userStats: [],
+    
     userStatsInitialized: false,
+    
     validateLoading: false
   }),
+
   created() {
     if (this.appToken && !this.initialized) {
       this.initPage();
     }
   },
+
   methods: {
     goToSelectedCord(cord) {
       this.$store.commit("selectedCord", cord);
@@ -664,6 +585,26 @@ export default {
       this.userTeams = [];
       this.userTeams = this.heroUser.teams || [];
       this.editingTeams = false;
+      this.teamsDirty = false;
+    },
+
+    saveHeroTeams() {
+      let updatedUser = Object.assign({}, this.heroUser);
+      updatedUser.teams = this.userTeams;
+
+      this.heroUpdateUserTeams(updatedUser)
+        .then(response => {
+          this.heroUser = response;
+          this.setAlert("User updated successfully", "#288964", 2000);
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        })
+        .finally(() => {
+          this.userTeams = this.heroUser.teams || [];
+          this.editingTeams = false;
+          this.teamsDirty = false;
+        });
     },
 
     saveUserData() {
@@ -678,6 +619,10 @@ export default {
         .catch(err => {
           this.setAlert(err.response.data.error, "#DC2D37", 0);
         });
+    },
+
+    teamsChanged() {
+      this.teamsDirty = true;
     },
 
     toggleAddingApp() {
@@ -702,6 +647,7 @@ export default {
           : "myResolvedCords";
     }
   },
+
   watch: {
     appToken: function() {
       this.initPage();
@@ -724,13 +670,12 @@ export default {
     editingTeams: function(value) {
       if (value && this.teamOptions.length < 1) {
         this.getTeams().then(response => {
-          const data =
-            response.data && response.data.data ? response.data.data : [];
-          const options = [];
+          /*const options = [];
           data.forEach(function(elem) {
             options.push(elem.name);
-          });
-          this.teamOptions = options;
+          });*/
+          this.teamOptions =
+            response.data && response.data.data ? response.data.data : [];
         });
       }
     },
