@@ -107,11 +107,29 @@
                 required
               >
               </v-text-field>
+
               <v-combobox
                 multiple
+                name="teams"
+                label="Teams"
+                :items="teamOptions"
+                item-text="name"
+                small-chips
+                deletable-chips
+                color="info darken-1"
+                id="teamSelect"
+                v-model="registerUser.teams"
+                :rules="teamRules"
+                required
+              >
+              </v-combobox>
+
+              <v-combobox
+                multiple
+                small-chips
+                deletable-chips
                 name="project"
                 label="Applications"
-                prepend-icon="application"
                 :items="appOptions"
                 color="info darken-1"
                 id="appSelect"
@@ -227,6 +245,7 @@ import { assetMixin } from "../mixins/assetMixin";
 import { themeMixin } from "../mixins/themeMixin";
 import { cordMixin } from "../mixins/cordMixin.js";
 import { appsMixin } from "../mixins/appsMixin.js";
+import { heroMixin } from "../mixins/heroMixin";
 
 export default {
   name: "register",
@@ -234,7 +253,15 @@ export default {
   $_veeValidate: {
     validator: "new"
   },
-  mixins: [authMixin, assetMixin, alertMixin, themeMixin, cordMixin, appsMixin],
+  mixins: [
+    authMixin,
+    assetMixin,
+    alertMixin,
+    themeMixin,
+    cordMixin,
+    appsMixin,
+    heroMixin
+  ],
   computed: {
     cancelLabel() {
       return this.step < 4 ? "Cancel" : "Close";
@@ -252,6 +279,7 @@ export default {
   data: () => ({
     backDisabled: false,
     appOptions: [],
+    teamOptions: [],
     dictionary: {
       custom: {
         password: {
@@ -303,6 +331,10 @@ export default {
       v => !!v || "Application is required",
       v => (v && v.length !== 0) || "Application is required"
     ],
+    teamRules: [
+      v => !!v || "Teams are required",
+      v => (v && v.length !== 0) || "Teams are required"
+    ],
     passwordRules: [
       v => !!v || "Password is required",
       v => (v && v.length > 4) || "Password must be at least 4 characters"
@@ -318,6 +350,8 @@ export default {
       default: false
     }
   },
+
+  // Todo: add step to registration to select teams
   mounted() {
     this.$validator.localize("en", this.dictionary);
     this.$nextTick(function() {
@@ -326,15 +360,29 @@ export default {
     });
 
     if (this.appToken) {
-      this.getApps().then(response => {
-        const data =
-          response.data && response.data.data ? response.data.data : [];
-        const options = [];
-        data.forEach(function(elem) {
-          options.push(elem.name);
+      this.getApps()
+        .then(response => {
+          const data =
+            response.data && response.data.data ? response.data.data : [];
+          const options = [];
+          data.forEach(function(elem) {
+            options.push(elem.name);
+          });
+          this.appOptions = options;
+
+          return this.getTeams();
+        })
+        .then(response => {
+          this.teamOptions =
+            response.data && response.data.data ? response.data.data : [];
+        })
+        .catch(() => {
+          this.setAlert(
+            `Error retrieving application and team data`,
+            "#DC2D37",
+            0
+          );
         });
-        this.appOptions = options;
-      });
     }
   },
   methods: {

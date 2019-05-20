@@ -1,4 +1,4 @@
-import { HeroService } from "../services/HeroService";
+import { HeroService } from "../services/heroService";
 
 export const heroMixin = {
   methods: {

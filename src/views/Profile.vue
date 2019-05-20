@@ -413,9 +413,9 @@ export default {
 
   data: () => ({
     activeTab: null,
-    
+
     appOptions: [],
-    
+
     cords: [
       {
         label: "Active Cords",
@@ -430,43 +430,43 @@ export default {
         value: []
       }
     ],
-    
+
     cordsLoading: false,
-    
+
     editingApps: false,
-    
+
     editingTeams: false,
-    
+
     editingUserInfo: false,
-    
+
     heroUser: null,
-    
+
     initialized: false,
-    
+
     selectItems: [
       { label: "My Active Cords", value: "myActiveCords" },
       { label: "My Resolved Cords", value: "myResolvedCords" },
       { label: "Rescues", value: "myRescueCords" }
     ],
-    
+
     selectItemType: "myActiveCords",
-    
+
     statsLoading: false,
-    
+
     teamsDirty: false,
-    
+
     teamOptions: [],
-    
+
     userDataDirty: false,
-    
+
     userApps: [],
-    
+
     userTeams: [],
-    
+
     userStats: [],
-    
+
     userStatsInitialized: false,
-    
+
     validateLoading: false
   }),
 
@@ -670,10 +670,6 @@ export default {
     editingTeams: function(value) {
       if (value && this.teamOptions.length < 1) {
         this.getTeams().then(response => {
-          /*const options = [];
-          data.forEach(function(elem) {
-            options.push(elem.name);
-          });*/
           this.teamOptions =
             response.data && response.data.data ? response.data.data : [];
         });
