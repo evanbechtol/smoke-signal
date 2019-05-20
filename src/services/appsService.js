@@ -23,7 +23,8 @@ const AppsService = {
             firstName: data.user.firstname,
             lastName: data.user.lastname,
             email: data.user.email,
-            apps: body.project
+            apps: body.project,
+            teams: body.teams
           },
           url: `${serviceUrl}/${routeApp}`
         };

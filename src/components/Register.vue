@@ -407,6 +407,7 @@ export default {
             lastName: this.registerUser.lastName,
             username: this.registerUser.username,
             project: this.registerUser.project,
+            teams: this.registerUser.teams,
             email: this.registerUser.email,
             password: this.registerUser.password
           };

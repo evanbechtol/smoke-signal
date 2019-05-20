@@ -168,11 +168,12 @@ import { alertMixin } from "../mixins/alertMixin";
 import { assetMixin } from "../mixins/assetMixin";
 import { authMixin } from "../mixins/authMixin";
 import { themeMixin } from "../mixins/themeMixin";
+import { heroMixin } from "../mixins/heroMixin";
 
 export default {
   name: "login",
   components: { Register: () => import("../components/Register") },
-  mixins: [themeMixin, alertMixin, assetMixin, authMixin],
+  mixins: [themeMixin, alertMixin, assetMixin, authMixin, heroMixin],
   data: () => ({
     checkbox: false,
     form: false,
