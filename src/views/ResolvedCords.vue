@@ -47,7 +47,6 @@
                     <template #activator="data">
                       <v-btn
                         depressed
-                        v-if="!pullingCord"
                         :color="`info ${darken}`"
                         v-on="data.on"
                         @click="pullingCord = !pullingCord"

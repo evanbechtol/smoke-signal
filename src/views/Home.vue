@@ -78,7 +78,6 @@
                   <template #activator="data">
                     <v-btn
                       depressed
-                      v-if="!pullingCord"
                       :color="`info ${darken}`"
                       v-on="data.on"
                       @click="pullingCord = !pullingCord"
@@ -251,8 +250,10 @@ import { authMixin } from "../mixins/authMixin";
 import { gridMixin } from "../mixins/gridMixin";
 import { TimeService } from "../services/timeService";
 import Grid from "../components/Grid";
-import PullCordDialog from "../components/PullCordDialog";
 import { DataExportService } from "../services/dataExportService";
+
+const PullCordDialog = () =>
+  import(/* webpackChunkName: "PullCordDialog" */ "../components/PullCordDialog");
 
 export default {
   name: "home",
