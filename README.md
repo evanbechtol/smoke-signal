@@ -1,5 +1,6 @@
-# Smoke Signal
-The purpose of Smoke Signal is to enable users to signal when a problem is encountered, and has blocked them from completing a task. When a user has encountered a problem, they simply "pull their cord". This notifies other users that a colleague is blocked and needs assistance. Users are able to associate helpful information with their issues, allowing "rescuers" to better help the blocked user. 
+# Hero
+The purpose of Hero is to enable users to signal when a problem is encountered, and has blocked them from completing a
+ task. When a user has encountered a problem, they simply "pull their cord". This notifies other users that a colleague is blocked and needs assistance. Users are able to associate helpful information with their issues, allowing "rescuers" to better help the blocked user. 
 
 Rescuers are simply users that aid in issue resolution. An issue could also have one, or many rescuers. Once an issue has been resolved, the cord is no longer pulled. However, a user could still have other cords pulled for different issues. This allows a user to break a large problem down into smaller issues.
 
@@ -10,12 +11,12 @@ The overall goal of the application is to reduce time spent by users being block
 The following items are required for this application to run.
   1. [Node.js](https://nodejs.org)
   2. [Vue-CLI-Service](https://cli.vuejs.org/guide/)
-  3. [Smoke-Signal-Service](https://scmgr.eams.ericsson.net/incubation/smoke-signal-service)  
+  3. [Hero-Service](https://naopsgit.exu.ericsson.se/node/services/ana-dev/hero-service)  
   
 ## Setup
 This assumes that all pre-requisites have been met
   1. Install application dependencies: `npm install`
-  2. Start the back-end (smoke-signal-service): `npm run start`
+  2. Start the back-end (hero-service): `npm run start`
   3. Start the...
        a. Development server: `npm run serve`
        b. Production server: `npm run start` 
@@ -133,7 +134,8 @@ The following steps are intended to be performed on the server which the applica
    1. Build the application `npm run build`
    2. If deploying with docker: 
         ```
-        docker build -t scmgr.eams.ericsson.net:5005/incubation/smoke-signal-service:latest . && docker push scmgr.eams.ericsson.net:5005/incubation/smoke-signal-service:latest
+        docker build -t scmgr.eams.ericsson.net:5005/incubation/hero:latest . && docker push scmgr.eams.ericsson.net
+      :5005/incubation/hero:latest
         ```
    2. If deploying as stand-alone: `npm run start`
    3. Test that the application works!
