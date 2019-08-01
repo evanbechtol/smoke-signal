@@ -375,7 +375,12 @@
               </v-flex>
 
               <!-- Add to discussion -->
-              <v-flex shrink v-if="!addingComment" my-0 align-self-start>
+              <v-flex
+                shrink
+                v-if="selectedIsOpen && !addingComment"
+                my-0
+                align-self-start
+              >
                 <v-btn
                   class="mx-0"
                   :color="`info ${darken}`"
@@ -389,7 +394,8 @@
                 </v-btn>
               </v-flex>
 
-              <v-flex grow v-if="shouldShowAddComment">
+              <!-- Add Comment -->
+              <v-flex id="commentFlex" grow v-if="shouldShowAddComment">
                 <v-layout column fill-height>
                   <v-flex xs12 sm4>
                     <tip-tap
@@ -417,6 +423,7 @@
                       <v-btn
                         small
                         depressed
+                        v-if="shouldShowAddComment"
                         :disabled="discussion.length < 2"
                         @click="updateDiscussion"
                         :color="`info ${darken}`"
@@ -428,15 +435,73 @@
                 </v-layout>
               </v-flex>
 
-              <!-- Actions -->
-              <v-flex xs12 mt-4 v-if="isMine">
-                <v-divider></v-divider>
+              <!-- Add Answer -->
+              <v-flex id="answerFlex" xs12 v-if="shouldShowAnswerInput" mt-2>
+                <v-layout column fill-height>
+                  <v-flex id="answerInput" xs12 sm4>
+                    <tip-tap
+                      :editable="addingAnswer"
+                      :content="answer"
+                      v-on:contentChanged="updateAnswer"
+                    ></tip-tap>
+                  </v-flex>
 
-                <v-card-actions v-if="showUnpullButton" class="px-0">
+                  <v-layout
+                    id="answerActions"
+                    row
+                    wrap
+                    align-center
+                    justify-start
+                  >
+                    <v-flex shrink>
+                      <v-btn
+                        id="cancelAnswerBtn"
+                        small
+                        depressed
+                        outline
+                        flat
+                        @click="cancelAddingAnswer"
+                        :dark="isDark"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-flex>
+
+                    <v-flex shrink>
+                      <v-btn
+                        id="submitAnswerBtn"
+                        small
+                        depressed
+                        :disabled="answer.length < 30"
+                        @click="addAnswer"
+                        :color="`info ${darken}`"
+                      >
+                        Submit
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
+                </v-layout>
+              </v-flex>
+
+              <!-- Actions -->
+              <v-flex xs12 mt-4>
+                <v-card-actions class="px-0">
+                  <v-btn
+                    id="addAnswerBtn"
+                    v-if="!isResolved && readonly && !addingAnswer"
+                    color="purple darken-1"
+                    flat
+                    small
+                    depressed
+                    dark
+                    @click="addingAnswer = true"
+                    >Add Answer
+                  </v-btn>
+
                   <v-tooltip right>
                     <template #activator="data">
                       <v-btn
-                        v-if="readonly"
+                        v-if="showUnpullButton && readonly"
                         v-on="data.on"
                         :block="isSmall"
                         color="purple darken-1"
@@ -545,6 +610,10 @@ export default {
       return this.readonly ? "transparent" : `accent ${this.darken}`;
     },
 
+    disableAnswerSubmit() {
+      return this.answer.length < 20;
+    },
+
     discussionAppendIcon() {
       return this.discussion.length >= 2 ? "send" : undefined;
     },
@@ -568,6 +637,10 @@ export default {
             return elem.username === user.username;
           }).length === 0
         : false;
+    },
+
+    shouldShowAnswerInput() {
+      return this.selectedIsOpen && this.addingAnswer;
     },
 
     shouldShowAddComment() {
@@ -606,6 +679,8 @@ export default {
 
   data: function() {
     return {
+      answer: "",
+      addingAnswer: false,
       addingComment: false,
       addingReply: [],
       addingToComment: false,
@@ -647,12 +722,33 @@ export default {
 
     msToTime: TimeService.msToTime,
 
+    addAnswer() {
+      if (this.answer.length >= 10) {
+        if (!(this.selectedCord.answers || this.selectedCord.answers.length)) {
+          this.selectedCord.answers = [];
+        }
+
+        this.selectedCord.answers.push({
+          time: new Date().toISOString(),
+          user: { _id: this.user._id, username: this.user.username },
+          data: this.answer
+        });
+
+        this.saveAnswer();
+      }
+    },
+
     addToDiscussion() {
       this.updateDiscussion();
     },
 
     appChanged() {
       this.appDirty = true;
+    },
+
+    cancelAddingAnswer() {
+      this.answer = "";
+      this.addingAnswer = false;
     },
 
     cancelAddingDiscussion() {
@@ -781,6 +877,33 @@ export default {
         });
     },
 
+    saveAnswer() {
+      const answer = {
+        user: this.heroUser,
+        answer: this.answer
+      };
+
+      this.saveAnswer(this.selectedCord._id, answer)
+        .then(() => {
+          this.setAlert("Answer successfully!", "#288964", 5000);
+          /*response.data.data.answer.forEach(function(elem) {
+            return convertStringToDate(elem);
+          });*/
+
+          this.refreshItem(this.selectedCord._id);
+          this.answer = "";
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+          this.loading = false;
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
+    },
+
     saveComment(index, refreshGrid = false) {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
@@ -809,6 +932,10 @@ export default {
 
     setFile(data) {
       this.formData = data;
+    },
+
+    updateAnswer(value) {
+      this.answer = value;
     },
 
     updateComment(value) {
@@ -859,22 +986,6 @@ export default {
         this.save();
         this.discussion = "";
       }
-    },
-
-    addReply(index) {
-      const content = this.comment[index];
-      if (content && content.length >= 2) {
-        if (this.selectedCord.discussion[index].comments === undefined) {
-          this.selectedCord.discussion[index].comments = [];
-        }
-        this.selectedCord.discussion[index].comments.push({
-          time: new Date().toISOString(),
-          user: { _id: this.user._id, username: this.user.username },
-          data: content
-        });
-        this.saveComment(index);
-        this.comment[index] = "";
-      }
     }
   },
 
@@ -886,6 +997,7 @@ export default {
         this.discussion = "";
       }
     },
+
     addingToComment: function() {
       if (this.addingToComment === false) {
         this.discussion = "";
@@ -904,6 +1016,7 @@ export default {
         }
       }
     },
+
     readonly: function() {
       if (
         typeof this.formData.get === "function" &&
