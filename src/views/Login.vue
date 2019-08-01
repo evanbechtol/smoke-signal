@@ -259,6 +259,9 @@ export default {
         })
         .catch(err => {
           return err;
+        })
+        .finally(() => {
+          this.$refs.resetForm.reset();
         });
     },
     toggleRegistration() {
