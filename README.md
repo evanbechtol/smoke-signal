@@ -134,8 +134,8 @@ The following steps are intended to be performed on the server which the applica
    1. Build the application `npm run build`
    2. If deploying with docker: 
         ```
-        docker build -t scmgr.eams.ericsson.net:5005/incubation/hero:latest . && docker push scmgr.eams.ericsson.net
-      :5005/incubation/hero:latest
+        docker build -tnaopsgit.exu.ericsson.se:5005/vuejs/hero:latest . && docker push naopsgit.exu.ericsson.se
+      :5005/vuejs/hero:latest
         ```
    2. If deploying as stand-alone: `npm run start`
    3. Test that the application works!
