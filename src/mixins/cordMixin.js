@@ -31,13 +31,14 @@ export const cordMixin = {
         ? "orangeWarning"
         : "success";
     },
+
     /**
      * @description Attempts to create a new cord using the body provided
      * @param data {object} Body to be used to crete a new cord
      * @returns {Promise} Returns promise for request being generated
      */
     createCord(data) {
-      const route = `cords/`;
+      const route = `cords`;
       const options = {
         method: "POST",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
@@ -46,6 +47,7 @@ export const cordMixin = {
       };
       return ApiService.customRequest(options);
     },
+
     /**
      * @description Attempts to delete a cord matching the provided Object ID
      * @param id {string} Object ID for the cord to delete
@@ -60,6 +62,17 @@ export const cordMixin = {
       };
       return ApiService.customRequest(options);
     },
+
+    getCategoryList() {
+      const route = `cords/category/list`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return ApiService.customRequest(options);
+    },
+
     /**
      * @description
      * @param limit {number} Optional - Controls page size (number of objects returned)
@@ -93,53 +106,7 @@ export const cordMixin = {
       };
       return ApiService.customRequest(options);
     },
-    /**
-     * @description Attempts to retrieve files for the cord matching the Object ID provided
-     * @param id {string} Object ID for the cord to retrieve files for
-     * @returns {Promise} Returns promise for request being generated
-     */
-    getFilesByCordId(id) {
-      const route = `cords/files/${id}`;
-      const options = {
-        method: "GET",
-        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
-        url: `${baseUrl}/${route}`
-      };
-      return ApiService.customRequest(options);
-    },
-    /**
-     * @description Attempts to upload files for the cord matching the Object ID provided
-     * @param id {string} Object ID for the cord to upload files for
-     * @param body {*} File data to be uploaded
-     * @returns {Promise} Returns promise for request being generated
-     */
-    uploadFileByCordId(id, body) {
-      const route = `cords/upload/${id}`;
-      const options = {
-        method: "POST",
-        headers: {
-          authorization: `Bearer ${this.$store.getters.appToken}`,
-          "Content-Type": "multipart/form-data"
-        },
-        url: `${baseUrl}/${route}`,
-        data: body
-      };
-      return ApiService.customRequest(options);
-    },
-    /**
-     * @description Attempts to retrieve all cords with the status provided
-     * @param status {string} Case-sensitive Status to search for
-     * @returns {Promise} Returns promise for request being generated
-     */
-    getCordsByStatus(status) {
-      const route = `cords/status/${status}`;
-      const options = {
-        method: "GET",
-        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
-        url: `${baseUrl}/${route}`
-      };
-      return ApiService.customRequest(options);
-    },
+
     /**
      * @description Attempts to retrieve all cords with the status and user provided
      * @param user {object} Object matching the user to search for
@@ -155,6 +122,37 @@ export const cordMixin = {
       };
       return ApiService.customRequest(options);
     },
+
+    /**
+     * @description Attempts to retrieve all cords with the status provided
+     * @param status {string} Case-sensitive Status to search for
+     * @returns {Promise} Returns promise for request being generated
+     */
+    getCordsByStatus(status) {
+      const route = `cords/status/${status}`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return ApiService.customRequest(options);
+    },
+
+    /**
+     * @description Attempts to retrieve files for the cord matching the Object ID provided
+     * @param id {string} Object ID for the cord to retrieve files for
+     * @returns {Promise} Returns promise for request being generated
+     */
+    getFilesByCordId(id) {
+      const route = `cords/files/${id}`;
+      const options = {
+        method: "GET",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`
+      };
+      return ApiService.customRequest(options);
+    },
+
     /**
      * @description Attempts to retrieve statistics for user provided
      * @param user {object} Object matching the user to search for
@@ -169,38 +167,7 @@ export const cordMixin = {
       };
       return ApiService.customRequest(options);
     },
-    /**
-     * @description Attempts to update the cord matching the provided Object ID
-     * @param id {string} Object ID for the cord to update
-     * @param data {object} Body to use when updating the cord
-     * @returns {Promise} Returns promise for request being generated
-     */
-    updateCord(id, data) {
-      const route = `cords/${id}`;
-      const options = {
-        method: "PUT",
-        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
-        url: `${baseUrl}/${route}`,
-        data
-      };
-      return ApiService.customRequest(options);
-    },
-    /**
-     * @description Attempts to update the cord rescuers for the cord matching the provided Object ID
-     * @param id {string} Object ID for the cord to update
-     * @param data {object} Body to use when updating the cord
-     * @returns {Promise} Returns promise for request being generated
-     */
-    updateRescuers(id, data) {
-      const route = `cords/rescuers/${id}`;
-      const options = {
-        method: "PUT",
-        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
-        url: `${baseUrl}/${route}`,
-        data
-      };
-      return ApiService.customRequest(options);
-    },
+
     /**
      * @description Attempts to retrieve a cord by the Object ID provided for cord details page
      *
@@ -223,15 +190,72 @@ export const cordMixin = {
           this.setAlert(err.message, "#DC2D37", 0);
         });
     },
-    getCategoryList() {
-      const route = `cords/category/list`;
+
+    saveAnswer(id, data) {
+      const route = `cords/${id}/answer`;
       const options = {
-        method: "GET",
+        method: "POST",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
-        url: `${baseUrl}/${route}`
+        url: `${baseUrl}/${route}`,
+        data
       };
       return ApiService.customRequest(options);
     },
+
+    /**
+     * @description Attempts to update the cord matching the provided Object ID
+     * @param id {string} Object ID for the cord to update
+     * @param data {object} Body to use when updating the cord
+     * @returns {Promise} Returns promise for request being generated
+     */
+    updateCord(id, data) {
+      const route = `cords/${id}`;
+      const options = {
+        method: "PUT",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`,
+        data
+      };
+      return ApiService.customRequest(options);
+    },
+
+    /**
+     * @description Attempts to upload files for the cord matching the Object ID provided
+     * @param id {string} Object ID for the cord to upload files for
+     * @param body {*} File data to be uploaded
+     * @returns {Promise} Returns promise for request being generated
+     */
+    uploadFileByCordId(id, body) {
+      const route = `cords/upload/${id}`;
+      const options = {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${this.$store.getters.appToken}`,
+          "Content-Type": "multipart/form-data"
+        },
+        url: `${baseUrl}/${route}`,
+        data: body
+      };
+      return ApiService.customRequest(options);
+    },
+
+    /**
+     * @description Attempts to update the cord rescuers for the cord matching the provided Object ID
+     * @param id {string} Object ID for the cord to update
+     * @param data {object} Body to use when updating the cord
+     * @returns {Promise} Returns promise for request being generated
+     */
+    updateRescuers(id, data) {
+      const route = `cords/rescuers/${id}`;
+      const options = {
+        method: "PUT",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`,
+        data
+      };
+      return ApiService.customRequest(options);
+    },
+
     userAppsRegister(body = null, response = null) {
       return AppsService.userAppsRegister(body, response);
     }
