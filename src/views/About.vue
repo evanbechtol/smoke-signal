@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height class="about page">
+  <v-container fluid fill-height class="about page" mt-5>
     <v-layout row wrap fill-height align-end justify-center>
       <v-flex xs12 sm12 mb-5 mx-1>
         <v-card elevation="0" class="animated faster slideInLeft">
