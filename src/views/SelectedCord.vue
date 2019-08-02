@@ -305,14 +305,12 @@
                           elevation="0"
                           :color="`accent ${darken}`"
                           class="px-3 py-2"
-                          max-width="150px"
-                          :dark="isDark"
                         >
-                          <span>
+                          <small>
                             Pulled
                             {{ computeDuration(selectedCord.openedOn) }}
                             ago
-                          </span>
+                          </small>
 
                           <br />
 
@@ -394,6 +392,25 @@
                 </v-btn>
               </v-flex>
 
+              <v-flex
+                shrink
+                v-if="selectedIsOpen && !addingComment"
+                my-0
+                align-self-start
+              >
+                <v-btn
+                  id="addAnswerBtn"
+                  v-if="!isResolved && readonly && !addingAnswer"
+                  color="purple darken-1"
+                  flat
+                  small
+                  depressed
+                  dark
+                  @click="addingAnswer = true"
+                  >Add Answer
+                </v-btn>
+              </v-flex>
+
               <!-- Add Comment -->
               <v-flex id="commentFlex" grow v-if="shouldShowAddComment">
                 <v-layout column fill-height>
@@ -436,7 +453,7 @@
               </v-flex>
 
               <!-- Add Answer -->
-              <v-flex id="answerFlex" xs12 v-if="shouldShowAnswerInput" mt-2>
+              <v-flex id="addAnswerFlex" xs12 v-if="shouldShowAnswerInput" mt-2>
                 <v-layout column fill-height>
                   <v-flex id="answerInput" xs12 sm4>
                     <tip-tap
@@ -472,7 +489,6 @@
                         id="submitAnswerBtn"
                         small
                         depressed
-                        :disabled="answer.length < 30"
                         @click="addAnswer"
                         :color="`info ${darken}`"
                       >
@@ -483,21 +499,58 @@
                 </v-layout>
               </v-flex>
 
+              <!-- Answers -->
+              <v-flex id="answerFlex" xs12 v-if="shouldShowAnswers">
+                <template v-for="(answer, answerIndex) in selectedCord.answers">
+                  <v-card
+                    flat
+                    :key="`answer-${answerIndex}`"
+                    :dark="isDark"
+                    :color="`accent ${darken}`"
+                  >
+                    <v-card-text>
+                      <v-layout row wrap align-center>
+                        <!-- answer content -->
+                        <v-flex xs12>
+                          <v-textarea
+                            id="`answer-${answerIndex}`"
+                            flat
+                            v-html="answer.answer"
+                          ></v-textarea>
+                        </v-flex>
+
+                        <v-flex xs10></v-flex>
+
+                        <v-flex shrink>
+                          <v-card
+                            elevation="0"
+                            :color="`accent ${darken}`"
+                            :dark="isDark"
+                          >
+                            <small>
+                              Answered On
+                              {{ new Date(answer.createdOn).toDateString() }}
+                            </small>
+
+                            <br />
+
+                            <v-avatar class="mr-2" size="26" tile>
+                              <v-img
+                                :src="getImagePath('evanbechtolHeadshot.png')"
+                              />
+                            </v-avatar>
+                            {{ answer.user.username }}
+                          </v-card>
+                        </v-flex>
+                      </v-layout>
+                    </v-card-text>
+                  </v-card>
+                </template>
+              </v-flex>
+
               <!-- Actions -->
               <v-flex xs12 mt-4>
                 <v-card-actions class="px-0">
-                  <v-btn
-                    id="addAnswerBtn"
-                    v-if="!isResolved && readonly && !addingAnswer"
-                    color="purple darken-1"
-                    flat
-                    small
-                    depressed
-                    dark
-                    @click="addingAnswer = true"
-                    >Add Answer
-                  </v-btn>
-
                   <v-tooltip right>
                     <template #activator="data">
                       <v-btn
@@ -639,6 +692,10 @@ export default {
         : false;
     },
 
+    shouldShowAnswers() {
+      return this.selectedCord.answers.length;
+    },
+
     shouldShowAnswerInput() {
       return this.selectedIsOpen && this.addingAnswer;
     },
@@ -723,7 +780,7 @@ export default {
     msToTime: TimeService.msToTime,
 
     addAnswer() {
-      if (this.answer.length >= 10) {
+      if (this.answer.length) {
         if (!(this.selectedCord.answers || this.selectedCord.answers.length)) {
           this.selectedCord.answers = [];
         }
@@ -734,7 +791,7 @@ export default {
           data: this.answer
         });
 
-        this.saveAnswer();
+        this.setupSaveAnswer();
       }
     },
 
@@ -877,9 +934,9 @@ export default {
         });
     },
 
-    saveAnswer() {
+    setupSaveAnswer() {
       const answer = {
-        user: this.heroUser,
+        user: { _id: this.user._id, username: this.user.username },
         answer: this.answer
       };
 

@@ -192,7 +192,7 @@ export const cordMixin = {
     },
 
     saveAnswer(id, data) {
-      const route = `cords/${id}/answer`;
+      const route = `cords/answer/${id}`;
       const options = {
         method: "POST",
         headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
