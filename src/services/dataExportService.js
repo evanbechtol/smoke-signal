@@ -8,7 +8,7 @@ const DataExportService = {
     });
 
     csvContent += [
-      Object.keys(arrData[0]).join(";"),
+      Object.keys(arrData[0]).join(","),
       ...arrData.map(item => {
         let values = Object.values(item);
 
@@ -20,11 +20,11 @@ const DataExportService = {
           const isArray =
             typeof elem === "object" && elem && elem.length !== undefined;
           if (isArray) {
-            values[index] = values[index].join(",");
+            values[index] = values[index].join(";");
           }
         });
         values.splice(11, 1);
-        return values.join(";");
+        return values.join(",");
       })
     ]
       .join("\n")
