@@ -12,7 +12,7 @@
         <!-- Cord Title -->
         <v-card-title
           primary-title
-          class="hildaLight space-small mx-0 mb-0 mt-5 px-2"
+          class="hildaLight space-small mx-0 mb-0 mt-5 px-2 pb-0"
         >
           <v-layout row wrap>
             <!-- Loading text -->
@@ -51,18 +51,29 @@
             <!-- Cord Title Text -->
             <v-flex v-if="selectedCord" xs12>
               <div class="animated titleFadeInLeft">
-                <span class="ml-3 pt-5 header" v-if="readonly">
-                  {{ selectedCord.title }}
-                </span>
+                <v-layout row wrap align-start justify-start py-0 my-0 ml-3>
+                  <v-flex xs12>
+                    <span class="pt-5 header" v-if="readonly">
+                      {{ selectedCord.title }}
+                    </span>
+                  </v-flex>
+
+                  <small v-if="readonly">
+                    <v-flex xs12>
+                      {{ selectedCord.app }} {{ selectedCord.category }}
+                    </v-flex>
+
+                    <v-flex xs12 style="font-size: 0.75em;">
+                      Pulled {{ computeDuration(selectedCord.openedOn) }} ago
+                    </v-flex>
+                  </small>
+                </v-layout>
+
                 <br />
 
                 <!-- Application & Category -->
-                <span class="ml-3">
-                  <small v-if="readonly">
-                    {{ selectedCord.app }} {{ selectedCord.category }}
-                  </small>
-
-                  <v-layout row wrap v-else ml-3 pl-0>
+                <span class="ml-3" v-if="!readonly">
+                  <v-layout row wrap ml-3 pl-0>
                     <v-flex xs12>
                       <v-text-field
                         v-model="selectedCord.title"
@@ -307,9 +318,8 @@
                           class="px-3 py-2"
                         >
                           <small>
-                            Pulled
-                            {{ computeDuration(selectedCord.openedOn) }}
-                            ago
+                            Pulled on
+                            {{ new Date(selectedCord.openedOn).toDateString() }}
                           </small>
 
                           <br />
@@ -357,10 +367,18 @@
                         <v-flex xs12 sm2>
                           <strong>
                             <!--eslint-disable-next-line-->
-                            {{ convertStringToDate(content.time).toLocaleDateString("en-us") }}
+                            {{
+                              convertStringToDate(
+                                content.time
+                              ).toLocaleDateString("en-us")
+                            }}
                             -
                             <!--eslint-disable-next-line-->
-                            {{ convertStringToDate(content.time).toLocaleTimeString("en-us") }}
+                            {{
+                              convertStringToDate(
+                                content.time
+                              ).toLocaleTimeString("en-us")
+                            }}
                           </strong>
                         </v-flex>
                         <v-flex grow>
