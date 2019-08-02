@@ -510,7 +510,7 @@
                         @click="addAnswer"
                         :color="`info ${darken}`"
                       >
-                        Submit
+                        Add Answer
                       </v-btn>
                     </v-flex>
                   </v-layout>
