@@ -507,6 +507,7 @@
                         id="submitAnswerBtn"
                         small
                         depressed
+                        :disabled="answer.length < 1"
                         @click="addAnswer"
                         :color="`info ${darken}`"
                       >
