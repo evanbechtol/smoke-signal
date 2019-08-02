@@ -229,7 +229,7 @@
 
                       <v-flex shrink mx-0>
                         <v-btn
-                          v-if="readonly"
+                          v-if="readonly && !isResolved && isMine"
                           class="mx-0 px-0"
                           :block="isSmall"
                           small
