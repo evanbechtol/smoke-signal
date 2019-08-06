@@ -541,6 +541,7 @@
                         <v-flex xs10></v-flex>
 
                         <v-flex shrink>
+                          <!-- Answered On Card -->
                           <v-card
                             elevation="0"
                             :color="`accent ${darken}`"
@@ -560,6 +561,11 @@
                             </v-avatar>
                             {{ answer.user.username }}
                           </v-card>
+                        </v-flex>
+
+                        <!-- Answer Actions -->
+                        <v-flex shrink>
+                        
                         </v-flex>
                       </v-layout>
                     </v-card-text>
@@ -712,7 +718,7 @@ export default {
     },
 
     shouldShowAnswers() {
-      return this.selectedCord.answers.length;
+      return this.selectedCord.answers && this.selectedCord.answers.length;
     },
 
     shouldShowAnswerInput() {
