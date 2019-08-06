@@ -101,6 +101,9 @@ export const gridMixin = {
     selectedChip: function(value) {
       return this.selectItemType === value;
     },
+    setSelectedItemType(value) {
+      this.selectItemType = this.selectItemType === value ? "all" : value;
+    },
     updateGridItems(itemType) {
       this.gridItemType = this.gridItemType === itemType ? "all" : itemType;
     }

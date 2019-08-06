@@ -74,7 +74,7 @@
                       :color="chipBg"
                       :dark="isDark"
                       :selected="selectedChip('myCords')"
-                      @click="selectItemType = 'myCords'"
+                      @click="setSelectedItemType('myCords')"
                     >
                       <v-avatar>
                         <v-icon class="mx-3" color="purple"

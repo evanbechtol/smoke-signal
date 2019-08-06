@@ -98,7 +98,7 @@
                     :color="chipBg"
                     :dark="isDark"
                     :selected="selectedChip('criticalCords')"
-                    @click="selectItemType = 'criticalCords'"
+                    @click="setSelectedItemType('criticalCords')"
                   >
                     <v-avatar>
                       <v-icon class="mx-3" color="error">error</v-icon>
@@ -110,7 +110,7 @@
                     :color="chipBg"
                     :dark="isDark"
                     :selected="selectedChip('moderateCords')"
-                    @click="selectItemType = 'moderateCords'"
+                    @click="setSelectedItemType('moderateCords')"
                   >
                     <v-avatar>
                       <v-icon class="mx-3" color="warning">warning</v-icon>
@@ -122,7 +122,7 @@
                     :color="chipBg"
                     :dark="isDark"
                     :selected="selectedChip('newCords')"
-                    @click="selectItemType = 'newCords'"
+                    @click="setSelectedItemType('newCords')"
                   >
                     <v-avatar>
                       <v-icon class="mx-3" color="info">info</v-icon>
@@ -133,7 +133,7 @@
                     :color="chipBg"
                     :dark="isDark"
                     :selected="selectedChip('myCords')"
-                    @click="selectItemType = 'myCords'"
+                    @click="setSelectedItemType('myCords')"
                   >
                     <v-avatar>
                       <v-icon class="mx-3" color="purple"
