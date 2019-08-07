@@ -53,7 +53,7 @@
               <div class="animated titleFadeInLeft">
                 <v-layout row wrap align-start justify-start py-0 my-0 ml-3>
                   <v-flex xs12>
-                    <span class="pt-5 header" v-if="readonly">
+                    <span class="pt-5 headline" v-if="readonly">
                       {{ selectedCord.title }}
                     </span>
                   </v-flex>
@@ -520,7 +520,8 @@
               </v-flex>
 
               <!-- Answers -->
-              <v-flex id="answerFlex" xs12 v-if="shouldShowAnswers">
+              <v-flex id="answerFlex" mt-3 xs12 v-if="shouldShowAnswers">
+                <p class="title">{{ selectedCord.answers.length }} Answers</p>
                 <template v-for="(answer, answerIndex) in selectedCord.answers">
                   <v-card
                     class="mb-2"
