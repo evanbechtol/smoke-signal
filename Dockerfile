@@ -14,9 +14,9 @@ RUN npm install -g yarn
 RUN npm install -g spa-http-server
 RUN npm install -g @vue/cli
 RUN npm install -g @vue/cli-service
-RUN yarn install eslint
-RUN yarn install prettier
-RUN yarn install eslint-plugin-prettier
+RUN yarn add eslint
+RUN yarn add prettier
+RUN yarn add eslint-plugin-prettier
 
 # make the 'app' folder the current working directory
 WORKDIR /app
