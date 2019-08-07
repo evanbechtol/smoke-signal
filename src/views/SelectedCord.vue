@@ -330,7 +330,7 @@
                             />-->
                             <v-icon>perm_identity</v-icon>
                           </v-avatar>
-                          {{ user.username }}
+                          {{ selectedCord.puller.username }}
                         </v-card>
                       </v-flex>
                     </v-layout>
