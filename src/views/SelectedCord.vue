@@ -538,7 +538,35 @@
                           ></v-textarea>
                         </v-flex>
 
-                        <v-flex xs10></v-flex>
+                        <!-- Answer Actions -->
+                        <v-flex id="answerActionsFlex" shrink>
+                          <v-layout
+                            row
+                            justify-start
+                            align-center
+                            fill-height
+                            mt-2
+                          >
+                            <v-flex shrink mx-0>
+                              <v-btn
+                                v-if="
+                                  !isResolved && answer.user._id === user._id
+                                "
+                                class="mx-0 px-0"
+                                small
+                                flat
+                                :color="`info ${darken}`"
+                                :disabled="isResolved"
+                                :dark="isDark"
+                                @click="editAnswer(answer._id, answerIndex)"
+                              >
+                                Edit
+                              </v-btn>
+                            </v-flex>
+                          </v-layout>
+                        </v-flex>
+
+                        <v-spacer></v-spacer>
 
                         <v-flex shrink>
                           <!-- Answered On Card -->
@@ -561,11 +589,6 @@
                             </v-avatar>
                             {{ answer.user.username }}
                           </v-card>
-                        </v-flex>
-
-                        <!-- Answer Actions -->
-                        <v-flex shrink>
-                        
                         </v-flex>
                       </v-layout>
                     </v-card-text>
@@ -861,6 +884,8 @@ export default {
     convertStringToDate(item) {
       return new Date(item);
     },
+
+    editAnswer(answerId, answerIndex) {},
 
     getInitials(item) {
       return item && typeof item === "string"
