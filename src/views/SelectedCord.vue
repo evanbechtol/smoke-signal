@@ -532,10 +532,18 @@
                         <!-- answer content -->
                         <v-flex xs12>
                           <v-textarea
+                            v-if="editingAnswerIndex !== answerIndex"
                             id="`answer-${answerIndex}`"
                             flat
                             v-html="answer.answer"
                           ></v-textarea>
+
+                          <tip-tap
+                            v-else
+                            :editable="typeof editingAnswerIndex === 'number'"
+                            :content="answer.answer"
+                            v-on:contentChanged="updateSubmittedAnswer"
+                          ></tip-tap>
                         </v-flex>
 
                         <!-- Answer Actions -->
@@ -796,6 +804,7 @@ export default {
       confirmCloseDialog: false,
       descriptionDirty: false,
       discussion: "",
+      editingAnswerIndex: undefined,
       formData: new FormData(),
       loading: false,
       readonly: true,
@@ -885,7 +894,11 @@ export default {
       return new Date(item);
     },
 
-    editAnswer(answerId, answerIndex) {},
+    editAnswer(answerId, answerIndex) {
+      if (answerId && typeof answerIndex === "number") {
+        this.editingAnswerIndex = answerIndex;
+      }
+    },
 
     getInitials(item) {
       return item && typeof item === "string"
@@ -1072,6 +1085,12 @@ export default {
           .catch(err => {
             throw err;
           });
+      }
+    },
+
+    updateSubmittedAnswer(answerIndex, value) {
+      if (answerIndex && value) {
+        this.selectedCord.answers[answerIndex].answer = value;
       }
     },
 
