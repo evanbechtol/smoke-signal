@@ -325,9 +325,10 @@
                           <br />
 
                           <v-avatar class="mr-2" size="26" tile>
-                            <v-img
+                            <!--<v-img
                               :src="getImagePath('evanbechtolHeadshot.png')"
-                            />
+                            />-->
+                            <v-icon>perm_identity</v-icon>
                           </v-avatar>
                           {{ user.username }}
                         </v-card>
@@ -614,9 +615,10 @@
                             <br />
 
                             <v-avatar class="mr-2" size="26" tile>
-                              <v-img
+                              <!--<v-img
                                 :src="getImagePath('evanbechtolHeadshot.png')"
-                              />
+                              />-->
+                              <v-icon>perm_identity</v-icon>
                             </v-avatar>
                             {{ answer.user.username }}
                           </v-card>

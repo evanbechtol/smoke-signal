@@ -26,7 +26,8 @@
         >
           <!--<v-icon class="mr-3">perm_identity</v-icon>-->
           <v-avatar class="mr-3" size="36">
-            <v-img :src="getImagePath('evanbechtolHeadshot.png')" />
+            <!--<v-img :src="getImagePath('evanbechtolHeadshot.png')" />-->
+            <v-icon dark>perm_identity</v-icon>
           </v-avatar>
           <span v-if="!isSmall">{{ user.username }}</span>
         </v-btn>
