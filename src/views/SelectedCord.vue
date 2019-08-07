@@ -523,6 +523,7 @@
               <v-flex id="answerFlex" xs12 v-if="shouldShowAnswers">
                 <template v-for="(answer, answerIndex) in selectedCord.answers">
                   <v-card
+                    class="mb-2"
                     flat
                     :key="`answer-${answerIndex}`"
                     :dark="isDark"
