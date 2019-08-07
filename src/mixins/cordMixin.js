@@ -202,6 +202,17 @@ export const cordMixin = {
       return ApiService.customRequest(options);
     },
 
+    updateEditedAnswer(id, data) {
+      const route = `cords/answer/${id}`;
+      const options = {
+        method: "PUT",
+        headers: { authorization: `Bearer ${this.$store.getters.appToken}` },
+        url: `${baseUrl}/${route}`,
+        data
+      };
+      return ApiService.customRequest(options);
+    },
+
     /**
      * @description Attempts to update the cord matching the provided Object ID
      * @param id {string} Object ID for the cord to update

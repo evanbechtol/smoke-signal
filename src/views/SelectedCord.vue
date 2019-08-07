@@ -547,7 +547,11 @@
                         </v-flex>
 
                         <!-- Answer Actions -->
-                        <v-flex id="answerActionsFlex" shrink>
+                        <v-flex
+                          id="answerActionsFlex"
+                          shrink
+                          v-if="!isResolved && answer.user._id === user._id"
+                        >
                           <v-layout
                             row
                             justify-start
@@ -555,11 +559,12 @@
                             fill-height
                             mt-2
                           >
-                            <v-flex shrink mx-0>
+                            <v-flex
+                              shrink
+                              mx-0
+                              v-if="editingAnswerIndex !== answerIndex"
+                            >
                               <v-btn
-                                v-if="
-                                  !isResolved && answer.user._id === user._id
-                                "
                                 class="mx-0 px-0"
                                 small
                                 flat
@@ -569,6 +574,24 @@
                                 @click="editAnswer(answer._id, answerIndex)"
                               >
                                 Edit
+                              </v-btn>
+                            </v-flex>
+
+                            <v-flex
+                              shrink
+                              mx-0
+                              v-if="editingAnswerIndex === answerIndex"
+                            >
+                              <v-btn
+                                class="mx-0 px-0"
+                                small
+                                depressed
+                                :color="`success ${darken}`"
+                                :disabled="isResolved"
+                                :dark="isDark"
+                                @click="saveEditedAnswer(answer, answer._id)"
+                              >
+                                Save
                               </v-btn>
                             </v-flex>
                           </v-layout>
@@ -1088,9 +1111,9 @@ export default {
       }
     },
 
-    updateSubmittedAnswer(answerIndex, value) {
-      if (answerIndex && value) {
-        this.selectedCord.answers[answerIndex].answer = value;
+    updateSubmittedAnswer(value) {
+      if (typeof this.editingAnswerIndex === "number" && value) {
+        this.selectedCord.answers[this.editingAnswerIndex].answer = value;
       }
     },
 
@@ -1111,6 +1134,24 @@ export default {
 
         this.save();
         this.discussion = "";
+      }
+    },
+
+    saveEditedAnswer(answer, answerId) {
+      if (answer && answerId) {
+        // Todo: Pass selectedCord._id, answer to API to be saved
+        // Todo: When save is complete, refresh selectedCord
+        this.updateEditedAnswer(this.selectedCord._id, answer)
+          .then(response => {
+            this.$store.commit("selectedCord", response.data.data);
+            this.setAlert("Answer updated successfully!", "#288964", 5000);
+          })
+          .catch(err => {
+            this.setAlert(`Error updating answer: ${err}`, "#DC2D37", 0);
+          })
+          .finally(() => {
+            this.editingAnswerIndex = undefined;
+          });
       }
     }
   },
