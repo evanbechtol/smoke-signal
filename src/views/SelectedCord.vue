@@ -364,26 +364,29 @@
                           <span>{{ content.user.username }}</span>
                         </v-tooltip>
                       </v-avatar>
-                      <v-layout pt-3 wrap row fill-height>
-                        <v-flex xs12 sm2>
-                          <strong>
-                            <!--eslint-disable-next-line-->
-                            {{
-                              convertStringToDate(
-                                content.time
-                              ).toLocaleDateString("en-us")
-                            }}
-                            -
-                            <!--eslint-disable-next-line-->
-                            {{
-                              convertStringToDate(
-                                content.time
-                              ).toLocaleTimeString("en-us")
-                            }}
-                          </strong>
-                        </v-flex>
-                        <v-flex grow>
-                          <p v-html="content.data"></p>
+                      <v-layout pt-1 wrap row fill-height>
+                        <v-flex xs12>
+                          <v-card
+                            flat
+                            :key="`comment-${index}`"
+                            :dark="isDark"
+                            :color="`accent ${darken}`"
+                          >
+                            <v-card-title>
+                              <small>
+                                Commented on
+                                <!--eslint-disable-next-line-->
+                                {{ new Date(content.time).toDateString() }}
+
+                                <br/>
+
+                                {{ content.user.username }}
+                              </small>
+                            </v-card-title>
+                            <v-card-text>
+                              <p v-html="content.data"></p>
+                            </v-card-text>
+                          </v-card>
                         </v-flex>
                       </v-layout>
                     </v-timeline-item>
