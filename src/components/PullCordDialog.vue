@@ -62,17 +62,15 @@
               </v-flex>
 
               <v-flex xs12>
-                <v-textarea
-                  color="info"
-                  box
-                  label="Issue Description"
-                  v-model="cord.description"
-                  hint="Provide a brief description of the issue, use details!"
-                  counter
-                  :rules="[rules.required, rules.minimum]"
-                  required
-                >
-                </v-textarea>
+                <div class="mb-4">
+                  <p class="subheading">Issue Description</p>
+                  <tip-tap
+                    editable
+                    :content="cord.description"
+                    v-on:contentChanged="updateDescription"
+                  ></tip-tap>
+                </div>
+
               </v-flex>
 
               <v-flex xs12>
@@ -117,7 +115,7 @@
         </v-btn>
         <v-btn
           color="info darken-1"
-          :disabled="!formValid"
+          :disabled="!(formValid && isDescriptionValid)"
           depressed
           @click="save"
           :block="isSmall"
@@ -136,6 +134,7 @@ import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import { appsMixin } from "../mixins/appsMixin";
 import UploadFile from "./Upload.vue";
+import TipTap from "./TipTap.vue";
 
 export default {
   name: "PullCordDialog",
@@ -147,12 +146,13 @@ export default {
     socketMixin,
     appsMixin
   ],
-  components: { UploadFile },
+  components: { UploadFile, TipTap },
   data: function() {
     return {
       cord: {},
       appOptions: [],
       dialog: this.initialDialog,
+      isDescriptionValid: false,
       formData: new FormData(),
       formValid: false,
       rules: {
@@ -171,6 +171,7 @@ export default {
       this.$refs.form.reset();
       this.$emit("closeDialog");
     },
+
     save() {
       this.cord.puller = { _id: this.user._id, username: this.user.username };
       this.cord.openedOn = this.getDateTime();
@@ -198,9 +199,16 @@ export default {
           this.setAlert(err, "#DC2D37", 0);
         });
     },
+
     setFile(data) {
       this.formData = data;
     },
+
+    updateDescription(value) {
+      this.cord.description = value;
+      this.isDescriptionValid = value && value.length >= 18;
+    },
+
     getDateTime() {
       return new Date().toISOString();
     }

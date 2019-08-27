@@ -359,7 +359,7 @@ export default {
     content: {
       type: String,
       required: true,
-      default: "`test`"
+      default: ""
     },
 
     editable: {
