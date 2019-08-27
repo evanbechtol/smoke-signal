@@ -49,15 +49,15 @@ export default {
     // eslint-disable-next-line
     criticalCords: (state, getters) => {
       return state.gridItems.filter(function(elem) {
-        return TimeService.computeDuration(elem.openedOn).includes("Days");
+        return TimeService.computeDuration(elem.openedOn).includes("days");
       });
     },
     // eslint-disable-next-line
     moderateCords: (state, getters) => {
       return state.gridItems.filter(function(elem) {
         return (
-          !TimeService.computeDuration(elem.openedOn).includes("Days") &&
-          TimeService.computeDuration(elem.openedOn).includes("Hrs")
+          !TimeService.computeDuration(elem.openedOn).includes("days") &&
+          TimeService.computeDuration(elem.openedOn).includes("hrs")
         );
       });
     },
@@ -73,8 +73,8 @@ export default {
     newCords: state => {
       return state.gridItems.filter(function(elem) {
         return (
-          !TimeService.computeDuration(elem.openedOn).includes("Days") &&
-          !TimeService.computeDuration(elem.openedOn).includes("Hrs")
+          !TimeService.computeDuration(elem.openedOn).includes("days") &&
+          !TimeService.computeDuration(elem.openedOn).includes("hrs")
         );
       });
     }
