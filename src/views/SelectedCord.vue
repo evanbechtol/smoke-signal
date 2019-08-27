@@ -940,7 +940,9 @@ export default {
         const isDifferentAnswer = answerIndex !== this.editingAnswerIndex;
 
         if (isDifferentAnswer) {
-          this.selectedCord.answers[this.editingAnswerIndex] = this.tempEditedAnswer;
+          this.selectedCord.answers[
+            this.editingAnswerIndex
+          ] = this.tempEditedAnswer;
           this.tempEditedAnswer = Object.assign(
             {},
             this.selectedCord.answers[answerIndex]
