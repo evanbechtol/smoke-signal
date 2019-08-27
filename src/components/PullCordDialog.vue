@@ -70,7 +70,6 @@
                     v-on:contentChanged="updateDescription"
                   ></tip-tap>
                 </div>
-
               </v-flex>
 
               <v-flex xs12>

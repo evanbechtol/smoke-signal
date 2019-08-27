@@ -378,7 +378,7 @@
                                 <!--eslint-disable-next-line-->
                                 {{ new Date(content.time).toDateString() }}
 
-                                <br/>
+                                <br />
 
                                 {{ content.user.username }}
                               </small>
@@ -588,6 +588,16 @@
                               mx-0
                               v-if="editingAnswerIndex === answerIndex"
                             >
+                              <v-btn
+                                small
+                                depressed
+                                outline
+                                flat
+                                @click="resetEditingAnswer"
+                                :dark="isDark"
+                              >
+                                Cancel
+                              </v-btn>
                               <v-btn
                                 class="mx-0 px-0"
                                 small
@@ -839,6 +849,7 @@ export default {
       loading: false,
       readonly: true,
       reply: "",
+      tempEditedAnswer: undefined,
       titleDirty: false
     };
   },
@@ -926,7 +937,21 @@ export default {
 
     editAnswer(answerId, answerIndex) {
       if (answerId && typeof answerIndex === "number") {
+        const isDifferentAnswer = answerIndex !== this.editingAnswerIndex;
+
+        if (isDifferentAnswer) {
+          this.selectedCord.answers[this.editingAnswerIndex] = this.tempEditedAnswer;
+          this.tempEditedAnswer = Object.assign(
+            {},
+            this.selectedCord.answers[answerIndex]
+          );
+        }
+
         this.editingAnswerIndex = answerIndex;
+        this.tempEditedAnswer = Object.assign(
+          {},
+          this.selectedCord.answers[answerIndex]
+        );
       }
     },
 
@@ -999,6 +1024,13 @@ export default {
             0
           );
         });
+    },
+
+    resetEditingAnswer() {
+      const answerIndex = this.editingAnswerIndex;
+      this.selectedCord.answers[answerIndex] = this.tempEditedAnswer;
+      this.editingAnswerIndex = undefined;
+      this.tempEditedAnswer = undefined;
     },
 
     save(refreshGrid = false) {
