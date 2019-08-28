@@ -526,121 +526,161 @@
               <v-flex id="answerFlex" mt-3 xs12 v-if="shouldShowAnswers">
                 <p class="title">{{ selectedCord.answers.length }} Answers</p>
                 <template v-for="(answer, answerIndex) in selectedCord.answers">
-                  <v-card
-                    class="mb-2"
-                    flat
-                    :key="`answer-${answerIndex}`"
-                    :dark="isDark"
-                    :color="`accent ${darken}`"
-                  >
-                    <v-card-text>
-                      <v-layout row wrap align-center>
-                        <!-- answer content -->
-                        <v-flex xs12>
-                          <v-textarea
-                            v-if="editingAnswerIndex !== answerIndex"
-                            id="`answer-${answerIndex}`"
-                            flat
-                            v-html="answer.answer"
-                          ></v-textarea>
-
-                          <tip-tap
-                            v-else
-                            :editable="typeof editingAnswerIndex === 'number'"
-                            :content="answer.answer"
-                            v-on:contentChanged="updateSubmittedAnswer"
-                          ></tip-tap>
-                        </v-flex>
-
-                        <!-- Answer Actions -->
-                        <v-flex
-                          id="answerActionsFlex"
-                          shrink
-                          v-if="!isResolved && answer.user._id === user._id"
-                        >
-                          <v-layout
-                            row
-                            justify-start
-                            align-center
-                            fill-height
-                            mt-2
+                  <v-layout :key="`answer-layout-${answerIndex}`" row>
+                    <!-- Answer Votes -->
+                    <v-flex shrink>
+                      <v-tooltip right class="ml-3">
+                        <template #activator="data">
+                          <v-btn
+                            class="ml-3"
+                            small
+                            icon
+                            @click="toggleSolution(answerIndex)"
+                            v-on="data.on"
                           >
-                            <v-flex
-                              shrink
-                              mx-0
-                              v-if="editingAnswerIndex !== answerIndex"
+                            <v-icon
+                              :size="answer.isSolution ? 30 : ''"
+                              :color="answer.isSolution ? 'success' : 'primary'"
                             >
-                              <v-btn
-                                class="mx-0 px-0"
-                                small
+                              {{ answer.isSolution ? "check" : "done_outline" }}
+                            </v-icon>
+                          </v-btn>
+                        </template>
+                        <span>
+                          {{
+                            answer.isSolution
+                              ? "Unmark as solution"
+                              : "Mark as solution"
+                          }}
+                        </span>
+                      </v-tooltip>
+                    </v-flex>
+
+                    <!-- Answer Content -->
+                    <v-flex grow>
+                      <v-card
+                        class="mb-2"
+                        flat
+                        :key="`answer-${answerIndex}`"
+                        :dark="isDark"
+                        :color="`accent ${darken}`"
+                      >
+                        <v-card-text>
+                          <v-layout row wrap align-center>
+                            <!-- answer content -->
+                            <v-flex xs12>
+                              <v-textarea
+                                v-if="editingAnswerIndex !== answerIndex"
+                                id="`answer-${answerIndex}`"
                                 flat
-                                :color="`info ${darken}`"
-                                :disabled="isResolved"
-                                :dark="isDark"
-                                @click="editAnswer(answer._id, answerIndex)"
-                              >
-                                Edit
-                              </v-btn>
+                                v-html="answer.answer"
+                              ></v-textarea>
+
+                              <tip-tap
+                                v-else
+                                :editable="
+                                  typeof editingAnswerIndex === 'number'
+                                "
+                                :content="answer.answer"
+                                v-on:contentChanged="updateSubmittedAnswer"
+                              ></tip-tap>
                             </v-flex>
 
+                            <!-- Answer Actions -->
                             <v-flex
+                              id="answerActionsFlex"
                               shrink
-                              mx-0
-                              v-if="editingAnswerIndex === answerIndex"
+                              v-if="!isResolved && answer.user._id === user._id"
                             >
-                              <v-btn
-                                small
-                                depressed
-                                outline
-                                flat
-                                @click="resetEditingAnswer"
+                              <v-layout
+                                row
+                                justify-start
+                                align-center
+                                fill-height
+                                mt-2
+                              >
+                                <v-flex
+                                  shrink
+                                  mx-0
+                                  v-if="editingAnswerIndex !== answerIndex"
+                                >
+                                  <v-btn
+                                    class="mx-0 px-0"
+                                    small
+                                    flat
+                                    :color="`info ${darken}`"
+                                    :disabled="isResolved"
+                                    :dark="isDark"
+                                    @click="editAnswer(answer._id, answerIndex)"
+                                  >
+                                    Edit
+                                  </v-btn>
+                                </v-flex>
+
+                                <v-flex
+                                  shrink
+                                  mx-0
+                                  v-if="editingAnswerIndex === answerIndex"
+                                >
+                                  <v-btn
+                                    small
+                                    depressed
+                                    outline
+                                    flat
+                                    @click="resetEditingAnswer"
+                                    :dark="isDark"
+                                  >
+                                    Cancel
+                                  </v-btn>
+                                  <v-btn
+                                    class="mx-0 px-0"
+                                    small
+                                    depressed
+                                    :color="`success ${darken}`"
+                                    :disabled="isResolved"
+                                    :dark="isDark"
+                                    @click="
+                                      saveEditedAnswer(answer, answer._id)
+                                    "
+                                  >
+                                    Save
+                                  </v-btn>
+                                </v-flex>
+                              </v-layout>
+                            </v-flex>
+
+                            <v-spacer></v-spacer>
+
+                            <v-flex shrink>
+                              <!-- Answered On Card -->
+                              <v-card
+                                elevation="0"
+                                :color="`accent ${darken}`"
                                 :dark="isDark"
                               >
-                                Cancel
-                              </v-btn>
-                              <v-btn
-                                class="mx-0 px-0"
-                                small
-                                depressed
-                                :color="`success ${darken}`"
-                                :disabled="isResolved"
-                                :dark="isDark"
-                                @click="saveEditedAnswer(answer, answer._id)"
-                              >
-                                Save
-                              </v-btn>
+                                <small>
+                                  Answered On
+                                  {{
+                                    new Date(answer.createdOn).toDateString()
+                                  }}
+                                </small>
+
+                                <br />
+
+                                <v-avatar class="mr-2" size="26" tile>
+                                  <!--<v-img
+                                    :src="getImagePath('evanbechtolHeadshot.png')"
+                                  />-->
+                                  <v-icon>perm_identity</v-icon>
+                                </v-avatar>
+                                {{ answer.user.username }}
+                              </v-card>
                             </v-flex>
                           </v-layout>
-                        </v-flex>
-
-                        <v-spacer></v-spacer>
-
-                        <v-flex shrink>
-                          <!-- Answered On Card -->
-                          <v-card
-                            elevation="0"
-                            :color="`accent ${darken}`"
-                            :dark="isDark"
-                          >
-                            <small>
-                              Answered On
-                              {{ new Date(answer.createdOn).toDateString() }}
-                            </small>
-
-                            <br />
-
-                            <v-avatar class="mr-2" size="26" tile>
-                              <!--<v-img
-                                :src="getImagePath('evanbechtolHeadshot.png')"
-                              />-->
-                              <v-icon>perm_identity</v-icon>
-                            </v-avatar>
-                            {{ answer.user.username }}
-                          </v-card>
-                        </v-flex>
-                      </v-layout>
-                    </v-card-text>
-                  </v-card>
+                        </v-card-text>
+                      </v-card>
+                    </v-flex>
+                  </v-layout>
                 </template>
               </v-flex>
 
@@ -1116,6 +1156,12 @@ export default {
 
     setFile(data) {
       this.formData = data;
+    },
+
+    toggleSolution(answerIndex) {
+      const answer = this.selectedCord.answers[answerIndex];
+      //eslint-disable-next-line
+      answer.isSolution = !!!answer.isSolution;
     },
 
     updateAnswer(value) {
