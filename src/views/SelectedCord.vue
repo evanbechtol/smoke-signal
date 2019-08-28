@@ -1162,6 +1162,7 @@ export default {
       const answer = this.selectedCord.answers[answerIndex];
       //eslint-disable-next-line
       answer.isSolution = !!!answer.isSolution;
+      this.save();
     },
 
     updateAnswer(value) {
