@@ -528,7 +528,7 @@
                 <template v-for="(answer, answerIndex) in selectedCord.answers">
                   <v-layout :key="`answer-layout-${answerIndex}`" row>
                     <!-- Answer Votes -->
-                    <v-flex shrink>
+                    <v-flex shrink v-if="isMine">
                       <v-tooltip right class="ml-3">
                         <template #activator="data">
                           <v-btn
