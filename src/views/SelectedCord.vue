@@ -528,32 +528,53 @@
                 <template v-for="(answer, answerIndex) in selectedCord.answers">
                   <v-layout :key="`answer-layout-${answerIndex}`" row>
                     <!-- Answer Votes -->
-                    <v-flex shrink v-if="isMine">
-                      <v-tooltip right class="ml-3">
-                        <template #activator="data">
-                          <v-btn
-                            class="ml-3"
-                            small
-                            icon
-                            @click="toggleSolution(answerIndex)"
-                            v-on="data.on"
-                          >
-                            <v-icon
-                              :size="answer.isSolution ? 30 : ''"
-                              :color="answer.isSolution ? 'success' : 'primary'"
+                    <v-flex xs1 pl-4>
+                      <div v-if="isMine">
+                        <v-tooltip right class="ml-3">
+                          <template #activator="data">
+                            <v-btn
+                              v-if="!hasSolution"
+                              class="ml-3"
+                              small
+                              icon
+                              @click="toggleSolution(answerIndex)"
+                              v-on="data.on"
                             >
-                              {{ answer.isSolution ? "check" : "done_outline" }}
-                            </v-icon>
-                          </v-btn>
-                        </template>
-                        <span>
-                          {{
-                            answer.isSolution
-                              ? "Unmark as solution"
-                              : "Mark as solution"
-                          }}
-                        </span>
-                      </v-tooltip>
+                              <v-icon color="primary">done_outline</v-icon>
+                            </v-btn>
+
+                            <v-btn
+                              v-else-if="hasSolution && answer.isSolution"
+                              class="ml-3"
+                              small
+                              icon
+                              @click="toggleSolution(answerIndex)"
+                              v-on="data.on"
+                            >
+                              <v-icon size="40" color="success">
+                                check
+                              </v-icon>
+                            </v-btn>
+                          </template>
+                          <span>
+                            {{
+                              answer.isSolution
+                                ? "Unmark as solution"
+                                : "Mark as solution"
+                            }}
+                          </span>
+                        </v-tooltip>
+                      </div>
+
+                      <div v-else>
+                        <v-icon
+                          v-if="answer.isSolution"
+                          size="30"
+                          color="success"
+                        >
+                          check
+                        </v-icon>
+                      </div>
                     </v-flex>
 
                     <!-- Answer Content -->
@@ -811,6 +832,13 @@ export default {
       return this.selectedCord.files && this.selectedCord.files.length > 0
         ? this.selectedCord.files
         : "";
+    },
+
+    hasSolution() {
+      return (
+        this.selectedCord.answers &&
+        this.selectedCord.answers.findIndex(elem => elem.isSolution) > -1
+      );
     },
 
     showUnpullButton() {
@@ -1079,9 +1107,16 @@ export default {
       this.updateCord(this.selectedCord._id, this.selectedCord)
         .then(response => {
           this.setAlert("Cord updated successfully!", "#288964", 5000);
-          response.data.data.discussion.forEach(function(elem) {
-            return convertStringToDate(elem);
-          });
+
+          const hasDiscussion =
+            response.data &&
+            response.data.data &&
+            response.data.data.discussion;
+          if (hasDiscussion) {
+            response.data.data.discussion.forEach(function(elem) {
+              return convertStringToDate(elem);
+            });
+          }
 
           // Optionally refresh the grid for other users. This is only necessary
           // when the cord status is changed
