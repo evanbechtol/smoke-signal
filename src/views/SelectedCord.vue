@@ -527,56 +527,84 @@
                 <p class="title">{{ selectedCord.answers.length }} Answers</p>
                 <template v-for="(answer, answerIndex) in selectedCord.answers">
                   <v-layout :key="`answer-layout-${answerIndex}`" row>
-                    <!-- Answer Votes -->
+                    <!-- Solution Actions and Votes Display -->
                     <v-flex xs1>
-                      <div v-if="isMine">
-                        <v-tooltip right>
-                          <template #activator="data">
-                            <v-btn
-                              v-if="!hasSolution"
-                              small
-                              icon
-                              @click="toggleSolution(answerIndex)"
-                              v-on="data.on"
-                            >
-                              <v-icon color="primary">done_outline</v-icon>
-                            </v-btn>
+                      <v-layout column align-center justify-content-center>
+                        <v-flex shrink>
+                          <v-btn
+                            small
+                            icon
+                            @click="toggleSolution(answerIndex)"
+                          >
+                            <v-icon size="40">arrow_drop_up</v-icon>
+                          </v-btn>
+                        </v-flex>
 
-                            <v-btn
-                              v-else-if="hasSolution && answer.isSolution"
-                              small
-                              icon
-                              @click="toggleSolution(answerIndex)"
-                              v-on="data.on"
-                            >
-                              <v-icon size="40" color="success">
-                                check
-                              </v-icon>
-                            </v-btn>
-                          </template>
-                          <span>
-                            {{
-                              answer.isSolution
-                                ? "Unmark as solution"
-                                : "Mark as solution"
-                            }}
-                          </span>
-                        </v-tooltip>
-                      </div>
+                        <v-flex shrink>
+                          {{ answer.votes ? answer.votes : 0 }}
+                        </v-flex>
 
-                      <div v-else>
-                        <v-icon
-                          v-if="answer.isSolution"
-                          size="30"
-                          color="success"
-                        >
-                          check
-                        </v-icon>
-                      </div>
+                        <v-flex shrink>
+                          <v-btn
+                            class="mb-0"
+                            small
+                            icon
+                            @click="toggleSolution(answerIndex)"
+                          >
+                            <v-icon size="40">arrow_drop_down</v-icon>
+                          </v-btn>
+                        </v-flex>
+                        <v-flex shrink class="my-0">
+                          <div v-if="isMine">
+                            <v-tooltip right>
+                              <template #activator="data">
+                                <v-btn
+                                  v-if="!hasSolution"
+                                  small
+                                  icon
+                                  @click="toggleSolution(answerIndex)"
+                                  v-on="data.on"
+                                >
+                                  <v-icon color="primary">done_outline</v-icon>
+                                </v-btn>
+
+                                <v-btn
+                                  v-else-if="hasSolution && answer.isSolution"
+                                  small
+                                  icon
+                                  @click="toggleSolution(answerIndex)"
+                                  v-on="data.on"
+                                >
+                                  <v-icon size="35" color="success">
+                                    check
+                                  </v-icon>
+                                </v-btn>
+                              </template>
+                              <span>
+                                {{
+                                  answer.isSolution
+                                    ? "Unmark as solution"
+                                    : "Mark as solution"
+                                }}
+                              </span>
+                            </v-tooltip>
+                          </div>
+
+                          <div v-else>
+                            <v-icon
+                              v-if="answer.isSolution"
+                              size="35"
+                              color="success"
+                            >
+                              check
+                            </v-icon>
+                          </div>
+                        </v-flex>
+                      </v-layout>
                     </v-flex>
 
                     <!-- Answer Content -->
-                    <v-flex grow>
+                    <v-flex grow mb-3>
                       <v-card
                         class="mb-2"
                         flat
