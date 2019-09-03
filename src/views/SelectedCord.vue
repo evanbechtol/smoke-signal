@@ -532,6 +532,7 @@
                       <v-layout column align-center justify-content-center>
                         <v-flex shrink>
                           <v-btn
+                            class="mb-0"
                             small
                             icon
                             @click="toggleSolution(answerIndex)"
@@ -546,7 +547,7 @@
 
                         <v-flex shrink>
                           <v-btn
-                            class="mb-0"
+                            class="mt-0"
                             small
                             icon
                             @click="toggleSolution(answerIndex)"
