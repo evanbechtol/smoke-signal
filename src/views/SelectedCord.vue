@@ -528,13 +528,12 @@
                 <template v-for="(answer, answerIndex) in selectedCord.answers">
                   <v-layout :key="`answer-layout-${answerIndex}`" row>
                     <!-- Answer Votes -->
-                    <v-flex xs1 pl-4>
+                    <v-flex xs1>
                       <div v-if="isMine">
-                        <v-tooltip right class="ml-3">
+                        <v-tooltip right>
                           <template #activator="data">
                             <v-btn
                               v-if="!hasSolution"
-                              class="ml-3"
                               small
                               icon
                               @click="toggleSolution(answerIndex)"
@@ -545,7 +544,6 @@
 
                             <v-btn
                               v-else-if="hasSolution && answer.isSolution"
-                              class="ml-3"
                               small
                               icon
                               @click="toggleSolution(answerIndex)"
