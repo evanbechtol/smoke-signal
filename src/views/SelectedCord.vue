@@ -537,12 +537,26 @@
                             icon
                             @click="toggleSolution(answerIndex)"
                           >
-                            <v-icon size="40">arrow_drop_up</v-icon>
+                            <v-icon
+                              size="40"
+                              :color="
+                                selectedCord &&
+                                user &&
+                                answer.votes.find(
+                                  elem =>
+                                    elem.userId === user._id && elem.value === 1
+                                )
+                                  ? 'warning'
+                                  : 'primary'
+                              "
+                            >
+                              arrow_drop_up
+                            </v-icon>
                           </v-btn>
                         </v-flex>
 
                         <v-flex shrink>
-                          {{ answer.votes ? answer.votes : 0 }}
+                          {{ answer.likes ? answer.likes : 0 }}
                         </v-flex>
 
                         <v-flex shrink>
@@ -552,7 +566,22 @@
                             icon
                             @click="toggleSolution(answerIndex)"
                           >
-                            <v-icon size="40">arrow_drop_down</v-icon>
+                            <v-icon
+                              size="40"
+                              :color="
+                                selectedCord &&
+                                user &&
+                                answer.votes.find(
+                                  elem =>
+                                    elem.userId === user._id &&
+                                    elem.value === -1
+                                )
+                                  ? 'warning'
+                                  : 'primary'
+                              "
+                            >
+                              arrow_drop_down
+                            </v-icon>
                           </v-btn>
                         </v-flex>
                         <v-flex shrink class="my-0">

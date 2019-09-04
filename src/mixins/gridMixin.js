@@ -72,9 +72,15 @@ export const gridMixin = {
           case "app":
           case "category":
             if (!isDesc) {
-              return this.$compareString(a[index].toLowerCase(), b[index].toLowerCase());
+              return this.$compareString(
+                a[index].toLowerCase(),
+                b[index].toLowerCase()
+              );
             } else {
-              return this.$compareString(b[index].toLowerCase(), a[index].toLowerCase());
+              return this.$compareString(
+                b[index].toLowerCase(),
+                a[index].toLowerCase()
+              );
             }
           case "resolvedOn":
             if (!isDesc) {
