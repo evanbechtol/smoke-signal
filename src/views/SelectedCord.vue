@@ -535,13 +535,14 @@
                             class="mb-0"
                             small
                             icon
-                            @click="toggleSolution(answerIndex)"
+                            @click="toggleAnswerVote(answer, 1)"
                           >
                             <v-icon
                               size="40"
                               :color="
                                 selectedCord &&
                                 user &&
+                                answer.votes &&
                                 answer.votes.find(
                                   elem =>
                                     elem.userId === user._id && elem.value === 1
@@ -564,13 +565,14 @@
                             class="mt-0"
                             small
                             icon
-                            @click="toggleSolution(answerIndex)"
+                            @click="toggleAnswerVote(answer, -1)"
                           >
                             <v-icon
                               size="40"
                               :color="
                                 selectedCord &&
                                 user &&
+                                answer.votes &&
                                 answer.votes.find(
                                   elem =>
                                     elem.userId === user._id &&
@@ -1249,6 +1251,43 @@ export default {
       this.formData = data;
     },
 
+    toggleAnswerVote(answer, value) {
+      const userVoteIndex = answer.votes.findIndex(
+        elem => elem.userId === this.user._id
+      );
+
+      // User has not voted on the answer provided
+      if (userVoteIndex === -1) {
+        const vote = { userId: this.user._id, value };
+        answer.votes.push(vote);
+      } else {
+        const voteValue = answer.votes[userVoteIndex].value;
+
+        // If value and vote is the same value, remove vote
+        if (value === voteValue) {
+          answer.votes.splice(userVoteIndex, 1);
+        } else {
+          const voteValue = answer.votes[userVoteIndex].value;
+          answer.votes[userVoteIndex].value = voteValue * -1;
+        }
+      }
+
+      this.updateEditedAnswer(this.selectedCord._id, answer)
+        .then(() => {
+          this.refreshItem(this.selectedCord._id);
+          this.answer = "";
+          return this.validateUser();
+        })
+        .then(validationResponse => {
+          this.$store.commit("token", validationResponse.data.token || null);
+          this.setExpiry();
+          this.loading = false;
+        })
+        .catch(err => {
+          this.setAlert(err.response.data.error, "#DC2D37", 0);
+        });
+    },
+
     toggleSolution(answerIndex) {
       const answer = this.selectedCord.answers[answerIndex];
       //eslint-disable-next-line
@@ -1318,8 +1357,6 @@ export default {
 
     saveEditedAnswer(answer, answerId) {
       if (answer && answerId) {
-        // Todo: Pass selectedCord._id, answer to API to be saved
-        // Todo: When save is complete, refresh selectedCord
         this.updateEditedAnswer(this.selectedCord._id, answer)
           .then(response => {
             this.$store.commit("selectedCord", response.data.data);
