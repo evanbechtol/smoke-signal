@@ -1260,15 +1260,18 @@ export default {
       if (userVoteIndex === -1) {
         const vote = { userId: this.user._id, value };
         answer.votes.push(vote);
+        answer.likes += value;
       } else {
         const voteValue = answer.votes[userVoteIndex].value;
 
         // If value and vote is the same value, remove vote
         if (value === voteValue) {
           answer.votes.splice(userVoteIndex, 1);
+          answer.likes += value * -1;
         } else {
           const voteValue = answer.votes[userVoteIndex].value;
           answer.votes[userVoteIndex].value = voteValue * -1;
+          answer.likes += voteValue * -1;
         }
       }
 
