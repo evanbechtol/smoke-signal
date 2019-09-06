@@ -855,6 +855,7 @@ import { alertMixin } from "../mixins/alertMixin";
 import { authMixin } from "../mixins/authMixin";
 import { socketMixin } from "../mixins/socketMixin";
 import { TimeService } from "../services/timeService";
+import TipTap from "../components/TipTap";
 
 export default {
   name: "SelectedCord",
@@ -870,7 +871,7 @@ export default {
 
   components: {
     UploadFile: () => import("../components/Upload.vue"),
-    TipTap: () => import("../components/TipTap.vue")
+    TipTap
   },
 
   computed: {
@@ -1271,7 +1272,7 @@ export default {
         } else {
           const voteValue = answer.votes[userVoteIndex].value;
           answer.votes[userVoteIndex].value = voteValue * -1;
-          answer.likes += voteValue * -1;
+          answer.likes += value === 1 ? 2 : -2;
         }
       }
 
