@@ -2,6 +2,7 @@ const DataExportService = {
   csvExport(arrData) {
     let csvContent = "data:text/csv;charset=utf-8,";
     arrData.forEach(function(elem) {
+      delete elem.answers;
       delete elem.discussion;
       delete elem.files;
       delete elem.__v;
@@ -14,6 +15,10 @@ const DataExportService = {
 
         if (typeof values[0] === "object") {
           values[0] = values[0].username || "";
+        }
+
+        if (typeof values[8] === "object") {
+          values[8] = values[8].username || "";
         }
         // Parse arrays to get the values
         values.forEach(function(elem, index) {
