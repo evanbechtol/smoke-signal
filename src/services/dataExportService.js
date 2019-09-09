@@ -6,6 +6,7 @@ const DataExportService = {
       delete elem.discussion;
       delete elem.files;
       delete elem.__v;
+      delete elem.votes;
     });
 
     csvContent += [
