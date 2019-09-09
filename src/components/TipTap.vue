@@ -19,6 +19,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menubar__button menu-btn"
                       :class="{ 'is-active': isActive.bold() }"
                       @click="commands.bold"
@@ -34,6 +35,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menubar__button menu-btn"
                       :class="{ 'is-active': isActive.italic() }"
                       @click="commands.italic"
@@ -49,6 +51,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menubar__button menu-btn"
                       :class="{ 'is-active': isActive.strike() }"
                       @click="commands.strike"
@@ -64,6 +67,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menubar__button menu-btn"
                       :class="{ 'is-active': isActive.underline() }"
                       @click="commands.underline"
@@ -79,6 +83,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menubar__button menu-btn"
                       :class="{ 'is-active': isActive.code() }"
                       @click="commands.code"
@@ -94,6 +99,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menubar__button menu-btn"
                       :class="{ 'is-active': isActive.code_block() }"
                       @click="commands.code_block"
@@ -135,9 +141,9 @@
                           </label>
                           <button
                             v-on="data.on"
+                            type="button"
                             class="menububble__button"
                             @click="setLinkUrl(commands.link, null)"
-                            type="button"
                           >
                             <v-icon>clear</v-icon>
                           </button>
@@ -153,6 +159,7 @@
                         <template #activator="data">
                           <button
                             v-on="data.on"
+                            type="button"
                             class="menububble__button menu-btn"
                             @click="showLinkMenu(getMarkAttrs('link'))"
                             :class="{ 'is-active': isActive.link() }"
@@ -171,6 +178,7 @@
               <v-flex shrink py-0>
                 <button
                   class="menu-btn"
+                  type="button"
                   :class="{ 'is-active': isActive.heading({ level: 1 }) }"
                   @click="commands.heading({ level: 1 })"
                 >
@@ -180,6 +188,7 @@
               <v-flex shrink py-0>
                 <button
                   class="menu-btn"
+                  type="button"
                   :class="{ 'is-active': isActive.heading({ level: 2 }) }"
                   @click="commands.heading({ level: 2 })"
                 >
@@ -189,6 +198,7 @@
               <v-flex shrink py-0>
                 <button
                   class="menu-btn"
+                  type="button"
                   :class="{ 'is-active': isActive.heading({ level: 3 }) }"
                   @click="commands.heading({ level: 3 })"
                 >
@@ -200,6 +210,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menu-btn"
                       :class="{ 'is-active': isActive.bullet_list() }"
                       @click="commands.bullet_list"
@@ -215,6 +226,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menu-btn"
                       :class="{ 'is-active': isActive.ordered_list() }"
                       @click="commands.ordered_list"
@@ -230,6 +242,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menu-btn"
                       :class="{ 'is-active': isActive.paragraph() }"
                       @click="commands.paragraph"
@@ -245,6 +258,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menu-btn"
                       :class="{ 'is-active': isActive.blockquote() }"
                       @click="commands.blockquote"
@@ -260,6 +274,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       class="menubar__button menu-btn"
                       @click="commands.horizontal_rule"
                     >
@@ -274,6 +289,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       style="opacity: 1;"
                       class="menubar__button menu-btn"
                       @click="commands.undo"
@@ -289,6 +305,7 @@
                   <template #activator="data">
                     <button
                       v-on="data.on"
+                      type="button"
                       style="opacity: 1;"
                       class="menubar__button menu-btn"
                       @click="commands.redo"
